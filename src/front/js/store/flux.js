@@ -19,7 +19,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			//Info de Usuario actualmente logeado
 			logged_user: [],
 
-			//Siguientes a crear
+			//Siguientes funciones a crear
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
