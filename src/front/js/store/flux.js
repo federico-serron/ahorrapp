@@ -16,10 +16,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 					initial: "white"
 				}
 			],
-
-
-			
+			//Info de Usuario actualmente logeado
 			logged_user: [],
+
+			//Siguientes a crear
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -39,6 +39,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log("Error loading message from backend", error)
 				}
 			},
+
 			changeColor: (index, color) => {
 				//get the store
 				const store = getStore();
@@ -54,9 +55,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ demo: demo });
 			},
 
-			login: async (payload) => {
+			login: async (email, password) => {
 				const URLlogin = `${apiUrl}/api/login`;
-				const {email, password} = payload;
 				const store = getStore();
 
 				try {
@@ -92,6 +92,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error(error);
 				}
 			},
+
+			//Siguientes actions aqui debajo
 		}
 	};
 };
