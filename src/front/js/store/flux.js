@@ -54,9 +54,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 				setStore({ demo: demo });
 			},
 
-			login: async (payload) => {
+			login: async (email, password) => {
 				const URLlogin = `${apiUrl}/api/login`;
-				const {email, password} = payload;
 				const store = getStore();
 
 				try {
@@ -86,10 +85,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 					localStorage.setItem("token", data.access_token)
 					console.log("Successfully logged in!")
 					setStore({...store, logged_user: data })
-					return data
+					return true
 
 				} catch (error) {
 					console.error(error);
+					return false
 				}
 			},
 		}
