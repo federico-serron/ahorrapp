@@ -95,6 +95,60 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			//Siguientes actions aqui debajo
+
+			// Action Registro de Usuario
+
+
+
+			register: async (email, password, confirmPassword, phone = null, address = null) => {
+				const URLregister = `${apiUrl}/api/register`;
+				const store = getStore();
+	
+				try {
+					if (!email || !password || !confirmPassword) {
+						console.log("Falta correo electrónico, contraseña o contraseña de confirmación");
+						return false;
+					}
+	
+					if (password !== confirmPassword) {
+						console.error("La contraseñas no coincide");
+						return false;
+					}
+	
+					const userData = {
+						email: email,
+						password: password,
+						phone: phone,
+						address: address
+					};
+	
+					let response = await fetch(URLregister, {
+						method: "POST",
+						body: JSON.stringify(userData),
+						headers: {
+							"Content-type": "application/json; charset=UTF-8"
+						}
+					});
+	
+					if (!response.ok) {
+						console.error("Error al intentar registrar el usuario, por favor inténtelo nuevamente.");
+						const errorData = await response.json();
+						console.error("Detalles del error del servidor:", errorData);
+						throw new Error(response.statusText);
+					}
+	
+					const data = await response.json();
+					console.log("¡Registrado exitosamente!", data);
+					return true;
+	
+				} catch (error) {
+					console.error("Hubo un error durante el registro:", error);
+					return false;
+				}
+			},
+
+
+
 		}
 	};
 };
