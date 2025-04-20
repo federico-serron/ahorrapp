@@ -71,7 +71,7 @@ def login():
     
 
     if not user: 
-        return jsonify({"message":"usuario no encontrado"})
+        return jsonify({"message":"usuario no encontrado"}), 404
        
     password_db = user.password 
         
@@ -83,8 +83,8 @@ def login():
         return jsonify({
                 "messagge": "Logueado exitosamente",
                 "access_token": access_token
-            })
+            }), 200
     else:
         return jsonify({
             "messagge": "contraseña incorrecta"
-        })
+        }), 400
