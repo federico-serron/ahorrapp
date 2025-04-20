@@ -1,49 +1,56 @@
-import React, { useState } from "react";
-import { Context } from "../store/appContext";
-import "../../styles/home.css";
-import { Dashboard } from "../component/Dashboard";
+import React from "react";
 
-export const Dashboard = ({ userEmail, onLogout }) => {
-    const { store } = useContext(Context);
 
+export const Dashboard = () => {
     return (
-        <div className="container py-4">
-            <div className="d-flex justify-content-between align-items-center mb-4">
-                <h2>Bienvenido {userEmail}</h2>
-                <button
-                    onClick={onLogout}
-                    className="btn btn-sm btn-danger"
-                >
-                    Cerrar sesión
-                </button>
+        <div className="container justify-content-center">
+            <div>
+                <h1>welcome to your wallet Name User (monto/sueldo)</h1>
             </div>
 
-            <div className="alert alert-info">
-                {store.message || "Mensaje del sistema"}
+            <select className="form-select form-select-sm" aria-label="Small select example" style={{ marginTop: "20px" }}>
+                <option selected>Select the Category</option>
+                <option value="1">Alquiler</option>
+                <option value="2">Comida</option>
+                <option value="3">Otros</option>
+            </select>
+
+            <select className="form-select form-select-sm" aria-label="Small select example" style={{ marginTop: "20px" }}>
+                <option selected>Amount</option>
+                <option value="1">10</option>
+                <option value="2">20</option>
+                <option value="3">Otro Monto</option>
+            </select>
+
+            <select className="form-select form-select-sm" aria-label="Small select example" style={{ marginTop: "20px" }}>
+                <option selected>Type of Currency</option>
+                <option value="1">$</option>
+                <option value="2">€</option>
+                <option value="3">Otros</option>
+            </select>
+
+            <div>
+
+                <button type="button" className="btn btn-outline-primary" style={{ width: "18rem", marginTop: "20px" }}>Load Data</button>
+
             </div>
-            <Dashboard/>
-            <div className="card">
-                <div className="card-body">
-                    <p>Contenido exclusivo para usuarios registrados</p>
+
+            <div>
+                <div className="card" style={{ width: "18rem", marginTop: "20px" }}>
+                    <div className="card-header">
+                        payment summary (dia/mes/año)
+                    </div>
+                    <ul className="list-group list-group-flush">
+                        <li className="list-group-item">category:</li>
+                        <li className="list-group-item">amount:</li>
+                        <li className="list-group-item">currency:</li>
+                    </ul>
+                    <div className="card-footer">Total: 20$ (ejemplo) <i class="fa-brands fa-cc-diners-club"></i>
+                    </div>
                 </div>
             </div>
         </div>
-    );
+    )
 };
 
-// Versión que incluye manejo de autenticación
-export const AuthDashboard = () => {
-    const [user, setUser] = useState("usuario@ejemplo.com"); // Cambia por tu estado real
-
-    if (!user) return <div className="container py-4">Por favor inicia sesión</div>;
-
-    return (
-        <Dashboard
-            userEmail={user}
-            onLogout={() => {
-                // Aquí puedes agregar lógica adicional antes del logout
-                setUser(null);
-            }}
-        />
-    );
-};
+export default Dashboard 
