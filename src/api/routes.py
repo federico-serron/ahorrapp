@@ -6,6 +6,10 @@ from api.models import db, User
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import jwt_required
+from datetime import timedelta
 
 api = Blueprint('api', __name__)
 
@@ -51,3 +55,36 @@ def signup_user():
 
 
     return jsonify(new_user.serialize()), 201
+
+@api.route('/login', methods=['POST'])
+def login():
+   
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+    
+    if not email or not password:
+       
+        return jsonify({'message': 'Correo y contraseña son obligatorios'}), 400
+
+    user = User.query.filter_by(email=email).first()
+    
+
+    if not user: 
+        return jsonify({"message":"usuario no encontrado"})
+       
+    password_db = user.password 
+        
+    true_false= bcrypt.check_password_hash(password_db,password)
+    if true_false: 
+        expires= timedelta(days=1)
+        user_id=user.id
+        access_token=create_access_token(identity=str(user_id),expires_delta=expires)
+        return jsonify({
+                "messagge": "Logueado exitosamente",
+                "access_token": access_token
+            })
+    else:
+        return jsonify({
+            "messagge": "contraseña incorrecta"
+        })
