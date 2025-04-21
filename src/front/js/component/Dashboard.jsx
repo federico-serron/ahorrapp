@@ -1,7 +1,18 @@
-import React from "react";
+import React, {useEffect} from "react";
+import { useNavigate } from "react-router-dom";
 
 
 export const Dashboard = () => {
+const navigate = useNavigate()
+
+
+useEffect(()=>{
+    if (!localStorage.getItem("token")) {
+        navigate('/login')
+    }
+},[])
+
+
     return (
         <div className="container justify-content-center">
             <div>
@@ -45,7 +56,7 @@ export const Dashboard = () => {
                         <li className="list-group-item">amount:</li>
                         <li className="list-group-item">currency:</li>
                     </ul>
-                    <div className="card-footer">Total: 20$ (ejemplo) <i class="fa-brands fa-cc-diners-club"></i>
+                    <div className="card-footer">Total: 20$ (ejemplo) <i className="fa-brands fa-cc-diners-club"></i>
                     </div>
                 </div>
             </div>

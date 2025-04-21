@@ -1,10 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import logo from "../../img/logo.png";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { Context } from "../store/appContext";
+
 
 
 const Signup = () => {
+
+  const { store, actions } = useContext(Context);
+
+
+
 
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
@@ -118,9 +125,9 @@ const Signup = () => {
               />
             </div>
 
-        
+
             <button type="submit" className="btn btn-primary w-100" disabled={loading}>
-            {loading ? "Registrando..." : "Registrarse"}
+              {loading ? "Registrando..." : "Registrarse"}
 
             </button>
           </form>
