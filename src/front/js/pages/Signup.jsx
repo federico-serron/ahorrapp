@@ -10,16 +10,12 @@ const Signup = () => {
 
   const { store, actions } = useContext(Context);
 
-
-
-
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate()
-
 
 
   const handleSubmit = async (e) => {
@@ -34,6 +30,7 @@ const Signup = () => {
       return;
     } else if (password.length < 8) {
       toast.warn("La contrasena debe ser de al menos 8 caracteres 😒")
+      return;
     }
 
     setLoading(true);
@@ -44,7 +41,7 @@ const Signup = () => {
       toast.success("Registrado exitosamente! 😍")
       navigate("/dashboard");
     } else {
-      toast.error("Hubo un error al intetnar crear el usuario 😓");
+      toast.error("Hubo un error al intentar crear el usuario 😓");
       setLoading(false);
 
     }
