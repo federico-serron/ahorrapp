@@ -135,9 +135,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
+			//Action de Jose
+
+			//Action de Juan
+
+			//Action de Rafa
+
+			//Action de Fede
+
 			//Siguientes actions aqui debajo
-
-
 		}
 	};
 };
