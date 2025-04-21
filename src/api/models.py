@@ -19,6 +19,8 @@ class User(db.Model):
 
     wallets: Mapped[list["Wallet"]] = relationship(back_populates="user")
     records: Mapped[list["Record"]] = relationship(back_populates="user")
+    goals: Mapped[list["Goal"]] = relationship(back_populates='user')
+
 
     def serialize(self):
         return {
@@ -46,6 +48,7 @@ class Record(db.Model):
     category: Mapped["Category"] = relationship(back_populates="records")
     wallet: Mapped["Wallet"] = relationship(back_populates="records")
     user: Mapped["User"] = relationship(back_populates="records")
+    
 
     def serialize(self):
         return {
@@ -108,3 +111,13 @@ class Wallet(db.Model):
             "balance": self.total_value,
             "currency_id": self.currency_id
         }
+
+class Goal(db.Model):
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(120), nullable=False)
+    goal_value: Mapped[int] = mapped_column(nullable=False)
+    is_complete: Mapped[bool] = mapped_column(Boolean(), nullable=False, default=False)
+    user_id: Mapped[int] = mapped_column(ForeignKey('user.id'), nullable=False)
+
+    user: Mapped["User"] = relationship(back_populates='goals')
+
