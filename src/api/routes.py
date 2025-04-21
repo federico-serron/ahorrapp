@@ -88,3 +88,12 @@ def login():
         return jsonify({
             "messagge": "contraseña incorrecta"
         }), 400
+
+
+# Ruta de Jose
+
+# Ruta de Juan
+
+# Ruta de Rafa
+
+# Ruta de Fede
