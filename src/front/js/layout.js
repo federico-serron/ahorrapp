@@ -14,6 +14,7 @@ import { Footer } from "./component/footer";
 
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+import Signup from "./pages/Signup.jsx";
 
 //create your first component
 const Layout = () => {
@@ -36,6 +37,8 @@ const Layout = () => {
                         {/* Login */}
                         <Route element={<Login/>} path="/login" />
                         {/* Siguientes rutas */}
+                        <Route element={<Signup/>} path="/signup" />
+
 
                     </Routes>
                     <Footer />
