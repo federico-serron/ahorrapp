@@ -67,8 +67,8 @@ def setup_commands(app):
     def insert_test_wallets(count):
         print("Creating test wallets")
         for x in range(1, int(count) + 1):
-            currency_id = Currency.query.filter_by(id=random.choice([1,2,3])).first().id
-            user_id = User.query.filter_by(id=random.choice([1,2,3,4,5])).first().id
+            currency_id = random.choice([c.id for c in Currency.query.all()])
+            user_id = random.choice([u.id for u in User.query.all()])
 
             wallet = Wallet()
             wallet.name = "Random name" + str(x)
@@ -86,20 +86,31 @@ def setup_commands(app):
     @click.argument("count") # argument of out command
     def insert_test_records(count):
         print("Creating test recrds")
-        category_id = Category.query.filter_by(id=random.choice([1,2,3])).first().id
-        walllet_id = Wallet.query.filter_by(id=random.choice([1,2,3])).first().id
-        user_id = User.query.filter_by(id=random.choice([1,2,3,4,5])).first().id
         for x in range(1, int(count) + 1):
+            category_id = random.choice([c.id for c in Category.query.all()])
+            wallet_id = random.choice([w.id for w in Wallet.query.all()])
+            user_id = random.choice([u.id for u in User.query.all()])
 
             record = Record()
             record.description = "Descrption very random" + str(x)
             record.amount = x * 2
             record.type = random.choice(["expense", "addition"])
             record.category_id = category_id
-            record.wallet_id = walllet_id
+            record.wallet_id = wallet_id
             record.user_id = user_id
             db.session.add(record)
             db.session.commit()
             print(record.serialize())
 
         print("All test records created")
+
+
+    @app.cli.command("insert-test-data")
+    def insert_test_wallets():
+        print("Creating testing data")
+        insert_test_users("7")
+        insert_test_categries("5")
+        insert_test_currencies()
+        insert_test_wallets("3")
+        insert_test_records("15")
+        print("All test data created")
