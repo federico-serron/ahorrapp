@@ -92,8 +92,23 @@ def login():
 
 # Ruta de Jose
 
+@api.route('/new-wallet', methods = ['POST'])
+def create_wallet():
+    id_user = request.json.get('id_user')
+    name_wallet = request.json.get('name')
+    initial_value = request.json.get('total_value')
+    currency_id = request.json.get('currency_id')
+
+
+    # hacer verificacaciones para asegurar de que se incluya los 4 items de arriba
+    # Si cumple, que se cree el wallet con la clase Wallet
+    # Luego crear la ruta de consulta GET
+    # Revisar si debo crear una ruta PUT para modificar el wallet
+
 # Ruta de Juan
 
 # Ruta de Rafa
+
+
 
 # Ruta de Fede
