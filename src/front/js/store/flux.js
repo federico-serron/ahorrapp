@@ -135,13 +135,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-			//Action de Jose
+			//Action 1
 
-			//Action de Juan
+			//Action 2
 
-			//Action de Rafa
+			//Action 3
 
-			//Action de Fede
+			//Action 4
 
 			//Siguientes actions aqui debajo
 		}

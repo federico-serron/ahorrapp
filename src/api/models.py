@@ -14,6 +14,7 @@ class User(db.Model):
     name: Mapped[str] = mapped_column(String(120), nullable=False)
     phone: Mapped[Optional[str]] = mapped_column(String(40), nullable=True)
     address: Mapped[Optional[str]] = mapped_column(String(120), nullable=True)
+    role: Mapped[str] = mapped_column(String(20), nullable=False, default="user")
     last_login: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.now(timezone.utc))
     is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False, default=True)
 

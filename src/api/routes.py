@@ -90,7 +90,7 @@ def login():
         }), 400
 
 
-# Ruta de Jose
+# Ruta 1
 
 @api.route('/new-wallet', methods = ['POST'])
 def create_wallet():
@@ -107,7 +107,7 @@ def create_wallet():
 
 # Ruta de Juan
 
-# Ruta de Rafa
+# Ruta 3
 
 
 
