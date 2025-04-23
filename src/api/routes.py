@@ -90,10 +90,10 @@ def login():
         }), 400
 
 
-# Ruta de Jose
+# Ruta 1
 
-# Ruta de Juan
+# Ruta 2
 
-# Ruta de Rafa
+# Ruta 3
 
-# Ruta de Fede
+# Ruta 4
