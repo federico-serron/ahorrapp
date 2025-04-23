@@ -2,8 +2,8 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User
-from api.utils import generate_sitemap, APIException
+from api.models import db, User, Record, Category, Wallet
+from api.utils import generate_sitemap, APIException, validate_relationships, validate_required_fields
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import create_access_token
@@ -97,11 +97,40 @@ def login():
 # Ruta 3
 
 # Ruta 4
-@api.route('/records')
+@api.route('/records', methods=["POST"])
 def add_record():
     
-    description = request.json.get('description')
-    amount = request.json.get('amount')
-    type = request.json.get('type')
+    fields = request.get_json()
 
-    return jsonify({"Hola": "Hola"})
+    required_fields = {
+        "description": fields.get("description"),
+        "amount": fields.get("amount"),
+        "type": fields.get("type"),
+        "category_id": fields.get("category_id"),
+        "wallet_id": fields.get("wallet_id"),
+    }
+
+    error_fields = validate_required_fields(required_fields)
+    if error_fields:
+        return error_fields
+
+    error_relationships = validate_relationships({"Categoría": (Category, fields.get('category_id')),"Billetera": (Wallet, fields.get('wallet_id'))})
+    if error_relationships:
+        return error_relationships
+
+    
+    if fields.get('amount') <= 0:
+        return jsonify({"msg": "El monto debe ser mayor a 0"}), 400
+    
+    new_record = Record(
+    description=fields['description'],
+    amount=fields['amount'],
+    type=fields['type'],
+    category_id=fields['category_id'],
+    wallet_id=fields['wallet_id']
+)
+
+    db.session.add(new_record)
+    db.session.commit()
+
+    return jsonify(new_record.serialize()), 201
