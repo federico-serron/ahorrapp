@@ -30,7 +30,8 @@ class User(db.Model):
             "email": self.email,
             "phone": self.phone,
             "address": self.address,
-            "last_login": self.last_login,
+            "role": self.role,
+            "last_login": self.last_login.isoformat(),
             "is_active": self.is_active,
         }
 
@@ -55,9 +56,18 @@ class Record(db.Model):
         return {
             "id": self.id,
             "description": self.description,
-            "timestamp": self.timestamp,
+            "timestamp": self.timestamp.isoformat(),
             "amount": self.amount,
-            "type": self.type
+            "type": self.type,
+            "category": self.category.serialize() if self.category else None,
+            "wallet": {
+                "id": self.wallet.id,
+                "name": self.wallet.name
+            } if self.wallet else None,
+            "user": {
+                "id": self.user.id,
+                "name": self.user.name
+            } if self.user else None
         }
 
 
@@ -109,8 +119,12 @@ class Wallet(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "balance": self.total_value,
-            "currency_id": self.currency_id
+            "total_value": self.total_value,
+            "currency": self.currency.serialize() if self.currency else None,
+            "user": {
+                "id": self.user.id,
+                "name": self.user.name
+            } if self.user else None
         }
 
 class Goal(db.Model):
@@ -122,3 +136,14 @@ class Goal(db.Model):
 
     user: Mapped["User"] = relationship(back_populates='goals')
 
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "goal_value": self.goal_value,
+            "is_complete": self.is_complete,
+            "user": {
+                "id": self.user.id,
+                "name": self.user.name
+            } if self.user else None
+        }

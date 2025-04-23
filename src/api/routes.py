@@ -97,3 +97,11 @@ def login():
 # Ruta 3
 
 # Ruta 4
+@api.route('/records')
+def add_record():
+    
+    description = request.json.get('description')
+    amount = request.json.get('amount')
+    type = request.json.get('type')
+
+    return jsonify({"Hola": "Hola"})
