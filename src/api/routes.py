@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User
+from api.models import db, User, Wallet
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
@@ -38,7 +38,6 @@ def signup_user():
 
     if not name or not email or not password:
         return jsonify({'msg': 'Datos incompletos, por favor llenar todos los datos del usuario'}), 400
-    
 
     user = User.query.filter_by(email = email).first()
 
@@ -90,19 +89,46 @@ def login():
         }), 400
 
 
-# Ruta 1
+# Ruta creada para añadir una nueva wallet a la cuenta del usuario
 
-@api.route('/new-wallet', methods = ['POST'])
+@api.route('/wallet', methods = ['POST'])
 def create_wallet():
-    id_user = request.json.get('id_user')
+    user_id = request.json.get('user_id')
     name_wallet = request.json.get('name')
     initial_value = request.json.get('total_value')
     currency_id = request.json.get('currency_id')
 
 
     # hacer verificacaciones para asegurar de que se incluya los 4 items de arriba
+    if not user_id or not name_wallet or not initial_value or not currency_id:
+        return jsonify({'msg': 'Por favor completar todos los campos'}), 400
+    
+    # Verifica si el usuario no existe
+    user = User.query.filter_by(id = user_id).first()
+    if not user:
+        return jsonify({'msg': 'Este usuario no existe'}), 400
+    
     # Si cumple, que se cree el wallet con la clase Wallet
+    wallet = Wallet.query.filter_by( name = name_wallet ,user_id = user_id).first()
+
+    if wallet:
+        return jsonify({'msg': 'Este nombre de wallet ya esta registrado en tu cuenta'})
+    
+    new_wallet = Wallet(name = name_wallet, total_value = initial_value, currency_id = currency_id, user_id = user_id)
+
+    db.session.add(new_wallet)
+    db.session.commit()
+
+
+    return jsonify(new_wallet.serialize()), 201
+
     # Luego crear la ruta de consulta GET
+@api.route('/wallet', methods = ['GET'])
+def get_wallet():
+    
+
+
+
     # Revisar si debo crear una ruta PUT para modificar el wallet
 
 # Ruta de Juan
