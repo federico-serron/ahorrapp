@@ -110,7 +110,8 @@ class Wallet(db.Model):
             "id": self.id,
             "name": self.name,
             "balance": self.total_value,
-            "currency_id": self.currency_id
+            "currency_id": self.currency_id,
+            "user_id": self.user_id
         }
 
 class Goal(db.Model):

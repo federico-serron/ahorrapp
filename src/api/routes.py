@@ -122,10 +122,22 @@ def create_wallet():
 
     return jsonify(new_wallet.serialize()), 201
 
-    # Luego crear la ruta de consulta GET
+    # Ruta para obtener todas las wallets registradas en la app
 @api.route('/wallet', methods = ['GET'])
-def get_wallet():
-    
+def get_wallets():
+
+    all_wallets = Wallet.query.all()
+    dict_wallets = list(map(lambda x: x.serialize(), all_wallets))
+
+    return jsonify(dict_wallets)
+
+
+# Ruta para obtener todas las wallets por user_id
+#@api.route('/wallet/<int:id>', methods = ['GET'])
+#def get_wallets(id):
+
+
+
 
 
 
