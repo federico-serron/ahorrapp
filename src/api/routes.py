@@ -97,10 +97,15 @@ def login():
 # Ruta 3
 
 # Ruta 4
-@api.route('/records', methods=["POST"])
+@api.route('/records/add', methods=["POST"])
+@jwt_required()
 def add_record():
     
     fields = request.get_json()
+    user_id = get_jwt_identity()
+
+    if not user_id:
+        return jsonify({"msg": "Debe estar logueado para agregar un registro."}), 401
 
     required_fields = {
         "description": fields.get("description"),
@@ -114,7 +119,7 @@ def add_record():
     if error_fields:
         return error_fields
 
-    error_relationships = validate_relationships({"Categoría": (Category, fields.get('category_id')),"Billetera": (Wallet, fields.get('wallet_id'))})
+    error_relationships = validate_relationships({"Category": (Category, fields.get('category_id')),"Wallet": (Wallet, fields.get('wallet_id'))})
     if error_relationships:
         return error_relationships
 
@@ -127,7 +132,8 @@ def add_record():
     amount=fields['amount'],
     type=fields['type'],
     category_id=fields['category_id'],
-    wallet_id=fields['wallet_id']
+    wallet_id=fields['wallet_id'],
+    user_id=user_id
 )
 
     db.session.add(new_record)

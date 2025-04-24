@@ -103,14 +103,3 @@ def setup_commands(app):
             print(record.serialize())
 
         print("All test records created")
-
-
-    @app.cli.command("insert-test-data")
-    def insert_test_wallets():
-        print("Creating testing data")
-        insert_test_users("7")
-        insert_test_categries("5")
-        insert_test_currencies()
-        insert_test_wallets("3")
-        insert_test_records("15")
-        print("All test data created")
