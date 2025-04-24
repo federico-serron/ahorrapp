@@ -91,9 +91,9 @@ def login():
 
 # Ruta creada para añadir una nueva wallet a la cuenta del usuario
 
-@api.route('/wallet', methods = ['POST'])
-def create_wallet():
-    user_id = request.json.get('user_id')
+@api.route('user/<int:id>/wallet', methods = ['POST'])
+def create_wallet(id):
+    user_id = id
     name_wallet = request.json.get('name')
     initial_value = request.json.get('total_value')
     currency_id = request.json.get('currency_id')
@@ -122,7 +122,7 @@ def create_wallet():
 
     return jsonify(new_wallet.serialize()), 201
 
-    # Ruta para obtener todas las wallets registradas en la app
+# Ruta para obtener todas las wallets registradas en la app (funcion solo para admin)
 @api.route('/wallet', methods = ['GET'])
 def get_wallets():
 
@@ -133,15 +133,15 @@ def get_wallets():
 
 
 # Ruta para obtener todas las wallets por user_id
-#@api.route('/wallet/<int:id>', methods = ['GET'])
-#def get_wallets(id):
+@api.route('/user/<int:id>/wallets/', methods = ['GET'])
+def get_wallets_by_user_id(id):
 
+    wallets_by_user = Wallet.query.filter_by(user_id = id)
+    wallets_by_user = list(map(lambda wallet: wallet.serialize(),wallets_by_user))
 
+    return jsonify(wallets_by_user)
 
-
-
-
-    # Revisar si debo crear una ruta PUT para modificar el wallet
+# Ruta PUT para modificar el wallet
 
 # Ruta de Juan
 
