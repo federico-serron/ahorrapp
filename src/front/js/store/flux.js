@@ -144,6 +144,56 @@ const getState = ({ getStore, getActions, setStore }) => {
 			//Action 4
 
 			//Siguientes actions aqui debajo
+
+			// Action para agregar un nuevo registro (Record)
+			addRecord: async (description, amount, type, category_id, wallet_id) => {
+                const URLaddRecord = `${apiUrl}/api/records/add`;
+                const { getStore, setStore } = getActions(); 
+
+                try {
+                    if (!description || !amount || !type || !category_id || !wallet_id) {
+                        console.error("Faltan campos requeridos para agregar el registro.");
+                        return false;
+                    }
+
+                    const recordData = {
+                        description: description,
+                        amount: parseFloat(amount), 
+                        type: type,
+                        category_id: parseInt(category_id), 
+                        wallet_id: parseInt(wallet_id),   
+                    };
+
+                    const response = await fetch(URLaddRecord, {
+                        method: "POST",
+                        body: JSON.stringify(recordData),
+                        headers: {
+                            "Content-type": "application/json; charset=UTF-8",
+                           
+                            "Authorization": `Bearer ${localStorage.getItem('token')}` 
+                        }
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        console.error("Error al agregar el registro:", errorData?.msg || response.statusText);
+                        return false;
+                    }
+
+                    const data = await response.json();
+                    console.log("Registro agregado exitosamente:", data);
+
+                   
+                    const store = getStore();
+                    setStore({ registros: [...store.registros, data] }); 
+
+                    return true;
+
+                } catch (error) {
+                    console.error("Hubo un error al agregar el registro:", error);
+                    return false;
+                }
+            },
 		}
 	};
 };
