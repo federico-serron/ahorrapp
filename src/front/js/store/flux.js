@@ -18,6 +18,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			],
 			//Info de Usuario actualmente logeado
 			logged_user: [],
+			records: [],
 
 			//Siguientes funciones a crear
 		},
@@ -146,13 +147,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 			//Siguientes actions aqui debajo
 			
 			// Acción para obtener registros filtrados por usuario y categoría en un período de tiempo (get-records)
-			get_records: async (category_id, start_date = null, end_date = null) => {
+			get_records: async (category_id, start_date) => {
 				const baseURL = `${apiUrl}/api/records/list`;
 				const queryParams = [];
 		
 				if (category_id) queryParams.push(`category_id=${category_id}`);
 				if (start_date) queryParams.push(`start_date=${new Date(start_date).toISOString()}`);
-				if (end_date) queryParams.push(`end_date=${new Date(end_date).toISOString()}`);
 		
 				const URLlistRecords = queryParams.length > 0 ? `${baseURL}?${queryParams.join('&')}` : baseURL;
 				const { setStore } = getActions();
@@ -172,11 +172,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 		
 					const data = await response.json();
-					setStore({ records: data.records }); 
+					setStore({ ...store, records: [...store.records, data.records]}); 
+					return true;
 		
 				} catch (error) {
 					console.error("Error al obtener los registros:", error);
 					setStore({ recordsError: error.message || "Ocurrió un error al cargar los registros." });
+					return false
 				}
 			},
 
@@ -222,7 +224,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
                    
                     const store = getStore();
-                    setStore({ ...store, registros: [...store.registros, data] });
+                    setStore({ ...store, records: [...store.records, data] });
 
                     return true;
 
