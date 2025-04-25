@@ -1,5 +1,6 @@
 from flask import jsonify, url_for
 from datetime import datetime, timezone
+from .models import User
 
 class APIException(Exception):
     status_code = 400
@@ -60,3 +61,12 @@ def parse_date(value: str, default: datetime) -> datetime:
         return datetime.strptime(value, "%Y-%m-%d").replace(tzinfo=timezone.utc)
     except (TypeError, ValueError):
         return default
+
+def check_user_is_admin(user_id):
+        
+    user = User.query.filter_by(id=user_id).first()
+
+    if user.role != 'admin':
+        return jsonify({"msg": "Debe ser administrador para poder acceder a este ruta"}), 401
+        
+    return None
