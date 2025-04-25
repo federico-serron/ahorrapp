@@ -1,18 +1,47 @@
-import React from "react";
+import React, { useEffect, useContext, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Context } from "../store/appContext";
+
+
+
 
 
 const Wallet = () => {
+    const navigate = useNavigate()
+    const { store, actions } = useContext(Context);
+    const [totalAmount, setTotalAmount] = useState(0)
+    const { id } = useParams()
+
+    const handleChange = (e) => {
+        const ruta = e.target.value
+        if (ruta) {
+            navigate(ruta)
+        }
+    }
+
+    useEffect(() => {
+        if (!localStorage.getItem("token")) {
+            navigate("/login")
+        }
+    }, [])
+
+    useEffect(() => {
+        setTotalAmount(actions.getWalletInfo(id))
+        
+    }, [])
+
+
     return (
         <div>
 
 
 
             <div className="container justify-content-center">
-                <select className="form-select" aria-label="Default select example">
-                    <option selected>Wallets</option>
-                    <option value="1">Wallet One</option>
-                    <option value="2">Wallet Two</option>
-                    <option value="3">Wallet Three</option>
+                <select onChange={handleChange} className="form-select" aria-label="Default select example">
+                    <option selected value="" disabled>Wallets</option>
+                    <option value="/wallet/1">Wallet One</option>
+                    <option value="/wallet/2">Wallet Two</option>
+                    <option value="/wallet/3">Wallet Three</option>
                 </select>
             </div>
 
@@ -23,31 +52,22 @@ const Wallet = () => {
 
             <div className="card">
                 <div className="card-header">
-                    Billetera Gastos Mensuales
+                    Billetera Gastos Mensuales {id}
                 </div>
                 <div className="card-body">
-                    <h5 className="card-title">Gastos</h5>
-
-                    <div className="mb-3">
-                        <input type="text" className="form-control" id="formGroupExampleInput" placeholder="ALQUILER 400$ " />
-                    </div>
-                    <div className="mb-3">
-                        <input type="text" className="form-control" id="formGroupExampleInput" placeholder="COMIDA 200$ " />
-                    </div>
-                    <div className="mb-3">
-                        <input type="text" className="form-control" id="formGroupExampleInput" placeholder="SERVICIOS 100$ " />
-                    </div>
+                    <ul className="list-group list-group-flush">
+                        <li className="list-group-item">An item</li>
+                        <li className="list-group-item">A second item</li>
+                        <li className="list-group-item">A third item</li>
+                        <li className="list-group-item">A fourth item</li>
+                        <li className="list-group-item">And a fifth one</li>
+                    </ul>
 
 
                     <p className="card-text"></p>
                     <a href="#" className="btn btn-primary">Go somewhere</a>
-                    <h1>Monto Actual  2.000 $</h1>
+                    <h1>monto actual ${totalAmount}</h1>
                 </div>
-            </div>
-
-            <div>
-                <label for="customRange1" className="form-label">Example range</label>
-                <input type="range" className="form-range" id="customRange1" />
             </div>
 
         </div>
