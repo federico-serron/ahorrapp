@@ -185,7 +185,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
                    
                     const store = getStore();
-                    setStore({ registros: [...store.registros, data] }); 
+                    setStore({ ...store, registros: [...store.registros, data] });
 
                     return true;
 
