@@ -144,6 +144,43 @@ const getState = ({ getStore, getActions, setStore }) => {
 			//Action 4
 
 			//Siguientes actions aqui debajo
+			
+			// Acción para obtener registros filtrados por usuario y categoría en un período de tiempo (get-records)
+			get_records: async (category_id, start_date = null, end_date = null) => {
+				const baseURL = `${apiUrl}/api/records/list`;
+				const queryParams = [];
+		
+				if (category_id) queryParams.push(`category_id=${category_id}`);
+				if (start_date) queryParams.push(`start_date=${new Date(start_date).toISOString()}`);
+				if (end_date) queryParams.push(`end_date=${new Date(end_date).toISOString()}`);
+		
+				const URLlistRecords = queryParams.length > 0 ? `${baseURL}?${queryParams.join('&')}` : baseURL;
+				const { setStore } = getActions();
+		
+				try {
+					const response = await fetch(URLlistRecords, {
+						method: 'GET',
+						headers: {
+							'Authorization': `Bearer ${localStorage.getItem('token')}`,
+							'Content-Type': 'application/json'
+						}
+					});
+		
+					if (!response.ok) {
+						const errorData = await response.json();
+						throw new Error(`Error en la petición: ${response.status} - ${errorData?.message || response.statusText}`);
+					}
+		
+					const data = await response.json();
+					setStore({ records: data.records }); 
+		
+				} catch (error) {
+					console.error("Error al obtener los registros:", error);
+					setStore({ recordsError: error.message || "Ocurrió un error al cargar los registros." });
+				}
+			},
+
+
 
 			// Action para agregar un nuevo registro (Record)
 			addRecord: async (description, amount, type, category_id, wallet_id) => {
