@@ -98,6 +98,8 @@ def login():
 
 # Ruta 4
 
+
+
 # Crea un nuevo registro
 @api.route('/records/add', methods=["POST"])
 @jwt_required()
@@ -149,6 +151,8 @@ def add_record():
         return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
 
 
+
+
 # Lista todos los registros del usuario logueado, lo puede filtrar por Categoria y/o Fecha de inicio
 @api.route('/records/list', methods=["GET"])
 @jwt_required()
@@ -186,20 +190,76 @@ def get_records():
     
 
 
+
 # Muestra la info de un registro especifico segun el id que viene ne la URL
-@api.route('/records/<int:id>')
+@api.route('/records/<int:id>', methods=["GET"])
 @jwt_required()
 def get_record(id):
+
     try:
         user_id = get_jwt_identity()
-        record = Record.query.filter_by(id=id).first()
+        record = Record.query.filter_by(id=id, user_id=user_id).first()
 
         if not record:
             return jsonify({"msg": "No se encuentra el registro solicitado"}), 404
 
 
+        return jsonify(record.serialize()), 200
+    
+    except Exception as e:
+        return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
+    
 
-        return jsonify({}), 200
+
+
+# Edita la info de un registro especifico segun el id que viene ne la URL
+@api.route('/records/<int:id>', methods=["PUT"])
+@jwt_required()
+def edit_record(id):
+
+    try:
+        user_id = get_jwt_identity()
+        record = Record.query.filter_by(id=id, user_id=user_id).first()
+
+        data = request.get_json()
+
+        if not record:
+            return jsonify({"msg": "No se encuentra el registro solicitado"}), 404
+        
+        if 'description' in data:
+            record.description = data['description']
+        if 'amount' in data:
+            record.amount = data['amount']
+        if 'type' in data:
+            record.type = data['type']
+        if 'category_id' in data:
+            record.category_id = data['category_id']
+
+        db.session.commit()
+
+        return jsonify(record.serialize()), 200
+    
+    except Exception as e:
+        return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
+    
+
+
+# Elimina un registro especifico segun el id que viene ne la URL
+@api.route('/records/<int:id>', methods=["DELETE"])
+@jwt_required()
+def delete_record(id):
+
+    try:
+        user_id = get_jwt_identity()
+        record = Record.query.filter_by(id=id, user_id=user_id).first()
+
+        if not record:
+            return jsonify({"msg": "No se encuentra el registro solicitado"}), 404
+        
+        db.session.delete(record)
+        db.session.commit()
+
+        return jsonify({"msg": "Registro eliminado exitosamente"}), 200
     
     except Exception as e:
         return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
