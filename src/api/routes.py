@@ -112,7 +112,7 @@ def create_wallet(id):
     wallet = Wallet.query.filter_by( name = name_wallet ,user_id = user_id).first()
 
     if wallet:
-        return jsonify({'msg': 'Este nombre de wallet ya esta registrado en tu cuenta'})
+        return jsonify({'msg': 'Este nombre de wallet ya esta registrado en tu cuenta'}),400
     
     new_wallet = Wallet(name = name_wallet, total_value = initial_value, currency_id = currency_id, user_id = user_id)
 
@@ -127,6 +127,10 @@ def create_wallet(id):
 def get_wallets():
 
     all_wallets = Wallet.query.all()
+
+    if not all_wallets:
+        return jsonify({'msg':'No hay wallets registradas'}),400
+    
     dict_wallets = list(map(lambda x: x.serialize(), all_wallets))
 
     return jsonify(dict_wallets)
@@ -136,12 +140,65 @@ def get_wallets():
 @api.route('/user/<int:id>/wallets/', methods = ['GET'])
 def get_wallets_by_user_id(id):
 
+    user = User.query.filter_by(id=id).first()
+
+    if not user: 
+        return jsonify({"message":"usuario no encontrado"}), 404
+       
+
     wallets_by_user = Wallet.query.filter_by(user_id = id)
+
+    if not wallets_by_user:
+        return jsonify({'msg': 'No existen wallets registrados a ese usuario'}),400
+
     wallets_by_user = list(map(lambda wallet: wallet.serialize(),wallets_by_user))
 
     return jsonify(wallets_by_user)
 
+# Crear Ruta GET para obtener la wallet por ID 
+
+
+
 # Ruta PUT para modificar el wallet
+@api.route('/user/<int:user_id>/wallets/<int:wallet_id>', methods = ['PUT'])
+def modify_wallet(user_id,wallet_id):
+
+    name_wallet = request.json.get('name')
+    initial_value = request.json.get('total_value')
+    currency_id = request.json.get('currency_id')
+
+
+    user = User.query.filter_by(id=user_id).first()
+
+    if not user: 
+        return jsonify({"message":"usuario no encontrado"}), 404
+    
+    wallet_from_user = Wallet.query.filter_by(user_id = user_id,id = wallet_id).first()
+
+    if not wallet_from_user:
+        return jsonify({'msg': 'No existe ese wallet del usuario'})
+    
+
+    if name_wallet:
+        wallet_from_user.name = name_wallet
+
+    if initial_value:
+        wallet_from_user.total_value = initial_value
+
+    if currency_id:
+        wallet_from_user.currency_id = currency_id
+
+    db.session.commit()
+
+    return jsonify(wallet_from_user.serialize())
+    
+
+
+    
+
+
+
+
 
 # Ruta de Juan
 
