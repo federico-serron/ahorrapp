@@ -156,6 +156,20 @@ def get_wallets_by_user_id(id):
     return jsonify(wallets_by_user)
 
 # Crear Ruta GET para obtener la wallet por ID 
+@api.route('/user/<int:user_id>/wallets/<int:wallet_id>', methods = ['GET'])
+def get_wallet_from_user(user_id,wallet_id):
+
+    user = User.query.filter_by(id=user_id).first()
+
+    if not user: 
+        return jsonify({"message":"usuario no encontrado"}), 404
+
+    wallet_from_user = Wallet.query.filter_by(user_id = user_id,id = wallet_id).first()
+
+    if not wallet_from_user:
+        return jsonify({'msg': 'No existe ese wallet del usuario'}), 404
+
+    return (jsonify(wallet_from_user.serialize())) 
 
 
 
@@ -176,7 +190,7 @@ def modify_wallet(user_id,wallet_id):
     wallet_from_user = Wallet.query.filter_by(user_id = user_id,id = wallet_id).first()
 
     if not wallet_from_user:
-        return jsonify({'msg': 'No existe ese wallet del usuario'})
+        return jsonify({'msg': 'No existe ese wallet del usuario'}), 404
     
 
     if name_wallet:
@@ -190,8 +204,26 @@ def modify_wallet(user_id,wallet_id):
 
     db.session.commit()
 
-    return jsonify(wallet_from_user.serialize())
+    return jsonify(wallet_from_user.serialize()), 201
     
+@api.route('/user/<int:user_id>/wallets/<int:wallet_id>', methods = ['delete'])
+def delete_wallet(user_id,wallet_id):
+
+    user = User.query.filter_by(id=user_id).first()
+
+    if not user: 
+        return jsonify({"message":"usuario no encontrado"}), 404
+
+    wallet_from_user = Wallet.query.filter_by(user_id = user_id,id = wallet_id).first()
+
+    if not wallet_from_user:
+        return jsonify({'msg': 'No existe ese wallet del usuario'}), 404
+    
+    db.session.delete(wallet_from_user)
+    db.session.commit()
+
+    return (jsonify({'msg': 'Wallet eliminada con exito'})) 
+
 
 
     
