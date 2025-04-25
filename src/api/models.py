@@ -39,7 +39,7 @@ class User(db.Model):
 class Record(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     description: Mapped[str] = mapped_column(String(120), nullable=False)
-    timestamp: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.now(timezone.utc))
+    timestamp: Mapped[datetime] = mapped_column(DateTime(timezone=True),nullable=False,default=lambda: datetime.now(timezone.utc))
     amount: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     type: Mapped[str] = mapped_column(String(120))
 

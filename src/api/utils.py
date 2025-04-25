@@ -1,4 +1,5 @@
 from flask import jsonify, url_for
+from datetime import datetime, timezone
 
 class APIException(Exception):
     status_code = 400
@@ -53,3 +54,9 @@ def validate_required_fields(campos):
     if campos_faltantes:
         return jsonify({"msg": f"Todos los datos son obligatorios: {', '.join(campos_faltantes)}"}), 400
     return None
+
+def parse_date(value: str, default: datetime) -> datetime:
+    try:
+        return datetime.strptime(value, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+    except (TypeError, ValueError):
+        return default
