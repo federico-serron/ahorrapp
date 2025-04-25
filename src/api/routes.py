@@ -3,13 +3,13 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
 from api.models import db, User, Record, Category, Wallet
-from api.utils import generate_sitemap, APIException, validate_relationships, validate_required_fields
+from api.utils import generate_sitemap, APIException, validate_relationships, validate_required_fields, parse_date
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
-from datetime import timedelta
+from datetime import timedelta, timezone, datetime
 
 api = Blueprint('api', __name__)
 
@@ -97,6 +97,8 @@ def login():
 # Ruta 3
 
 # Ruta 4
+
+# Crea un nuevo registro
 @api.route('/records/add', methods=["POST"])
 @jwt_required()
 def add_record():
@@ -140,3 +142,30 @@ def add_record():
     db.session.commit()
 
     return jsonify(new_record.serialize()), 201
+
+
+# Lista todos los registros del usuario logueado, lo puede filtrar por Categoria y/o Fecha de inicio
+@api.route('/records/list', methods=["GET"])
+@jwt_required()
+def get_records():
+
+    user_id = get_jwt_identity()
+
+    category_id = request.args.get('category_id', type=int, default=None)
+    start_date = parse_date(request.args.get('start_date'), datetime(2025, 1, 1, tzinfo=timezone.utc))
+    end_date = parse_date(request.args.get('end_date'), datetime.now(timezone.utc))
+
+    query = Record.query.filter(Record.user_id == user_id)
+
+    if category_id:
+        query = query.filter(Record.category_id == category_id)
+    if start_date:
+        query = query.filter(Record.timestamp >= start_date)
+    if end_date:
+        query = query.filter(Record.timestamp <= end_date)
+
+    records = query.all()
+
+    return jsonify({
+                    "records": [record.serialize() for record in records]
+                    }),200
