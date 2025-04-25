@@ -102,46 +102,51 @@ def login():
 @api.route('/records/add', methods=["POST"])
 @jwt_required()
 def add_record():
+
+    try:
     
-    fields = request.get_json()
-    user_id = get_jwt_identity()
+        fields = request.get_json()
+        user_id = get_jwt_identity()
 
-    if not user_id:
-        return jsonify({"msg": "Debe estar logueado para agregar un registro."}), 401
+        if not user_id:
+            return jsonify({"msg": "Debe estar logueado para agregar un registro."}), 401
 
-    required_fields = {
-        "description": fields.get("description"),
-        "amount": fields.get("amount"),
-        "type": fields.get("type"),
-        "category_id": fields.get("category_id"),
-        "wallet_id": fields.get("wallet_id"),
-    }
+        required_fields = {
+            "description": fields.get("description"),
+            "amount": fields.get("amount"),
+            "type": fields.get("type"),
+            "category_id": fields.get("category_id"),
+            "wallet_id": fields.get("wallet_id"),
+        }
 
-    error_fields = validate_required_fields(required_fields)
-    if error_fields:
-        return error_fields
+        error_fields = validate_required_fields(required_fields)
+        if error_fields:
+            return error_fields
 
-    error_relationships = validate_relationships({"Category": (Category, fields.get('category_id')),"Wallet": (Wallet, fields.get('wallet_id'))})
-    if error_relationships:
-        return error_relationships
+        error_relationships = validate_relationships({"Category": (Category, fields.get('category_id')),"Wallet": (Wallet, fields.get('wallet_id'))})
+        if error_relationships:
+            return error_relationships
 
+        
+        if fields.get('amount') <= 0:
+            return jsonify({"msg": "El monto debe ser mayor a 0"}), 400
+        
+        new_record = Record(
+        description=fields['description'],
+        amount=fields['amount'],
+        type=fields['type'],
+        category_id=fields['category_id'],
+        wallet_id=fields['wallet_id'],
+        user_id=user_id
+    )
+
+        db.session.add(new_record)
+        db.session.commit()
+
+        return jsonify(new_record.serialize()), 201
     
-    if fields.get('amount') <= 0:
-        return jsonify({"msg": "El monto debe ser mayor a 0"}), 400
-    
-    new_record = Record(
-    description=fields['description'],
-    amount=fields['amount'],
-    type=fields['type'],
-    category_id=fields['category_id'],
-    wallet_id=fields['wallet_id'],
-    user_id=user_id
-)
-
-    db.session.add(new_record)
-    db.session.commit()
-
-    return jsonify(new_record.serialize()), 201
+    except Exception as e:
+        return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
 
 
 # Lista todos los registros del usuario logueado, lo puede filtrar por Categoria y/o Fecha de inicio
@@ -149,23 +154,52 @@ def add_record():
 @jwt_required()
 def get_records():
 
-    user_id = get_jwt_identity()
+    try:
 
-    category_id = request.args.get('category_id', type=int, default=None)
-    start_date = parse_date(request.args.get('start_date'), datetime(2025, 1, 1, tzinfo=timezone.utc))
-    end_date = parse_date(request.args.get('end_date'), datetime.now(timezone.utc))
+        user_id = get_jwt_identity()
 
-    query = Record.query.filter(Record.user_id == user_id)
+        category_id = request.args.get('category_id', type=int, default=None)
+        start_date = parse_date(request.args.get('start_date'), datetime(2025, 1, 1, tzinfo=timezone.utc))
+        end_date = parse_date(request.args.get('end_date'), datetime.now(timezone.utc))
 
-    if category_id:
-        query = query.filter(Record.category_id == category_id)
-    if start_date:
-        query = query.filter(Record.timestamp >= start_date)
-    if end_date:
-        query = query.filter(Record.timestamp <= end_date)
+        query = Record.query.filter(Record.user_id == user_id)
 
-    records = query.all()
+        if category_id:
+            query = query.filter(Record.category_id == category_id)
+        if start_date:
+            query = query.filter(Record.timestamp >= start_date)
+        if end_date:
+            query = query.filter(Record.timestamp <= end_date)
 
-    return jsonify({
-                    "records": [record.serialize() for record in records]
-                    }),200
+        records = query.all()
+
+        if category_id and not records:
+            return jsonify({"msg": "No hay registros para la categoria solicitada"}), 404
+
+
+        return jsonify({
+                        "records": [record.serialize() for record in records]
+                        }),200
+
+    except Exception as e:
+        return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
+    
+
+
+# Muestra la info de un registro especifico segun el id que viene ne la URL
+@api.route('/records/<int:id>')
+@jwt_required()
+def get_record(id):
+    try:
+        user_id = get_jwt_identity()
+        record = Record.query.filter_by(id=id).first()
+
+        if not record:
+            return jsonify({"msg": "No se encuentra el registro solicitado"}), 404
+
+
+
+        return jsonify({}), 200
+    
+    except Exception as e:
+        return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
