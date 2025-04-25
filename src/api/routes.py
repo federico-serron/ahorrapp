@@ -91,7 +91,7 @@ def login():
 
 # Ruta creada para añadir una nueva wallet a la cuenta del usuario
 
-@api.route('user/<int:id>/wallet', methods = ['POST'])
+@api.route('user/<int:id>/wallets', methods = ['POST'])
 def create_wallet(id):
     user_id = id
     name_wallet = request.json.get('name')
@@ -123,7 +123,7 @@ def create_wallet(id):
     return jsonify(new_wallet.serialize()), 201
 
 # Ruta para obtener todas las wallets registradas en la app (funcion solo para admin)
-@api.route('/wallet', methods = ['GET'])
+@api.route('/wallets', methods = ['GET'])
 def get_wallets():
 
     all_wallets = Wallet.query.all()
@@ -206,7 +206,7 @@ def modify_wallet(user_id,wallet_id):
 
     return jsonify(wallet_from_user.serialize()), 201
     
-@api.route('/user/<int:user_id>/wallets/<int:wallet_id>', methods = ['delete'])
+@api.route('/user/<int:user_id>/wallets/<int:wallet_id>', methods = ['DELETE'])
 def delete_wallet(user_id,wallet_id):
 
     user = User.query.filter_by(id=user_id).first()
@@ -223,13 +223,6 @@ def delete_wallet(user_id,wallet_id):
     db.session.commit()
 
     return (jsonify({'msg': 'Wallet eliminada con exito'})) 
-
-
-
-    
-
-
-
 
 
 # Ruta de Juan
