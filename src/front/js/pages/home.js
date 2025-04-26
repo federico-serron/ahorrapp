@@ -34,16 +34,11 @@ export const Home = () => {
 					alt="Finanzas" />
 			</div>
 			<div className="col-md-4 mb-4">
-				<img src="https://images.pexels.com/photos/4386355/pexels-photo-4386355.jpeg?auto=compress&cs=tinysrgb&w=600" 
-					className="img-fluid rounded shadow-sm" 
-					alt="Billetera" />
+				<img src="https://images.pexels.com/photos/3183197/pexels-photo-3183197.jpeg?auto=compress&cs=tinysrgb&w=600" 
+					className="img-fluid rounded shadow-sm " 
+					alt="Equipo" />
 			</div>
 		</section>
-
-		{/* Footer */}
-		<footer className="text-center text-muted small">
-			© {new Date().getFullYear()} Ahorrapp. Todos los derechos reservados.
-		</footer>
 	</div>
 	)
 };
