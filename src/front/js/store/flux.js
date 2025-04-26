@@ -224,7 +224,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 
                    
                     const store = getStore();
+
                     setStore({ ...store, records: [...store.records, data] });
+
 
                     return true;
 

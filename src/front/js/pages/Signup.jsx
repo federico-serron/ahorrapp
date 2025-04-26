@@ -48,6 +48,12 @@ const Signup = () => {
 
   }
 
+  useEffect(()=>{
+    if (localStorage.getItem("token")) {
+      navigate('/')
+    }
+  },[])
+
   return (
     <div className="container d-flex justify-content-center align-items-center mt-5">
       <div className="card shadow-lg w-100" style={{ maxWidth: "500px" }}>
