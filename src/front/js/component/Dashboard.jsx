@@ -15,7 +15,7 @@ useEffect(()=>{
     return (
         <div className="container justify-content-center">
             <div>
-                <h1>welcome to your wallet Name User (monto/sueldo)</h1>
+                <h1>Dashboard User</h1>
             </div>
 
             <select className="form-select form-select-sm" aria-label="Small select example" style={{ marginTop: "20px" }}>
