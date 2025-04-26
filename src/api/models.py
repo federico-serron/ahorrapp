@@ -121,7 +121,7 @@ class Wallet(db.Model):
             "name": self.name,
             "balance": self.total_value,
             "currency_id": self.currency_id,
-            "user_id": self.user_id
+            "user_id": self.user_id,
             "total_value": self.total_value,
             "currency": self.currency.serialize() if self.currency else None,
             "user": {
