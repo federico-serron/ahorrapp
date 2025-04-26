@@ -41,7 +41,6 @@ def signup_user():
 
     if not name or not email or not password:
         return jsonify({'msg': 'Datos incompletos, por favor llenar todos los datos del usuario'}), 400
-    
 
     user = User.query.filter_by(email = email).first()
 
@@ -95,14 +94,168 @@ def login():
         }), 400
 
 
-# Ruta 1
+# Ruta creada para añadir una nueva wallet a la cuenta del usuario
 
-# Ruta 2
+@api.route('/wallet/add', methods = ['POST'])
+@jwt_required()
+def create_wallet():
+    user_id = get_jwt_identity()
+    name_wallet = request.json.get('name')
+    initial_value = request.json.get('total_value')
+    currency_id = request.json.get('currency_id')
 
-# Ruta 3
 
-# Ruta 4
+    # hacer verificacaciones para asegurar de que se incluya los 4 items de arriba
+    if not name_wallet or initial_value == None or not currency_id:
+        return jsonify({'msg': 'Por favor completar todos los campos'}), 400
+    
+    # Verifica si el usuario no existe
+    user = User.query.filter_by(id = user_id).first()
+    if not user:
+        return jsonify({'msg': 'Este usuario no existe'}), 400
+    
+    # Si cumple, que se cree el wallet con la clase Wallet
+    wallet = Wallet.query.filter_by( name = name_wallet ,user_id = user_id).first()
 
+    if wallet:
+        return jsonify({'msg': 'Este nombre de wallet ya esta registrado en tu cuenta'}),400
+    
+    new_wallet = Wallet(name = name_wallet, total_value = initial_value, currency_id = currency_id, user_id = user_id)
+
+    db.session.add(new_wallet)
+    db.session.commit()
+
+
+    return jsonify(new_wallet.serialize()), 201
+
+# Ruta para obtener todas las wallets registradas en la app (funcion solo para admin)
+@api.route('/wallet/all', methods = ['GET'])
+@jwt_required()
+def get_wallets():
+   
+    try:
+
+        is_not_admin = check_user_is_admin(get_jwt_identity())
+
+        if is_not_admin:
+            return is_not_admin
+        
+        all_wallets = Wallet.query.all()
+
+        if not all_wallets:
+            return jsonify({'msg':'No hay wallets registradas'}),400
+    
+        dict_wallets = list(map(lambda x: x.serialize(), all_wallets))
+
+        return jsonify(dict_wallets)
+    except Exception as e:
+        return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
+
+
+# Ruta para obtener todas las wallets por user_id
+@api.route('/wallet/get', methods = ['GET'])
+@jwt_required()
+def get_wallets_by_user_id():
+    
+    try:
+        user_id = get_jwt_identity()
+        
+        wallets_by_user = Wallet.query.filter_by(user_id = user_id)
+
+        if not wallets_by_user:
+            return jsonify({'msg': 'No existen wallets registrados a ese usuario'}),400
+
+        wallets_by_user = list(map(lambda wallet: wallet.serialize(),wallets_by_user))
+
+        return jsonify(wallets_by_user)
+    except Exception as e:
+        return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
+
+# Crear Ruta GET para obtener la wallet por ID 
+@api.route('/wallet/get/<int:wallet_id>', methods = ['GET'])
+@jwt_required()
+def get_wallet_from_user(wallet_id):
+
+    try:
+        user_id = get_jwt_identity()
+        user = User.query.filter_by(id=user_id).first()
+
+        if not user: 
+            return jsonify({"message":"usuario no encontrado"}), 404
+
+        wallet_from_user = Wallet.query.filter_by(user_id = user_id,id = wallet_id).first()
+
+        if not wallet_from_user:
+            return jsonify({'msg': 'No existe ese wallet del usuario'}), 404
+
+        return (jsonify(wallet_from_user.serialize())) 
+    
+    except Exception as e:
+        return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
+
+
+
+# Ruta PUT para modificar el wallet
+@api.route('/wallet/edit/<int:wallet_id>', methods = ['PUT'])
+@jwt_required()
+def modify_wallet(wallet_id):
+    
+    try:
+        name_wallet = request.json.get('name')
+        initial_value = request.json.get('total_value')
+        currency_id = request.json.get('currency_id')
+
+        user_id = get_jwt_identity()
+        user = User.query.filter_by(id=user_id).first()
+
+        if not user: 
+            return jsonify({"message":"usuario no encontrado"}), 404
+        
+        wallet_from_user = Wallet.query.filter_by(user_id = user_id,id = wallet_id).first()
+
+        if not wallet_from_user:
+            return jsonify({'msg': 'No existe ese wallet del usuario'}), 404
+        
+
+        if name_wallet:
+            wallet_from_user.name = name_wallet
+
+        if initial_value:
+            wallet_from_user.total_value = initial_value
+
+        if currency_id:
+            wallet_from_user.currency_id = currency_id
+
+        db.session.commit()
+
+        return jsonify(wallet_from_user.serialize()), 201
+    except Exception as e:
+        return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
+
+
+    
+@api.route('/wallet/delete/<int:wallet_id>', methods = ['DELETE'])
+@jwt_required()
+def delete_wallet(wallet_id):
+
+    try:
+        user_id = get_jwt_identity()
+        user = User.query.filter_by(id=user_id).first()
+
+        if not user: 
+            return jsonify({"message":"usuario no encontrado"}), 404
+
+        wallet_from_user = Wallet.query.filter_by(user_id = user_id,id = wallet_id).first()
+
+        if not wallet_from_user:
+            return jsonify({'msg': 'No existe ese wallet del usuario'}), 404
+        
+        db.session.delete(wallet_from_user)
+        db.session.commit()
+
+        return (jsonify({'msg': 'Wallet eliminada con exito'})) 
+    except Exception as e:
+        return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
 
 
 # Crea un nuevo registro
@@ -379,3 +532,8 @@ def delete_category(id):
 
     except Exception as e:
         return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
+      
+      
+# Nueva ruta 1 Jose
+
+# Nueva ruta 2 Fede
