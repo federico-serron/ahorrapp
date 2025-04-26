@@ -1,15 +1,26 @@
 import React, {useEffect, useState} from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
 
 	const [isVisible, setIsVisible] = useState(false);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const navigate = useNavigate()
+
+	const handleLogout = () => {
+		localStorage.removeItem("token");
+		setIsLoggedIn(false)
+		navigate('/login')
+	}
 
 
     useEffect(() => {
         setIsVisible(true);
     }, []);
 
+	useEffect(()=>{
+		setIsLoggedIn(!!localStorage.getItem("token"))
+	},[])
 
 	return (
 	<nav className={`navbar navbar-expand-lg navbar-light bg-light shadow-sm animated-navbar ${isVisible ? "fade-slide" : ""}`}>
@@ -31,13 +42,16 @@ export const Navbar = () => {
 			<div className="collapse navbar-collapse" id="navbarNav">
 				<ul className="navbar-nav ms-auto">
 					<li className="nav-item">
-						<Link className="nav-link" to="/login">Ingresar</Link>
+						{localStorage.getItem("token") ? <button className="nav-link btn btn-danger text-white px-3 ms-2" onClick={handleLogout}>Salir</button> : <Link className="nav-link" to="/login">Ingresar</Link>}
 					</li>
-					<li className="nav-item">
-						<Link className="nav-link btn btn-success text-white px-3 ms-2" to="/signup">
-							Registrarse
-						</Link>
-					</li>
+					{localStorage.getItem("token") ? "" : (
+						<li className="nav-item">
+							<Link className="nav-link btn btn-success text-white px-3 ms-2" to="/signup">
+								Registrarse
+							</Link>
+						</li>
+					)}
+
 				</ul>
 			</div>
 		</div>
