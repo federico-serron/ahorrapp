@@ -130,10 +130,11 @@ def get_wallets():
    
     try:
 
-        is_admin = check_user_is_admin(get_jwt_identity())
+        is_not_admin = check_user_is_admin(get_jwt_identity())
 
-        if not is_admin:
-            return ({'msg':"No eres admin, acceso restingido"}), 400
+        if is_not_admin:
+            return is_not_admin
+        
         all_wallets = Wallet.query.all()
 
         if not all_wallets:
