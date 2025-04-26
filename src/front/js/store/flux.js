@@ -4,6 +4,67 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			message: null,
+			categories: {
+				Restaurante: [
+				  "restaurante", "parrillada", "pizzeria", "cafeteria", "bar", "chiviteria",
+				  "sushi", "bistro", "comida rapida", "hamburgueseria", "brunch", "almuerzo",
+				  "cena", "brindis", "cerveceria", "gastrobar", "birra"
+				],
+				Supermercado: [
+				  "supermercado", "almacen", "minimercado", "autoservicio", "mercado",
+				  "hipermercado", "despensa", "kiosco", "feria", "verduleria", "fruteria",
+				  "carniceria", "pescaderia", "panaderia", "granja"
+				],
+				Transporte: [
+				  "uber", "taxi", "omnibus", "bus", "colectivo", "peaje", "nafta", "combustible",
+				  "estacionamiento", "subte", "tren", "bicicleta", "bici", "pasaje", "aeropuerto",
+				  "vuelo", "remise", "moto"
+				],
+				Vivienda: [
+				  "alquiler", "renta", "hipoteca", "gastos comunes", "contribucion", "impuesto",
+				  "UTE", "OSE", "ANTEL", "electricidad", "agua", "telefono", "internet", "gas",
+				  "seguro hogar", "mantencion"
+				],
+				Entretenimiento: [
+				  "cine", "teatro", "concierto", "evento", "recital", "festival", "espectaculo",
+				  "museo", "exposicion", "karaoke", "parque de diversiones", "juegos", "videojuegos",
+				  "netflix", "spotify", "plataforma", "streaming"
+				],
+				Salud: [
+				  "farmacia", "medicamentos", "mutualista", "consultas", "analisis", "dentista",
+				  "oftalmologo", "psicologo", "fisioterapia", "examen medico", "salud"
+				],
+				Educacion: [
+				  "colegiatura", "cuota", "universidad", "curso", "taller", "clases", "academia",
+				  "seminario", "libros", "materiales", "examen", "educacion"
+				],
+				Compras: [
+				  "ropa", "calzado", "indumentaria", "zapatos", "accesorios", "perfumeria",
+				  "cosmeticos", "tecnologia", "electronica", "celular", "computadora", "notebook",
+				  "auriculares", "gaming", "decoracion", "muebles"
+				],
+				Deporte: [
+				  "gimnasio", "fitness", "deporte", "entrenamiento", "yoga", "pilates", "pesas",
+				  "cancha", "futbol", "basquet", "padel", "correr", "maraton"
+				],
+				Finanzas: [
+				  "banco", "transferencia", "tarjeta", "pago", "prestamo", "intereses",
+				  "credito", "debito", "inversion", "comision", "gastos bancarios"
+				],
+				Mascotas: [
+				  "veterinaria", "alimento", "mascota", "perro", "gato", "vacuna", "bano",
+				  "accesorios mascotas", "paseador"
+				],
+				Viajes: [
+				  "hotel", "hostel", "alojamiento", "pasaje", "vuelo", "excursion",
+				  "tour", "viaje", "transporte turistico", "souvenir", "paquete turistico"
+				],
+				Otros: [
+				  "regalo", "donacion", "caridad", "cobro", "perdida", "error bancario",
+				  "servicio tecnico", "reparacion", "multas", "papeleria", "tramite",
+				  "gastos varios", "sin categoria"
+				]
+			  },			  
 			demo: [
 				{
 					title: "FIRST",
@@ -18,7 +79,107 @@ const getState = ({ getStore, getActions, setStore }) => {
 			],
 			//Info de Usuario actualmente logeado
 			logged_user: [],
-			records: [],
+			records: [{
+				id: 1,
+				description: "Cena con amigos en la parrillada",
+				timestamp: "2025-04-26T21:30:00",
+				amount: -2500,
+				type: "expense",
+				category: {
+				  id: 3,
+				  name: "Restaurante",
+				  keywords: ["restaurante", "parrillada", "bar", "comida"]
+				},
+				wallet: {
+				  id: 1,
+				  name: "Cuenta Bancaria"
+				},
+				user: {
+				  id: 1,
+				  name: "Federico"
+				}
+			  },
+			  {
+				id: 2,
+				description: "Compra de frutas en la feria",
+				timestamp: "2025-04-25T10:00:00",
+				amount: -800,
+				type: "expense",
+				category: {
+				  id: 2,
+				  name: "Supermercado",
+				  keywords: ["feria", "supermercado", "verduleria"]
+				},
+				wallet: {
+				  id: 2,
+				  name: "Tarjeta de Crédito"
+				},
+				user: {
+				  id: 1,
+				  name: "Federico"
+				}
+			  },
+			  {
+				id: 3,
+				description: "Pago de alquiler de abril",
+				timestamp: "2025-04-01T09:00:00",
+				amount: -15000,
+				type: "expense",
+				category: {
+				  id: 5,
+				  name: "Vivienda",
+				  keywords: ["alquiler", "gastos comunes", "renta"]
+				},
+				wallet: {
+				  id: 1,
+				  name: "Cuenta Bancaria"
+				},
+				user: {
+				  id: 1,
+				  name: "Federico"
+				}
+			  },
+			  {
+				id: 4,
+				description: "Cobro de sueldo de abril",
+				timestamp: "2025-04-01T08:00:00",
+				amount: 60000,
+				type: "income",
+				category: {
+				  id: 9,
+				  name: "Finanzas",
+				  keywords: ["sueldo", "ingreso", "pago"]
+				},
+				wallet: {
+				  id: 1,
+				  name: "Cuenta Bancaria"
+				},
+				user: {
+				  id: 1,
+				  name: "Federico"
+				}
+			  },
+			  {
+				id: 5,
+				description: "Suscripción mensual de Netflix",
+				timestamp: "2025-04-20T12:00:00",
+				amount: -450,
+				type: "expense",
+				category: {
+				  id: 6,
+				  name: "Entretenimiento",
+				  keywords: ["netflix", "streaming", "cine"]
+				},
+				wallet: {
+				  id: 2,
+				  name: "Tarjeta de Crédito"
+				},
+				user: {
+				  id: 1,
+				  name: "Federico"
+				}
+			  }
+			],
 
 			//Siguientes funciones a crear
 		},

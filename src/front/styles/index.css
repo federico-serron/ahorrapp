@@ -6,3 +6,19 @@ btn-login{
     padding-left: 2.5rem; 
     padding-right: 2.5rem;
 }
+
+.btn-custom {
+    background: linear-gradient(135deg, #0d6efd, #6610f2);
+    color: white;
+    border: none;
+    transition: 0.3s ease-in-out;
+  }
+  
+.btn-custom:hover {
+    filter: brightness(1.2);
+}
+  
+.form-control:focus {
+    border-color: #6610f2;
+    box-shadow: 0 0 0 0.25rem rgba(102, 16, 242, 0.25);
+}
