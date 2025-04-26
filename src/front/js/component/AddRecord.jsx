@@ -1,12 +1,14 @@
 import React, { useState, useContext, useEffect } from "react";
 import ListRecord from "./ListRecord.jsx";
 import { Context } from "../store/appContext";
+import { useNavigate } from "react-router-dom";
 
 
 const AddRecord = () => {
     const { store, actions } = useContext(Context);
     const [inputValue, setInputValue] = useState("");
     const [totalValueWallet, setTotalValueWallet] = useState(0)
+    const navigate = useNavigate()
 
     const removeAccents = (str) => {
         return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -59,6 +61,12 @@ const AddRecord = () => {
         setTotalValueWallet(totalValue)
         console.log(totalValue)
     }, [store.records])
+
+    useEffect(()=>{
+        if (!localStorage.getItem("token")) {
+            navigate('/login')
+        }
+    },[])
 
     return (
         <div className="container mt-4">

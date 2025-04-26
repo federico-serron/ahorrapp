@@ -12,7 +12,6 @@ useEffect(()=>{
     }
 },[])
 
-
     return (
         <div className="container justify-content-center">
             <div>
