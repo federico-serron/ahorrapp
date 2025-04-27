@@ -41,7 +41,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				Compras: [
 				  "ropa", "calzado", "indumentaria", "zapatos", "accesorios", "perfumeria",
 				  "cosmeticos", "tecnologia", "electronica", "celular", "computadora", "notebook",
-				  "auriculares", "gaming", "decoracion", "muebles"
+				  "auriculares", "gaming", "decoracion", "muebles", "repuesto"
 				],
 				Deporte: [
 				  "gimnasio", "fitness", "deporte", "entrenamiento", "yoga", "pilates", "pesas",
@@ -79,107 +79,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 			],
 			//Info de Usuario actualmente logeado
 			logged_user: [],
-			records: [{
-				id: 1,
-				description: "Cena con amigos en la parrillada",
-				timestamp: "2025-04-26T21:30:00",
-				amount: -2500,
-				type: "expense",
-				category: {
-				  id: 3,
-				  name: "Restaurante",
-				  keywords: ["restaurante", "parrillada", "bar", "comida"]
-				},
-				wallet: {
-				  id: 1,
-				  name: "Cuenta Bancaria"
-				},
-				user: {
-				  id: 1,
-				  name: "Federico"
-				}
-			  },
-			  {
-				id: 2,
-				description: "Compra de frutas en la feria",
-				timestamp: "2025-04-25T10:00:00",
-				amount: -800,
-				type: "expense",
-				category: {
-				  id: 2,
-				  name: "Supermercado",
-				  keywords: ["feria", "supermercado", "verduleria"]
-				},
-				wallet: {
-				  id: 2,
-				  name: "Tarjeta de Crédito"
-				},
-				user: {
-				  id: 1,
-				  name: "Federico"
-				}
-			  },
-			  {
-				id: 3,
-				description: "Pago de alquiler de abril",
-				timestamp: "2025-04-01T09:00:00",
-				amount: -15000,
-				type: "expense",
-				category: {
-				  id: 5,
-				  name: "Vivienda",
-				  keywords: ["alquiler", "gastos comunes", "renta"]
-				},
-				wallet: {
-				  id: 1,
-				  name: "Cuenta Bancaria"
-				},
-				user: {
-				  id: 1,
-				  name: "Federico"
-				}
-			  },
-			  {
-				id: 4,
-				description: "Cobro de sueldo de abril",
-				timestamp: "2025-04-01T08:00:00",
-				amount: 60000,
-				type: "income",
-				category: {
-				  id: 9,
-				  name: "Finanzas",
-				  keywords: ["sueldo", "ingreso", "pago"]
-				},
-				wallet: {
-				  id: 1,
-				  name: "Cuenta Bancaria"
-				},
-				user: {
-				  id: 1,
-				  name: "Federico"
-				}
-			  },
-			  {
-				id: 5,
-				description: "Suscripción mensual de Netflix",
-				timestamp: "2025-04-20T12:00:00",
-				amount: -450,
-				type: "expense",
-				category: {
-				  id: 6,
-				  name: "Entretenimiento",
-				  keywords: ["netflix", "streaming", "cine"]
-				},
-				wallet: {
-				  id: 2,
-				  name: "Tarjeta de Crédito"
-				},
-				user: {
-				  id: 1,
-				  name: "Federico"
-				}
-			  }
-			],
+			//Registros de gastos/ingresos
+			records: [],
 
 			//Siguientes funciones a crear
 		},
@@ -311,12 +212,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 			get_records: async (category_id, start_date) => {
 				const baseURL = `${apiUrl}/api/records/list`;
 				const queryParams = [];
+				const store = getStore();
+
 		
 				if (category_id) queryParams.push(`category_id=${category_id}`);
 				if (start_date) queryParams.push(`start_date=${new Date(start_date).toISOString()}`);
 		
 				const URLlistRecords = queryParams.length > 0 ? `${baseURL}?${queryParams.join('&')}` : baseURL;
-				const { setStore } = getActions();
+				
 		
 				try {
 					const response = await fetch(URLlistRecords, {
@@ -333,7 +236,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 		
 					const data = await response.json();
-					setStore({ ...store, records: [...store.records, data.records]}); 
+					setStore({ ...store, records: data.records}); 
 					return true;
 		
 				} catch (error) {
@@ -346,12 +249,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 			// Action para agregar un nuevo registro (Record)
-			addRecord: async (description, amount, type, category_id, wallet_id) => {
+			addRecord: async (description, amount, type, category_name, wallet_id) => {
                 const URLaddRecord = `${apiUrl}/api/records/add`;
-                const { getStore, setStore } = getActions(); 
+				const store = getStore();
 
                 try {
-                    if (!description || !amount || !type || !category_id || !wallet_id) {
+                    if (!description || !amount || !type || !category_name || !wallet_id) {
                         console.error("Faltan campos requeridos para agregar el registro.");
                         return false;
                     }
@@ -360,7 +263,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                         description: description,
                         amount: parseFloat(amount), 
                         type: type,
-                        category_id: parseInt(category_id), 
+                        category_name: category_name, 
                         wallet_id: parseInt(wallet_id),   
                     };
 
@@ -383,12 +286,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     const data = await response.json();
                     console.log("Registro agregado exitosamente:", data);
 
-                   
-                    const store = getStore();
-
                     setStore({ ...store, records: [...store.records, data] });
-
-
                     return true;
 
                 } catch (error) {

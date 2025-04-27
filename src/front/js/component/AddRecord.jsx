@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import ListRecord from "./ListRecord.jsx";
 import { Context } from "../store/appContext";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 
 const AddRecord = () => {
@@ -22,7 +23,7 @@ const AddRecord = () => {
     };
 
 
-    const handleRecord = (inputValue, categories) => {
+    const handleRecord = async (inputValue, categories) => {
         const amountMatch = inputValue.match(/-?\d+(\.\d+)?/);
         const amount = amountMatch ? parseFloat(amountMatch[0]) : null;
         const words = inputValue
@@ -32,7 +33,8 @@ const AddRecord = () => {
             .map(removeAccents)
             .map(singularize);
 
-            let matchedCategory = null;
+            let matchedCategory = "General";
+            let type = amount < 0 ? "Gasto" : "Ingreso";
 
         for (const [category, keywords] of Object.entries(categories)) {
             if (words.some(word => keywords.includes(word))) {
@@ -43,23 +45,31 @@ const AddRecord = () => {
 
         console.log(amount, matchedCategory, words.join(" "))
         setInputValue("")
-        return store.records = [...store.records, {
-            id: store.records.length + 1,
-            description: words.join(" "),
-            amount: amount,
-            category:{
-                name: matchedCategory
-            }
-        }];
+
+        const response = await actions.addRecord(words.join(" "), amount, type, matchedCategory, 1)
+        if (!response) {
+            console.log("Hubo un error al intentar agregar el registro.")
+        }
+        toast.success("Registro agregado exitosamente!");
+
+        // return store.records = [...store.records, {
+        //     id: store.records.length + 1,
+        //     description: words.join(" "),
+        //     amount: amount,
+        //     category:{
+        //         name: matchedCategory
+        //     }
+        // }];
     };
 
     useEffect(()=>{
         let totalValue = 0
-        for (let i = 0; i < store.records.length; i++) {
-            totalValue = totalValue + store.records[i].amount;
+        if (store.records && store.records.length > 0) {
+            for (let i = 0; i < store.records.length; i++) {
+                totalValue = totalValue + store.records[i].amount;
+            }
+            setTotalValueWallet(totalValue)
         }
-        setTotalValueWallet(totalValue)
-        console.log(totalValue)
     }, [store.records])
 
     useEffect(()=>{
