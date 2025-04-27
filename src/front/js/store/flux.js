@@ -19,6 +19,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             //Info de Usuario actualmente logeado
             logged_user: [],
             records: [],
+            wallets: [],
 
             //Siguientes funciones a crear
         },
@@ -154,15 +155,16 @@ const getState = ({ getStore, getActions, setStore }) => {
                     if (!name || total_value === null || !currency_id) return false;
                     const response = await fetch(URLaddWallet, {
                         method: "POST",
-                        body: JSON.stringify({ name, total_value: parseFloat(total_value), currency_id: parseInt(currency_id) }),
+                        body: JSON.stringify({ name: name, total_value: total_value, currency_id: parseInt(currency_id) }),
                         headers: {
                             "Content-Type": "application/json",
                             "Authorization": `Bearer ${localStorage.getItem("token")}`
                         }
                     });
                     if (!response.ok) return false;
-                    await response.json();
-                    return true;
+                    const data = await response.json()
+                    setStore({ ...store, wallets: [...store.wallets, data]});
+                    return data;
                 } catch (error) {
                     console.error(error);
                     return false;
@@ -216,7 +218,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                 try {
                     const walletData = {};
                     if (name) walletData.name = name;
-                    if (total_value) walletData.total_value = parseFloat(total_value);
+                    if (total_value) walletData.total_value = parseInt(total_value);
                     if (currency_id) walletData.currency_id = parseInt(currency_id);
 
                     const response = await fetch(URLeditWallet, {
@@ -227,9 +229,9 @@ const getState = ({ getStore, getActions, setStore }) => {
                             "Authorization": `Bearer ${localStorage.getItem("token")}`
                         }
                     });
-                    if (!response.ok) return false;
-                    await response.json();
-                    return true;
+                    const data = await response.json()
+setStore({ ...store, wallets: [...store.wallets, data]});
+return data;
                 } catch (error) {
                     console.error(error);
                     return false;
