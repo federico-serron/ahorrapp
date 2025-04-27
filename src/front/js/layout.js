@@ -16,6 +16,7 @@ import { ToastContainer } from 'react-toastify';
 import { Dashboard } from "./component/Dashboard.jsx";
 import Signup from "./pages/Signup.jsx";
 import Wallet from "./component/Wallet.jsx";
+import AddRecord from "./component/AddRecord.jsx";
 
 //create your first component
 const Layout = () => {
@@ -41,6 +42,8 @@ const Layout = () => {
                         <Route element={<Login/>} path="/login" />
                         {/* Siguientes rutas */}
                         <Route element={<Signup/>} path="/signup" />
+                        <Route element={<AddRecord/>} path="/records/add" />
+
 
 
                     </Routes>

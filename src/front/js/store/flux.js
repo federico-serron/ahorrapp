@@ -1,310 +1,261 @@
 const getState = ({ getStore, getActions, setStore }) => {
-    const apiUrl = process.env.BACKEND_URL;
 
-    return {
-        store: {
-            message: null,
-            demo: [
-                {
-                    title: "FIRST",
-                    background: "white",
-                    initial: "white"
-                },
-                {
-                    title: "SECOND",
-                    background: "white",
-                    initial: "white"
-                }
-            ],
-            //Info de Usuario actualmente logeado
-            logged_user: [],
-            records: [],
-            wallets: [],
+	const apiUrl = process.env.BACKEND_URL;
 
-            //Siguientes funciones a crear
-        },
-        actions: {
-            // Use getActions to call a function within a fuction
-            exampleFunction: () => {
-                getActions().changeColor(0, "green");
-            },
+	return {
+		store: {
+			message: null,
+			categories: {
+				Restaurante: [
+				  "restaurante", "parrillada", "pizzeria", "cafeteria", "bar", "chiviteria",
+				  "sushi", "bistro", "comida rapida", "hamburgueseria", "brunch", "almuerzo",
+				  "cena", "brindis", "cerveceria", "gastrobar", "birra"
+				],
+				Supermercado: [
+				  "supermercado", "almacen", "minimercado", "autoservicio", "mercado",
+				  "hipermercado", "despensa", "kiosco", "feria", "verduleria", "fruteria",
+				  "carniceria", "pescaderia", "panaderia", "granja"
+				],
+				Transporte: [
+				  "uber", "taxi", "omnibus", "bus", "colectivo", "peaje", "nafta", "combustible",
+				  "estacionamiento", "subte", "tren", "bicicleta", "bici", "pasaje", "aeropuerto",
+				  "vuelo", "remise", "moto"
+				],
+				Vivienda: [
+				  "alquiler", "renta", "hipoteca", "gastos comunes", "contribucion", "impuesto",
+				  "UTE", "OSE", "ANTEL", "electricidad", "agua", "telefono", "internet", "gas",
+				  "seguro hogar", "mantencion"
+				],
+				Entretenimiento: [
+				  "cine", "teatro", "concierto", "evento", "recital", "festival", "espectaculo",
+				  "museo", "exposicion", "karaoke", "parque de diversiones", "juegos", "videojuegos",
+				  "netflix", "spotify", "plataforma", "streaming"
+				],
+				Salud: [
+				  "farmacia", "medicamentos", "mutualista", "consultas", "analisis", "dentista",
+				  "oftalmologo", "psicologo", "fisioterapia", "examen medico", "salud"
+				],
+				Educacion: [
+				  "colegiatura", "cuota", "universidad", "curso", "taller", "clases", "academia",
+				  "seminario", "libros", "materiales", "examen", "educacion"
+				],
+				Compras: [
+				  "ropa", "calzado", "indumentaria", "zapatos", "accesorios", "perfumeria",
+				  "cosmeticos", "tecnologia", "electronica", "celular", "computadora", "notebook",
+				  "auriculares", "gaming", "decoracion", "muebles", "repuesto"
+				],
+				Deporte: [
+				  "gimnasio", "fitness", "deporte", "entrenamiento", "yoga", "pilates", "pesas",
+				  "cancha", "futbol", "basquet", "padel", "correr", "maraton"
+				],
+				Finanzas: [
+				  "banco", "transferencia", "tarjeta", "pago", "prestamo", "intereses",
+				  "credito", "debito", "inversion", "comision", "gastos bancarios"
+				],
+				Mascotas: [
+				  "veterinaria", "alimento", "mascota", "perro", "gato", "vacuna", "bano",
+				  "accesorios mascotas", "paseador"
+				],
+				Viajes: [
+				  "hotel", "hostel", "alojamiento", "pasaje", "vuelo", "excursion",
+				  "tour", "viaje", "transporte turistico", "souvenir", "paquete turistico"
+				],
+				Otros: [
+				  "regalo", "donacion", "caridad", "cobro", "perdida", "error bancario",
+				  "servicio tecnico", "reparacion", "multas", "papeleria", "tramite",
+				  "gastos varios", "sin categoria"
+				]
+			  },			  
+			demo: [
+				{
+					title: "FIRST",
+					background: "white",
+					initial: "white"
+				},
+				{
+					title: "SECOND",
+					background: "white",
+					initial: "white"
+				}
+			],
+			//Info de Usuario actualmente logeado
+			logged_user: [],
+			//Registros de gastos/ingresos
+			records: [],
 
-            getMessage: async () => {
-                try{
-                    // fetching data from the backend
-                    const resp = await fetch(process.env.BACKEND_URL + "/api/hello");
-                    const data = await resp.json();
-                    setStore({ message: data.message });
-                    // don't forget to return something, that is how the async resolves
-                    return data;
-                } catch(error) {
-                    console.log("Error loading message from backend", error);
-                }
-            },
+			//Siguientes funciones a crear
+		},
+		actions: {
+			// Use getActions to call a function within a fuction
+			exampleFunction: () => {
+				getActions().changeColor(0, "green");
+			},
 
-            changeColor: (index, color) => {
-                //get the store
-                const store = getStore();
+			getMessage: async () => {
+				try{
+					// fetching data from the backend
+					const resp = await fetch(process.env.BACKEND_URL + "/api/hello")
+					const data = await resp.json()
+					setStore({ message: data.message })
+					// don't forget to return something, that is how the async resolves
+					return data;
+				}catch(error){
+					console.log("Error loading message from backend", error)
+				}
+			},
 
-                //we have to loop the entire demo array to look for the respective index
-                //and change its color
-                const demo = store.demo.map((elm, i) => {
-                    if (i === index) elm.background = color;
-                    return elm;
-                });
+			changeColor: (index, color) => {
+				//get the store
+				const store = getStore();
 
-                //reset the global store
-                setStore({ demo: demo });
-            },
+				//we have to loop the entire demo array to look for the respective index
+				//and change its color
+				const demo = store.demo.map((elm, i) => {
+					if (i === index) elm.background = color;
+					return elm;
+				});
 
-            login: async (email, password) => {
-                const URLlogin = `${apiUrl}/api/login`;
-                const store = getStore();
+				//reset the global store
+				setStore({ demo: demo });
+			},
 
-                try {
-                    if (!email || !password) {
-                        console.log("Missing email or password");
-                        return false;
-                    }
-                    let response = await fetch(URLlogin, {
-                        method: "POST",
-                        body: JSON.stringify({'email': email, 'password': password}),
-                        headers: {
-                            "Content-type": "application/json; charset=UTF-8"
-                        }
-                    });
-                    if (!response.ok) {
-                        console.error("Error trying to login, pelase try again.");
-                        throw new Error(response.statusText);
-                    }
+			login: async (email, password) => {
+				const URLlogin = `${apiUrl}/api/login`;
+				const store = getStore();
 
-                    const data = await response.json();
+				try {
+					if (!email || !password) {
+						console.log("Missing email or password")
+						return false
+					}
+					let response = await fetch(URLlogin, {
+						method: "POST",
+						body: JSON.stringify({'email': email, 'password': password}),
+						headers: {
+							"Content-type": "application/json; charset=UTF-8"
+						} 
+					})
+					if (!response.ok) {
+						console.error("Error trying to login, pelase try again.");
+						throw new Error(response.statusText);
+					}
 
-                    if (!data.access_token) {
-                        console.error(data, "No valid token received!");
-                        throw new Error("No token received");
-                    }
+					const data = await response.json();
 
-                    localStorage.setItem("token", data.access_token);
-                    console.log("Successfully logged in!");
-                    setStore({...store, logged_user: data });
-                    return true;
+					if (!data.access_token) {
+						console.error(data, "No valid token received!")
+						throw new Error("No token received");
+					}
 
-                } catch (error) {
-                    console.error(error);
-                    return false;
-                }
-            },
+					localStorage.setItem("token", data.access_token)
+					console.log("Successfully logged in!")
+					setStore({...store, logged_user: data })
+					return true
 
-            // Action Registro de Usuario
+				} catch (error) {
+					console.error(error);
+					return false
+				}
+			},
 
-            signup: async (name, email, password) => {
-                const URLregister = `${apiUrl}/api/signup`;
-                const store = getStore();
+			// Action Registro de Usuario
 
-                try {
-                    if (!email || !password || !name) {
-                        console.log("Falta correo electrónico, contraseña o contraseña de confirmación");
-                        return false;
-                    }
+			signup: async (name, email, password) => {
+				const URLregister = `${apiUrl}/api/signup`;
+				const store = getStore();
+	
+				try {
+					if (!email || !password || !name) {
+						console.log("Falta correo electrónico, contraseña o contraseña de confirmación");
+						return false;
+					}
+	
+					const userData = {
+						name: name,
+						email: email,
+						password: password,
+					};
+	
+					let response = await fetch(URLregister, {
+						method: "POST",
+						body: JSON.stringify(userData),
+						headers: {
+							"Content-type": "application/json; charset=UTF-8"
+						}
+					});
+	
+					if (!response.ok) {
+						console.error("Error al intentar registrar el usuario, por favor inténtelo nuevamente.");
+						throw new Error(response.statusText);
+					}
+	
+					const data = await response.json();
+					console.log("¡Registrado exitosamente!", data);
+					return true;
+	
+				} catch (error) {
+					console.error("Hubo un error durante el registro:", error);
+					return false;
+				}
+			},
 
-                    const userData = {
-                        name: name,
-                        email: email,
-                        password: password,
-                    };
+			//Action 1
 
-                    let response = await fetch(URLregister, {
-                        method: "POST",
-                        body: JSON.stringify(userData),
-                        headers: {
-                            "Content-type": "application/json; charset=UTF-8"
-                        }
-                    });
+			//Action 2
 
-                    if (!response.ok) {
-                        console.error("Error al intentar registrar el usuario, por favor inténtelo nuevamente.");
-                        throw new Error(response.statusText);
-                    }
+			//Action 3
 
-                    const data = await response.json();
-                    console.log("¡Registrado exitosamente!", data);
-                    return true;
+			//Action 4
 
-                } catch (error) {
-                    console.error("Hubo un error durante el registro:", error);
-                    return false;
-                }
-            },
+			//Siguientes actions aqui debajo
+			
+			// Acción para obtener registros filtrados por usuario y categoría en un período de tiempo (get-records)
+			get_records: async (category_id, start_date) => {
+				const baseURL = `${apiUrl}/api/records/list`;
+				const queryParams = [];
+				const store = getStore();
 
-            //Action 1
-
-            //Action 2
-
-            //Action 3
-
-            //Action 4
-
-
-            // Añadir nueva Wallet a la cuenta de usuario
-
-
-            addWallet: async (name, total_value, currency_id) => {
-                const URLaddWallet = `${apiUrl}/api/wallet/add`;
-                try {
-                    if (!name || total_value === null || !currency_id) return false;
-                    const response = await fetch(URLaddWallet, {
-                        method: "POST",
-                        body: JSON.stringify({ name: name, total_value: total_value, currency_id: parseInt(currency_id) }),
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
-                    if (!response.ok) return false;
-                    const data = await response.json()
-                    setStore({ ...store, wallets: [...store.wallets, data]});
-                    return data;
-                } catch (error) {
-                    console.error(error);
-                    return false;
-                }
-            },
-            // Obtener Todas las Wallets del Usuario Autenticado
-
-            getWalletsByUser: async () => {
-                const URLgetWallets = `${apiUrl}/api/wallet/get`;
-                try {
-                    const response = await fetch(URLgetWallets, {
-                        method: "GET",
-                        headers: {
-                            "Authorization": `Bearer ${localStorage.getItem("token")}`,
-                            "Content-Type": "application/json"
-                        }
-                    });
-                    if (!response.ok) return [];
-                    return await response.json();
-                } catch (error) {
-                    console.error(error);
-                    return [];
-                }
-            },
-
-            // Obtener Wallet por ID
-
-            getWalletById: async (wallet_id) => {
-                const URLgetWallet = `${apiUrl}/api/wallet/get/${wallet_id}`;
-                try {
-                    const response = await fetch(URLgetWallet, {
-                        method: "GET",
-                        headers: {
-                            "Authorization": `Bearer ${localStorage.getItem("token")}`,
-                            "Content-Type": "application/json"
-                        }
-                    });
-                    if (!response.ok) return null;
-                    return await response.json();
-                } catch (error) {
-                    console.error(error);
-                    return null;
-                }
-            },
-
-
-            // Editar una Wallet
-
-            editWallet: async (wallet_id, name, total_value, currency_id) => {
-                const URLeditWallet = `${apiUrl}/api/wallet/edit/${wallet_id}`;
-                try {
-                    const walletData = {};
-                    if (name) walletData.name = name;
-                    if (total_value) walletData.total_value = parseInt(total_value);
-                    if (currency_id) walletData.currency_id = parseInt(currency_id);
-
-                    const response = await fetch(URLeditWallet, {
-                        method: "PUT",
-                        body: JSON.stringify(walletData),
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": `Bearer ${localStorage.getItem("token")}`
-                        }
-                    });
-                    const data = await response.json()
-setStore({ ...store, wallets: [...store.wallets, data]});
-return data;
-                } catch (error) {
-                    console.error(error);
-                    return false;
-                }
-            },
-
-            // Eliminar una Wallet
-
-            deleteWallet: async (wallet_id) => {
-                const URLdeleteWallet = `${apiUrl}/api/wallet/delete/${wallet_id}`;
-                try {
-                    const response = await fetch(URLdeleteWallet, {
-                        method: "DELETE",
-                        headers: {
-                            "Authorization": `Bearer ${localStorage.getItem("token")}`,
-                            "Content-Type": "application/json"
-                        }
-                    });
-                    if (!response.ok) return false;
-                    return true;
-                } catch (error) {
-                    console.error(error);
-                    return false;
-                }
-            },
-
-
-            // Acción para obtener registros filtrados por usuario y categoría en un período de tiempo (get-records)
-
-            get_records: async (category_id, start_date) => {
-                const baseURL = `${apiUrl}/api/records/list`;
-                const queryParams = [];
-
-                if (category_id) queryParams.push(`category_id=${category_id}`);
-                if (start_date) queryParams.push(`start_date=${new Date(start_date).toISOString()}`);
-
-                const URLlistRecords = queryParams.length > 0 ? `${baseURL}?${queryParams.join('&')}` : baseURL;
-                const { setStore } = getActions();
-
-                try {
-                    const response = await fetch(URLlistRecords, {
-                        method: 'GET',
-                        headers: {
-                            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                            'Content-Type': 'application/json'
-                        }
-                    });
-
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        throw new Error(`Error en la petición: ${response.status} - ${errorData?.message || response.statusText}`);
-                    }
-
-                    const data = await response.json();
-                    setStore({ ...store, records: [...store.records, data.records]});
-                    return true;
-
-                } catch (error) {
-                    console.error("Error al obtener los registros:", error);
-                    setStore({ recordsError: error.message || "Ocurrió un error al cargar los registros." });
-                    return false;
-                }
-            },
+		
+				if (category_id) queryParams.push(`category_id=${category_id}`);
+				if (start_date) queryParams.push(`start_date=${new Date(start_date).toISOString()}`);
+		
+				const URLlistRecords = queryParams.length > 0 ? `${baseURL}?${queryParams.join('&')}` : baseURL;
+				
+		
+				try {
+					const response = await fetch(URLlistRecords, {
+						method: 'GET',
+						headers: {
+							'Authorization': `Bearer ${localStorage.getItem('token')}`,
+							'Content-Type': 'application/json'
+						}
+					});
+		
+					if (!response.ok) {
+						const errorData = await response.json();
+						throw new Error(`Error en la petición: ${response.status} - ${errorData?.message || response.statusText}`);
+					}
+		
+					const data = await response.json();
+					setStore({ ...store, records: data.records}); 
+					return true;
+		
+				} catch (error) {
+					console.error("Error al obtener los registros:", error);
+					setStore({ recordsError: error.message || "Ocurrió un error al cargar los registros." });
+					return false
+				}
+			},
 
 
 
-            // Action para agregar un nuevo registro (Record)
-            addRecord: async (description, amount, type, category_id, wallet_id) => {
+			// Action para agregar un nuevo registro (Record)
+			addRecord: async (description, amount, type, category_name, wallet_id) => {
                 const URLaddRecord = `${apiUrl}/api/records/add`;
-                const { getStore, setStore } = getActions();
+				        const store = getStore();
 
                 try {
-                    if (!description || !amount || !type || !category_id || !wallet_id) {
+                    if (!description || !amount || !type || !category_name || !wallet_id) {
                         console.error("Faltan campos requeridos para agregar el registro.");
                         return false;
                     }
@@ -313,8 +264,8 @@ return data;
                         description: description,
                         amount: parseFloat(amount),
                         type: type,
-                        category_id: parseInt(category_id),
-                        wallet_id: parseInt(wallet_id),
+                        category_name: category_name, 
+                        wallet_id: parseInt(wallet_id),   
                     };
 
                     const response = await fetch(URLaddRecord, {
@@ -336,12 +287,7 @@ return data;
                     const data = await response.json();
                     console.log("Registro agregado exitosamente:", data);
 
-
-                    const store = getStore();
-
                     setStore({ ...store, records: [...store.records, data] });
-
-
                     return true;
 
                 } catch (error) {
