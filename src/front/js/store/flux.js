@@ -1,4 +1,5 @@
 const getState = ({ getStore, getActions, setStore }) => {
+
 	const apiUrl = process.env.BACKEND_URL;
 
 	return {
@@ -251,7 +252,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			// Action para agregar un nuevo registro (Record)
 			addRecord: async (description, amount, type, category_name, wallet_id) => {
                 const URLaddRecord = `${apiUrl}/api/records/add`;
-				const store = getStore();
+				        const store = getStore();
 
                 try {
                     if (!description || !amount || !type || !category_name || !wallet_id) {
@@ -261,7 +262,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
                     const recordData = {
                         description: description,
-                        amount: parseFloat(amount), 
+                        amount: parseFloat(amount),
                         type: type,
                         category_name: category_name, 
                         wallet_id: parseInt(wallet_id),   
@@ -272,8 +273,8 @@ const getState = ({ getStore, getActions, setStore }) => {
                         body: JSON.stringify(recordData),
                         headers: {
                             "Content-type": "application/json; charset=UTF-8",
-                           
-                            "Authorization": `Bearer ${localStorage.getItem('token')}` 
+
+                            "Authorization": `Bearer ${localStorage.getItem('token')}`
                         }
                     });
 
@@ -294,8 +295,8 @@ const getState = ({ getStore, getActions, setStore }) => {
                     return false;
                 }
             },
-		}
-	};
+        }
+    };
 };
 
 export default getState;
