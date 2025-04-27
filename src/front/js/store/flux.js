@@ -1,193 +1,307 @@
 const getState = ({ getStore, getActions, setStore }) => {
-	const apiUrl = process.env.BACKEND_URL;
+    const apiUrl = process.env.BACKEND_URL;
 
-	return {
-		store: {
-			message: null,
-			demo: [
-				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
-				},
-				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
-				}
-			],
-			//Info de Usuario actualmente logeado
-			logged_user: [],
-			records: [],
+    return {
+        store: {
+            message: null,
+            demo: [
+                {
+                    title: "FIRST",
+                    background: "white",
+                    initial: "white"
+                },
+                {
+                    title: "SECOND",
+                    background: "white",
+                    initial: "white"
+                }
+            ],
+            //Info de Usuario actualmente logeado
+            logged_user: [],
+            records: [],
+            wallets: [],
 
-			//Siguientes funciones a crear
-		},
-		actions: {
-			// Use getActions to call a function within a fuction
-			exampleFunction: () => {
-				getActions().changeColor(0, "green");
-			},
+            //Siguientes funciones a crear
+        },
+        actions: {
+            // Use getActions to call a function within a fuction
+            exampleFunction: () => {
+                getActions().changeColor(0, "green");
+            },
 
-			getMessage: async () => {
-				try{
-					// fetching data from the backend
-					const resp = await fetch(process.env.BACKEND_URL + "/api/hello")
-					const data = await resp.json()
-					setStore({ message: data.message })
-					// don't forget to return something, that is how the async resolves
-					return data;
-				}catch(error){
-					console.log("Error loading message from backend", error)
-				}
-			},
+            getMessage: async () => {
+                try{
+                    // fetching data from the backend
+                    const resp = await fetch(process.env.BACKEND_URL + "/api/hello");
+                    const data = await resp.json();
+                    setStore({ message: data.message });
+                    // don't forget to return something, that is how the async resolves
+                    return data;
+                } catch(error) {
+                    console.log("Error loading message from backend", error);
+                }
+            },
 
-			changeColor: (index, color) => {
-				//get the store
-				const store = getStore();
+            changeColor: (index, color) => {
+                //get the store
+                const store = getStore();
 
-				//we have to loop the entire demo array to look for the respective index
-				//and change its color
-				const demo = store.demo.map((elm, i) => {
-					if (i === index) elm.background = color;
-					return elm;
-				});
+                //we have to loop the entire demo array to look for the respective index
+                //and change its color
+                const demo = store.demo.map((elm, i) => {
+                    if (i === index) elm.background = color;
+                    return elm;
+                });
 
-				//reset the global store
-				setStore({ demo: demo });
-			},
+                //reset the global store
+                setStore({ demo: demo });
+            },
 
-			login: async (email, password) => {
-				const URLlogin = `${apiUrl}/api/login`;
-				const store = getStore();
+            login: async (email, password) => {
+                const URLlogin = `${apiUrl}/api/login`;
+                const store = getStore();
 
-				try {
-					if (!email || !password) {
-						console.log("Missing email or password")
-						return false
-					}
-					let response = await fetch(URLlogin, {
-						method: "POST",
-						body: JSON.stringify({'email': email, 'password': password}),
-						headers: {
-							"Content-type": "application/json; charset=UTF-8"
-						} 
-					})
-					if (!response.ok) {
-						console.error("Error trying to login, pelase try again.");
-						throw new Error(response.statusText);
-					}
+                try {
+                    if (!email || !password) {
+                        console.log("Missing email or password");
+                        return false;
+                    }
+                    let response = await fetch(URLlogin, {
+                        method: "POST",
+                        body: JSON.stringify({'email': email, 'password': password}),
+                        headers: {
+                            "Content-type": "application/json; charset=UTF-8"
+                        }
+                    });
+                    if (!response.ok) {
+                        console.error("Error trying to login, pelase try again.");
+                        throw new Error(response.statusText);
+                    }
 
-					const data = await response.json();
+                    const data = await response.json();
 
-					if (!data.access_token) {
-						console.error(data, "No valid token received!")
-						throw new Error("No token received");
-					}
+                    if (!data.access_token) {
+                        console.error(data, "No valid token received!");
+                        throw new Error("No token received");
+                    }
 
-					localStorage.setItem("token", data.access_token)
-					console.log("Successfully logged in!")
-					setStore({...store, logged_user: data })
-					return true
+                    localStorage.setItem("token", data.access_token);
+                    console.log("Successfully logged in!");
+                    setStore({...store, logged_user: data });
+                    return true;
 
-				} catch (error) {
-					console.error(error);
-					return false
-				}
-			},
+                } catch (error) {
+                    console.error(error);
+                    return false;
+                }
+            },
 
-			// Action Registro de Usuario
+            // Action Registro de Usuario
 
-			signup: async (name, email, password) => {
-				const URLregister = `${apiUrl}/api/signup`;
-				const store = getStore();
-	
-				try {
-					if (!email || !password || !name) {
-						console.log("Falta correo electrónico, contraseña o contraseña de confirmación");
-						return false;
-					}
-	
-					const userData = {
-						name: name,
-						email: email,
-						password: password,
-					};
-	
-					let response = await fetch(URLregister, {
-						method: "POST",
-						body: JSON.stringify(userData),
-						headers: {
-							"Content-type": "application/json; charset=UTF-8"
-						}
-					});
-	
-					if (!response.ok) {
-						console.error("Error al intentar registrar el usuario, por favor inténtelo nuevamente.");
-						throw new Error(response.statusText);
-					}
-	
-					const data = await response.json();
-					console.log("¡Registrado exitosamente!", data);
-					return true;
-	
-				} catch (error) {
-					console.error("Hubo un error durante el registro:", error);
-					return false;
-				}
-			},
+            signup: async (name, email, password) => {
+                const URLregister = `${apiUrl}/api/signup`;
+                const store = getStore();
 
-			//Action 1
+                try {
+                    if (!email || !password || !name) {
+                        console.log("Falta correo electrónico, contraseña o contraseña de confirmación");
+                        return false;
+                    }
 
-			//Action 2
+                    const userData = {
+                        name: name,
+                        email: email,
+                        password: password,
+                    };
 
-			//Action 3
+                    let response = await fetch(URLregister, {
+                        method: "POST",
+                        body: JSON.stringify(userData),
+                        headers: {
+                            "Content-type": "application/json; charset=UTF-8"
+                        }
+                    });
 
-			//Action 4
+                    if (!response.ok) {
+                        console.error("Error al intentar registrar el usuario, por favor inténtelo nuevamente.");
+                        throw new Error(response.statusText);
+                    }
 
-			//Siguientes actions aqui debajo
-			
-			// Acción para obtener registros filtrados por usuario y categoría en un período de tiempo (get-records)
-			get_records: async (category_id, start_date) => {
-				const baseURL = `${apiUrl}/api/records/list`;
-				const queryParams = [];
-		
-				if (category_id) queryParams.push(`category_id=${category_id}`);
-				if (start_date) queryParams.push(`start_date=${new Date(start_date).toISOString()}`);
-		
-				const URLlistRecords = queryParams.length > 0 ? `${baseURL}?${queryParams.join('&')}` : baseURL;
-				const { setStore } = getActions();
-		
-				try {
-					const response = await fetch(URLlistRecords, {
-						method: 'GET',
-						headers: {
-							'Authorization': `Bearer ${localStorage.getItem('token')}`,
-							'Content-Type': 'application/json'
-						}
-					});
-		
-					if (!response.ok) {
-						const errorData = await response.json();
-						throw new Error(`Error en la petición: ${response.status} - ${errorData?.message || response.statusText}`);
-					}
-		
-					const data = await response.json();
-					setStore({ ...store, records: [...store.records, data.records]}); 
-					return true;
-		
-				} catch (error) {
-					console.error("Error al obtener los registros:", error);
-					setStore({ recordsError: error.message || "Ocurrió un error al cargar los registros." });
-					return false
-				}
-			},
+                    const data = await response.json();
+                    console.log("¡Registrado exitosamente!", data);
+                    return true;
+
+                } catch (error) {
+                    console.error("Hubo un error durante el registro:", error);
+                    return false;
+                }
+            },
+
+            //Action 1
+
+            //Action 2
+
+            //Action 3
+
+            //Action 4
 
 
+            // Añadir nueva Wallet a la cuenta de usuario
 
-			// Action para agregar un nuevo registro (Record)
-			addRecord: async (description, amount, type, category_id, wallet_id) => {
+
+            addWallet: async (name, total_value, currency_id) => {
+                const URLaddWallet = `${apiUrl}/api/wallet/add`;
+                try {
+                    if (!name || total_value === null || !currency_id) return false;
+                    const response = await fetch(URLaddWallet, {
+                        method: "POST",
+                        body: JSON.stringify({ name: name, total_value: total_value, currency_id: parseInt(currency_id) }),
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
+                    if (!response.ok) return false;
+                    const data = await response.json()
+                    setStore({ ...store, wallets: [...store.wallets, data]});
+                    return data;
+                } catch (error) {
+                    console.error(error);
+                    return false;
+                }
+            },
+            // Obtener Todas las Wallets del Usuario Autenticado
+
+            getWalletsByUser: async () => {
+                const URLgetWallets = `${apiUrl}/api/wallet/get`;
+                try {
+                    const response = await fetch(URLgetWallets, {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                            "Content-Type": "application/json"
+                        }
+                    });
+                    if (!response.ok) return [];
+                    return await response.json();
+                } catch (error) {
+                    console.error(error);
+                    return [];
+                }
+            },
+
+            // Obtener Wallet por ID
+
+            getWalletById: async (wallet_id) => {
+                const URLgetWallet = `${apiUrl}/api/wallet/get/${wallet_id}`;
+                try {
+                    const response = await fetch(URLgetWallet, {
+                        method: "GET",
+                        headers: {
+                            "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                            "Content-Type": "application/json"
+                        }
+                    });
+                    if (!response.ok) return null;
+                    return await response.json();
+                } catch (error) {
+                    console.error(error);
+                    return null;
+                }
+            },
+
+
+            // Editar una Wallet
+
+            editWallet: async (wallet_id, name, total_value, currency_id) => {
+                const URLeditWallet = `${apiUrl}/api/wallet/edit/${wallet_id}`;
+                try {
+                    const walletData = {};
+                    if (name) walletData.name = name;
+                    if (total_value) walletData.total_value = parseInt(total_value);
+                    if (currency_id) walletData.currency_id = parseInt(currency_id);
+
+                    const response = await fetch(URLeditWallet, {
+                        method: "PUT",
+                        body: JSON.stringify(walletData),
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${localStorage.getItem("token")}`
+                        }
+                    });
+                    const data = await response.json()
+setStore({ ...store, wallets: [...store.wallets, data]});
+return data;
+                } catch (error) {
+                    console.error(error);
+                    return false;
+                }
+            },
+
+            // Eliminar una Wallet
+
+            deleteWallet: async (wallet_id) => {
+                const URLdeleteWallet = `${apiUrl}/api/wallet/delete/${wallet_id}`;
+                try {
+                    const response = await fetch(URLdeleteWallet, {
+                        method: "DELETE",
+                        headers: {
+                            "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                            "Content-Type": "application/json"
+                        }
+                    });
+                    if (!response.ok) return false;
+                    return true;
+                } catch (error) {
+                    console.error(error);
+                    return false;
+                }
+            },
+
+
+            // Acción para obtener registros filtrados por usuario y categoría en un período de tiempo (get-records)
+
+            get_records: async (category_id, start_date) => {
+                const baseURL = `${apiUrl}/api/records/list`;
+                const queryParams = [];
+
+                if (category_id) queryParams.push(`category_id=${category_id}`);
+                if (start_date) queryParams.push(`start_date=${new Date(start_date).toISOString()}`);
+
+                const URLlistRecords = queryParams.length > 0 ? `${baseURL}?${queryParams.join('&')}` : baseURL;
+                const { setStore } = getActions();
+
+                try {
+                    const response = await fetch(URLlistRecords, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(`Error en la petición: ${response.status} - ${errorData?.message || response.statusText}`);
+                    }
+
+                    const data = await response.json();
+                    setStore({ ...store, records: [...store.records, data.records]});
+                    return true;
+
+                } catch (error) {
+                    console.error("Error al obtener los registros:", error);
+                    setStore({ recordsError: error.message || "Ocurrió un error al cargar los registros." });
+                    return false;
+                }
+            },
+
+
+
+            // Action para agregar un nuevo registro (Record)
+            addRecord: async (description, amount, type, category_id, wallet_id) => {
                 const URLaddRecord = `${apiUrl}/api/records/add`;
-                const { getStore, setStore } = getActions(); 
+                const { getStore, setStore } = getActions();
 
                 try {
                     if (!description || !amount || !type || !category_id || !wallet_id) {
@@ -197,10 +311,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 
                     const recordData = {
                         description: description,
-                        amount: parseFloat(amount), 
+                        amount: parseFloat(amount),
                         type: type,
-                        category_id: parseInt(category_id), 
-                        wallet_id: parseInt(wallet_id),   
+                        category_id: parseInt(category_id),
+                        wallet_id: parseInt(wallet_id),
                     };
 
                     const response = await fetch(URLaddRecord, {
@@ -208,8 +322,8 @@ const getState = ({ getStore, getActions, setStore }) => {
                         body: JSON.stringify(recordData),
                         headers: {
                             "Content-type": "application/json; charset=UTF-8",
-                           
-                            "Authorization": `Bearer ${localStorage.getItem('token')}` 
+
+                            "Authorization": `Bearer ${localStorage.getItem('token')}`
                         }
                     });
 
@@ -222,7 +336,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     const data = await response.json();
                     console.log("Registro agregado exitosamente:", data);
 
-                   
+
                     const store = getStore();
 
                     setStore({ ...store, records: [...store.records, data] });
@@ -235,8 +349,8 @@ const getState = ({ getStore, getActions, setStore }) => {
                     return false;
                 }
             },
-		}
-	};
+        }
+    };
 };
 
 export default getState;
