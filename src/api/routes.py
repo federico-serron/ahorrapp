@@ -557,6 +557,12 @@ def set_goal():
         if goal:
             return(jsonify({'msg':'El nombre de Goal ya existe'})), 404
         
+        wallets_by_user = Wallet.query.filter_by(user_id = user_id)
+
+        if not wallets_by_user:
+            return jsonify({'msg':"Este usuario no tiene goals"}), 404
+
+        
         new_goal = Goal(name = name_goal, goal_value = goal_value, is_complete = is_complete, user_id = user_id)
         
         db.session.add(new_goal)
@@ -645,7 +651,42 @@ def get_goal_by_id(id):
     except Exception as e:
         return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
     
+@api.route('/goal/get-progress/<int:id>', methods=['GET'])
+@jwt_required()
+def get_progress_from_goal(id):
     
+    try:
+        user_id = get_jwt_identity()
+        goal_from_user = Goal.query.filter_by(user_id = user_id,id=id).first()
+        wallets_by_user = Wallet.query.filter_by(user_id = user_id)
+
+        if not wallets_by_user:
+            return jsonify({'msg':"Este usuario no tiene goals"}), 404
+
+        if not goal_from_user:
+            return jsonify({'msg':"Este goal no existe del usuario"}), 404
+
+        sum_all_wallets_balance = 0
+        for wallet in wallets_by_user:
+            sum_all_wallets_balance += wallet.total_value
+
+        if sum_all_wallets_balance < 0:
+            sum_all_wallets_balance = 0
+         
+        remaining = goal_from_user.goal_value - sum_all_wallets_balance
+        progress = (sum_all_wallets_balance * 100) // goal_from_user.goal_value
+
+        return jsonify({
+            "goal": goal_from_user.goal_value,
+            "balance": sum_all_wallets_balance,
+            "remaining":  remaining ,
+            "progress":  progress       
+        }), 201
+    except Exception as e:
+        return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
+   
+  
+      
 
 
 # Nueva ruta 2 Fede
