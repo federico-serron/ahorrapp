@@ -1,9 +1,71 @@
 const getState = ({ getStore, getActions, setStore }) => {
+
 	const apiUrl = process.env.BACKEND_URL;
 
 	return {
 		store: {
 			message: null,
+			categories: {
+				Restaurante: [
+				  "restaurante", "parrillada", "pizzeria", "cafeteria", "bar", "chiviteria",
+				  "sushi", "bistro", "comida rapida", "hamburgueseria", "brunch", "almuerzo",
+				  "cena", "brindis", "cerveceria", "gastrobar", "birra"
+				],
+				Supermercado: [
+				  "supermercado", "almacen", "minimercado", "autoservicio", "mercado",
+				  "hipermercado", "despensa", "kiosco", "feria", "verduleria", "fruteria",
+				  "carniceria", "pescaderia", "panaderia", "granja"
+				],
+				Transporte: [
+				  "uber", "taxi", "omnibus", "bus", "colectivo", "peaje", "nafta", "combustible",
+				  "estacionamiento", "subte", "tren", "bicicleta", "bici", "pasaje", "aeropuerto",
+				  "vuelo", "remise", "moto"
+				],
+				Vivienda: [
+				  "alquiler", "renta", "hipoteca", "gastos comunes", "contribucion", "impuesto",
+				  "UTE", "OSE", "ANTEL", "electricidad", "agua", "telefono", "internet", "gas",
+				  "seguro hogar", "mantencion"
+				],
+				Entretenimiento: [
+				  "cine", "teatro", "concierto", "evento", "recital", "festival", "espectaculo",
+				  "museo", "exposicion", "karaoke", "parque de diversiones", "juegos", "videojuegos",
+				  "netflix", "spotify", "plataforma", "streaming"
+				],
+				Salud: [
+				  "farmacia", "medicamentos", "mutualista", "consultas", "analisis", "dentista",
+				  "oftalmologo", "psicologo", "fisioterapia", "examen medico", "salud"
+				],
+				Educacion: [
+				  "colegiatura", "cuota", "universidad", "curso", "taller", "clases", "academia",
+				  "seminario", "libros", "materiales", "examen", "educacion"
+				],
+				Compras: [
+				  "ropa", "calzado", "indumentaria", "zapatos", "accesorios", "perfumeria",
+				  "cosmeticos", "tecnologia", "electronica", "celular", "computadora", "notebook",
+				  "auriculares", "gaming", "decoracion", "muebles", "repuesto"
+				],
+				Deporte: [
+				  "gimnasio", "fitness", "deporte", "entrenamiento", "yoga", "pilates", "pesas",
+				  "cancha", "futbol", "basquet", "padel", "correr", "maraton"
+				],
+				Finanzas: [
+				  "banco", "transferencia", "tarjeta", "pago", "prestamo", "intereses",
+				  "credito", "debito", "inversion", "comision", "gastos bancarios"
+				],
+				Mascotas: [
+				  "veterinaria", "alimento", "mascota", "perro", "gato", "vacuna", "bano",
+				  "accesorios mascotas", "paseador"
+				],
+				Viajes: [
+				  "hotel", "hostel", "alojamiento", "pasaje", "vuelo", "excursion",
+				  "tour", "viaje", "transporte turistico", "souvenir", "paquete turistico"
+				],
+				Otros: [
+				  "regalo", "donacion", "caridad", "cobro", "perdida", "error bancario",
+				  "servicio tecnico", "reparacion", "multas", "papeleria", "tramite",
+				  "gastos varios", "sin categoria"
+				]
+			  },			  
 			demo: [
 				{
 					title: "FIRST",
@@ -18,6 +80,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			],
 			//Info de Usuario actualmente logeado
 			logged_user: [],
+			//Registros de gastos/ingresos
 			records: [],
 
 			//Siguientes funciones a crear
@@ -150,12 +213,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 			get_records: async (category_id, start_date) => {
 				const baseURL = `${apiUrl}/api/records/list`;
 				const queryParams = [];
+				const store = getStore();
+
 		
 				if (category_id) queryParams.push(`category_id=${category_id}`);
 				if (start_date) queryParams.push(`start_date=${new Date(start_date).toISOString()}`);
 		
 				const URLlistRecords = queryParams.length > 0 ? `${baseURL}?${queryParams.join('&')}` : baseURL;
-				const { setStore } = getActions();
+				
 		
 				try {
 					const response = await fetch(URLlistRecords, {
@@ -172,7 +237,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 		
 					const data = await response.json();
-					setStore({ ...store, records: [...store.records, data.records]}); 
+					setStore({ ...store, records: data.records}); 
 					return true;
 		
 				} catch (error) {
@@ -185,21 +250,21 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 			// Action para agregar un nuevo registro (Record)
-			addRecord: async (description, amount, type, category_id, wallet_id) => {
+			addRecord: async (description, amount, type, category_name, wallet_id) => {
                 const URLaddRecord = `${apiUrl}/api/records/add`;
-                const { getStore, setStore } = getActions(); 
+				        const store = getStore();
 
                 try {
-                    if (!description || !amount || !type || !category_id || !wallet_id) {
+                    if (!description || !amount || !type || !category_name || !wallet_id) {
                         console.error("Faltan campos requeridos para agregar el registro.");
                         return false;
                     }
 
                     const recordData = {
                         description: description,
-                        amount: parseFloat(amount), 
+                        amount: parseFloat(amount),
                         type: type,
-                        category_id: parseInt(category_id), 
+                        category_name: category_name, 
                         wallet_id: parseInt(wallet_id),   
                     };
 
@@ -208,8 +273,8 @@ const getState = ({ getStore, getActions, setStore }) => {
                         body: JSON.stringify(recordData),
                         headers: {
                             "Content-type": "application/json; charset=UTF-8",
-                           
-                            "Authorization": `Bearer ${localStorage.getItem('token')}` 
+
+                            "Authorization": `Bearer ${localStorage.getItem('token')}`
                         }
                     });
 
@@ -222,12 +287,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     const data = await response.json();
                     console.log("Registro agregado exitosamente:", data);
 
-                   
-                    const store = getStore();
-
                     setStore({ ...store, records: [...store.records, data] });
-
-
                     return true;
 
                 } catch (error) {
@@ -235,8 +295,8 @@ const getState = ({ getStore, getActions, setStore }) => {
                     return false;
                 }
             },
-		}
-	};
+        }
+    };
 };
 
 export default getState;

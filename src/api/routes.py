@@ -280,7 +280,7 @@ def add_record():
             "description": fields.get("description"),
             "amount": fields.get("amount"),
             "type": fields.get("type"),
-            "category_id": fields.get("category_id"),
+            "category_name": fields.get("category_name"),
             "wallet_id": fields.get("wallet_id"),
         }
 
@@ -288,19 +288,23 @@ def add_record():
         if error_fields:
             return error_fields
 
-        error_relationships = validate_relationships({"Category": (Category, fields.get('category_id')),"Wallet": (Wallet, fields.get('wallet_id'))})
+        error_relationships = validate_relationships({"Wallet": (Wallet, fields.get('wallet_id'))})
         if error_relationships:
             return error_relationships
 
-        
-        if fields.get('amount') <= 0:
-            return jsonify({"msg": "El monto debe ser mayor a 0"}), 400
+        selected_category = Category.query.filter_by(name=fields.get('category_name', 'General')).first()
+
+        if not selected_category:
+            new_cat = Category(name='General', description="Categoria por defecto")
+            db.session.add(new_cat)
+            db.session.commit()
+            selected_category = new_cat
         
         new_record = Record(
         description=fields['description'],
         amount=fields['amount'],
         type=fields['type'],
-        category_id=fields['category_id'],
+        category_id= selected_category.id,
         wallet_id=fields['wallet_id'],
         user_id=user_id
     )
