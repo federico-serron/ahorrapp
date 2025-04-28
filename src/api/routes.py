@@ -560,13 +560,7 @@ def set_goal():
 
         if goal:
             return(jsonify({'msg':'El nombre de Goal ya existe'})), 404
-        
-        wallets_by_user = Wallet.query.filter_by(user_id = user_id)
-
-        if not wallets_by_user:
-            return jsonify({'msg':"Este usuario no tiene goals"}), 404
-
-        
+            
         new_goal = Goal(name = name_goal, goal_value = goal_value, is_complete = is_complete, user_id = user_id)
         
         db.session.add(new_goal)
@@ -588,7 +582,7 @@ def edit_goal(id):
         goal_from_user = Goal.query.filter_by(user_id = user_id, id = id).first()
 
         if not goal_from_user:
-            return jsonify({'msg': "El goal no existe"})
+            return jsonify({'msg': "El goal no existe"}), 404
         
         if name_goal:
             goal_from_user.name = name_goal
@@ -619,7 +613,7 @@ def delete_goal(id):
         db.session.delete(goal_from_user)
         db.session.commit()
 
-        return (jsonify({'msg': 'Goal eliminada con exito'})) 
+        return (jsonify({'msg': 'Goal eliminada con exito'})), 200 
     except Exception as e:
         return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
 
@@ -628,7 +622,7 @@ def delete_goal(id):
 def get_all_goals_from_user():
     try:
         user_id = get_jwt_identity()
-        goals_from_user = Goal.query.filter_by(user_id = user_id)
+        goals_from_user = Goal.query.filter_by(user_id = user_id).all()
 
         if not goals_from_user:
             return jsonify({'msg':"El usuario no tiene goals"}), 404
@@ -662,7 +656,7 @@ def get_progress_from_goal(id):
     try:
         user_id = get_jwt_identity()
         goal_from_user = Goal.query.filter_by(user_id = user_id,id=id).first()
-        wallets_by_user = Wallet.query.filter_by(user_id = user_id)
+        wallets_by_user = Wallet.query.filter_by(user_id = user_id).all()
 
         if not wallets_by_user:
             return jsonify({'msg':"Este usuario no tiene goals"}), 404
