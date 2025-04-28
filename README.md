@@ -96,9 +96,9 @@ Este proyecto está listo para ser desplegado en **Heroku** con tan solo unos po
 
 **Contribuyentes:**
 
-- **Jose Luis Nunez**
+- **Jose Luis Nuñez**
 - **Juan Salazar**
-- **Rafael Varga**
+- **Rafael Vargas**
 - **Federico Serron**
 
 Este proyecto fue desarrollado como parte del aprendizaje en el desarrollo de aplicaciones Full Stack. ¡Contribuciones son bienvenidas! Si encuentras algún error o tienes una idea para mejorar la aplicación, no dudes en hacer un **Pull Request**.
