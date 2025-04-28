@@ -657,16 +657,14 @@ def get_progress_from_goal(id):
         user_id = get_jwt_identity()
         goal_from_user = Goal.query.filter_by(user_id = user_id,id=id).first()
         wallets_by_user = Wallet.query.filter_by(user_id = user_id).all()
-
-        if not wallets_by_user:
-            return jsonify({'msg':"Este usuario no tiene goals"}), 404
-
+        sum_all_wallets_balance = 0
+        
+        if wallets_by_user:
+            for wallet in wallets_by_user:
+                sum_all_wallets_balance += wallet.total_value
+                
         if not goal_from_user:
             return jsonify({'msg':"Este goal no existe del usuario"}), 404
-
-        sum_all_wallets_balance = 0
-        for wallet in wallets_by_user:
-            sum_all_wallets_balance += wallet.total_value
 
         if sum_all_wallets_balance < 0:
             sum_all_wallets_balance = 0
