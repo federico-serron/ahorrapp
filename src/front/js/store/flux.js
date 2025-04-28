@@ -82,8 +82,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			logged_user: [],
 			//Registros de gastos/ingresos
 			records: [],
-
-			//Siguientes funciones a crear
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -198,16 +196,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return false;
 				}
 			},
-
-			//Action 1
-
-			//Action 2
-
-			//Action 3
-
-			//Action 4
-
-			//Siguientes actions aqui debajo
 			
 			// Acción para obtener registros filtrados por usuario y categoría en un período de tiempo (get-records)
 			get_records: async (category_id, start_date) => {
@@ -250,7 +238,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 			// Action para agregar un nuevo registro (Record)
-			addRecord: async (description, amount, type, category_name, wallet_id) => {
+		addRecord: async (description, amount, type, category_name, wallet_id) => {
                 const URLaddRecord = `${apiUrl}/api/records/add`;
 				        const store = getStore();
 
@@ -295,6 +283,16 @@ const getState = ({ getStore, getActions, setStore }) => {
                     return false;
                 }
             },
+
+
+			//Actions Juan
+
+			//Actions Rafa
+
+			//Actions Fede
+
+			//Actions Jose
+			
         }
     };
 };
