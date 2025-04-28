@@ -35,12 +35,26 @@ def setup_commands(app):
         print("All test users created")
 
     @app.cli.command("insert-test-categories")
-    @click.argument("count") # argument of out command
-    def insert_test_categries(count):
+    def insert_test_categries():
         print("Creating test categories")
-        for x in range(1, int(count) + 1):
+        categories = [
+        "Restaurante",
+        "Supermercado",
+        "Transporte",
+        "Vivienda",
+        "Entretenimiento",
+        "Salud",
+        "Educacion",
+        "Compras",
+        "Deporte",
+        "Finanzas",
+        "Mascotas",
+        "Viajes",
+        "Otros"
+        ];
+        for x in categories:
             category = Category()
-            category.name = "test_category" + str(x)
+            category.name = x
             category.description = "Description test"
             db.session.add(category)
             db.session.commit()

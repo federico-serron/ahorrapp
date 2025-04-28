@@ -34,17 +34,21 @@ const ListRecord = () => {
                         <th style={{ border: "1px solid #ddd", padding: "8px" }}>Monto</th>
                         <th style={{ border: "1px solid #ddd", padding: "8px" }}>Tipo</th>
                         <th style={{ border: "1px solid #ddd", padding: "8px" }}>Categoria</th>
+                        <th style={{ border: "1px solid #ddd", padding: "8px" }}>Fecha</th>
+
                     </tr>
                 </thead>
                 <tbody>
                     {records && records.length > 0 ? (
-                        records.map((record) => (
-                            <tr key={record.id}>
-                                <td style={{ border: "1px solid #ddd", padding: "8px" }}>{record.id}</td>
+                        records.map((record, index) => (
+                            <tr key={index}>
+                                <td style={{ border: "1px solid #ddd", padding: "8px" }}>{index+1}</td>
                                 <td style={{ border: "1px solid #ddd", padding: "8px" }}>{record.description}</td>
                                 <td style={{ border: "1px solid #ddd", padding: "8px" }}>{record.amount}</td>
                                 <td style={{ border: "1px solid #ddd", padding: "8px" }}>{record.type == "Ingreso" ? `✅` : `📛`}</td>
                                 <td style={{ border: "1px solid #ddd", padding: "8px" }}>{record.category.name}</td>
+                                <td style={{ border: "1px solid #ddd", padding: "8px" }}>{new Date(record.timestamp).toLocaleString('es-UY')}</td>
+
                             </tr>
                         ))) : (
                         <tr>
