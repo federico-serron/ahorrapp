@@ -681,8 +681,14 @@ def get_progress_from_goal(id):
     except Exception as e:
         return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
    
-  
-      
+
+# Nueva ruta Juan
 
 
-# Nueva ruta 2 Fede
+# Nueva ruta Rafa
+
+
+# Nueva ruta Fede
+
+
+# Nueva ruta Jose
