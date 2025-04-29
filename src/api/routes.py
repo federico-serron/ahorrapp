@@ -83,7 +83,12 @@ def login():
     if true_false: 
         expires= timedelta(days=1)
         user_id=user.id
-        access_token=create_access_token(identity=str(user_id),expires_delta=expires)
+        user_role=user.role
+        
+        access_token=create_access_token(identity=str(user_id),expires_delta=expires, additional_claims={"role": user_role})
+        
+        user.last_login=datetime.now(timezone.utc)
+        
         return jsonify({
                 "messagge": "Logueado exitosamente",
                 "access_token": access_token

@@ -1,7 +1,12 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useContext} from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Context } from "../store/appContext";
+
 
 export const Navbar = () => {
+
+	const { store, actions } = useContext(Context);
+    const role = actions.getUserRoleFromToken();
 
 	const [isVisible, setIsVisible] = useState(false);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -48,6 +53,13 @@ export const Navbar = () => {
 						</li>
 						<li className="nav-item">
 							<Link className="nav-link" to="/records/add">Registros</Link>
+						</li>
+					</>
+				)}
+				{role === "admin" && (
+					<>
+						<li className="nav-item">
+							<Link className="nav-link" to="/admin">Admin</Link>
 						</li>
 					</>
 				)}
