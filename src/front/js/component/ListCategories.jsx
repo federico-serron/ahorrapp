@@ -1,13 +1,28 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Context } from "../store/appContext";
 import ConfirmModal from "./ConfrimModal.jsx";
+import { toast } from "react-toastify";
+import FormCategoryModal from "./FormCategoryModal.jsx";
 
 const ListCategories = () => {
 
     const { store, actions } = useContext(Context);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true)
+    const [categoryToDelete, setCategoryToDelete] = useState(null);
 
+
+    const handleDelete = async (id) => {
+
+        const response = await actions.deleteCategory(id);
+        if (!response) {
+            toast.error("No se pudo eliminar la categoria")
+            return;
+        } else {
+            toast.success("La categoria ha sido eliminada correcamente")
+            setCategories(store.categories_db)
+        }
+    }
 
 
     useEffect(() => {
@@ -35,7 +50,14 @@ const ListCategories = () => {
 
     return (
         <div className="container mt-4">
-            <h2 className="mb-4">Lista de Usuarios</h2>
+
+            <div className="d-flex align-items-center mb-4 ">
+                <h2 className="mb-0">Lista de Categorias</h2>
+                <i class="ms-2 fa-solid fa-circle-plus fs-3 text-success"
+                role="button"
+                data-bs-toggle="modal"
+                data-bs-target="#createCategoryModal"></i>
+            </div>
             <div className="row">
                 <div className="col-12">
                     <div className="table-responsive">
@@ -46,6 +68,8 @@ const ListCategories = () => {
                                     <th>Nombre</th>
                                     <th>Descripcion</th>
                                     <th>Registros Asoc.</th>
+                                    <th></th>
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -63,18 +87,20 @@ const ListCategories = () => {
                                     categories.map((category, index) => (
                                         <tr key={category.id}>
                                             <td>{index + 1}</td>
-                                            <td>
-                                                <i
-                                                    className="fas fa-trash delete-fa show me-2"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#confirmDeleteModal"
-                                                    role="button"
-                                                    onClick={() => setUserToDelete(category.id)}
-                                                ></i>
-                                                {category.name}
-                                            </td>
+                                            <td>{category.name}</td>
                                             <td>{category.descritpion}</td>
-                                            <td>{category.records_count}</td>
+                                            <td style={{ minWidth: "15px", width: "5%" }}>{category.records_count}</td>
+                                            <td style={{ minWidth: "50px", width: "6%" }}><i
+                                                className="fas fa-trash show me-2 text-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#confirmDeleteModal"
+                                                role="button"
+                                                onClick={() => setCategoryToDelete(category.id)}
+                                            ></i>
+                                                <i className="fa-solid fa-pen text-primary" role="button"></i>
+
+                                            </td>
+
                                         </tr>
                                     ))
                                 )}
@@ -86,9 +112,13 @@ const ListCategories = () => {
 
             <ConfirmModal
                 id="confirmDeleteModal"
-                message="¿Estás seguro de que quieres eliminar este usuario?"
-                onConfirm={() => handleDelete(userToDelete)}
+                message="¿Estás seguro de que quieres eliminar esta categoria?"
+                onConfirm={() => handleDelete(categoryToDelete)}
                 onCancel={() => setUserToDelete(null)}
+            />
+            <FormCategoryModal 
+                id="createCategoryModal"
+                message="Crea una nueva categoria"
             />
         </div>
     );
