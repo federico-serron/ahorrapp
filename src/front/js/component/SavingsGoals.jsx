@@ -1,12 +1,36 @@
-import React from "react";
+import React, { useEffect, useState, useContext } from "react";
+// Suponiendo que tienes un contexto donde está getGoalProgress
+import { Context } from "../store/appContext";
 
 const SavingsGoals = () => {
-    // son datos de ejemplo hasta pdoer traer datos reales
-    const goals = [
-        { id: 1, name: "Fondo de emergencia", target: 10000, saved: 4500 },
-        { id: 2, name: "Nuevo teléfono", target: 1500, saved: 800 },
-        { id: 3, name: "Vacaciones", target: 5000, saved: 5000 }
-    ];
+    const { actions } = useContext(Context);
+    const [goals, setGoals] = useState([]);
+
+    useEffect(() => {
+        // Simulamos IDs de metas que quieres consultar
+        const goalIds = [1, 2, 3];
+
+        // Función para traer datos reales
+        const fetchGoals = async () => {
+            const fetchedGoals = [];
+
+            for (const id of goalIds) {
+                const data = await actions.getGoalProgress(id);
+                if (data) {
+                    fetchedGoals.push({
+                        id: data.id,
+                        name: data.name,
+                        target: data.target,
+                        saved: data.saved
+                    });
+                }
+            }
+
+            setGoals(fetchedGoals);
+        };
+
+        fetchGoals();
+    }, [actions]);
 
     return (
         <div style={{
