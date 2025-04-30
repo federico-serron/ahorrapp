@@ -17,6 +17,10 @@ import { Dashboard } from "./component/Dashboard.jsx";
 import Signup from "./pages/Signup.jsx";
 import Wallet from "./component/Wallet.jsx";
 import AddRecord from "./component/AddRecord.jsx";
+import Unauthorized from "./pages/Unauthorized.jsx"
+import ListUsers from "./component/ListUsers.jsx";
+import AdminLayout from "./component/AdminLayout.jsx";
+import ListCategories from "./component/ListCategories.jsx";
 
 //create your first component
 const Layout = () => {
@@ -37,12 +41,20 @@ const Layout = () => {
                         <Route element={<Wallet />} path="/wallet/:id" />
                         <Route element={<Dashboard />} path="/dashboard" />
                         <Route element={<Single />} path="/single/:theid" />
-                        <Route element={<h1>Not found!</h1>} />
+                        <Route path="/unauthorized" element={<Unauthorized />} />
+                        {/* Admin routes */}
+                        <Route path="/admin" element={<AdminLayout />}>
+                            <Route path="users" index element={<ListUsers />} />
+                            <Route path="categories" index element={<ListCategories />} />
+                        </Route>
+                        
                         {/* Login */}
                         <Route element={<Login/>} path="/login" />
                         {/* Siguientes rutas */}
                         <Route element={<Signup/>} path="/signup" />
                         <Route element={<AddRecord/>} path="/records/add" />
+
+                        <Route element={<h1>Not found!</h1>} />
 
 
 
