@@ -1,15 +1,29 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Context } from "../store/appContext";
+import ConfirmModal from './ConfrimModal.jsx';
 
 const ListUsers = () => {
     const { store, actions } = useContext(Context);
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true)
+    const [userToDelete, setUserToDelete] = useState(null)
 
+
+    const handleDelete = async (id) => {
+
+        const response = await actions.deleteUser(id);
+        if (!response) {
+            toast.error("No se pudo eliminar el usuario")
+            return;
+        } else {
+            toast.success("El usuario ha sido eliminado correcamente")
+            setUsers(store.users)
+        }
+
+
+    }
 
     useEffect(() => {
-
-
         const fetchUsers = async () => {
             // const response = await actions.getUsers();
             // if (!response) {
@@ -51,7 +65,11 @@ const ListUsers = () => {
                         users.map((user, index) => (
                             <tr key={user.id}>
                                 <td>{index + 1}</td>
-                                <td>{user.name}</td>
+                                <td><i class="fas fa-trash delete-fa show" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"
+                                    role='button'
+                                    onClick={() => { setUserToDelete(user.id) }}></i>
+                                    {user.name}
+                                </td>
                                 <td>{user.email}</td>
                                 <td>{user.wallets.length}</td>
                                 <td>{new Date(user.last_login).toLocaleString('es-UY')}</td>
@@ -65,6 +83,12 @@ const ListUsers = () => {
                     )}
                 </tbody>
             </table>
+            <ConfirmModal
+                id="confirmDeleteModal"
+                message="¿Estás seguro de que quieres eliminar este usuario?"
+                onConfirm={() => handleDelete(userToDelete)}
+                onCancel={() => setUserToDelete(null)}
+            />
         </div>
 
     )

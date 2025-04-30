@@ -87,7 +87,8 @@ class Category(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "description": self.description
+            "description": self.description,
+            "records_count": len(self.records)
         }
 
 

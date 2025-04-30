@@ -20,6 +20,7 @@ import AddRecord from "./component/AddRecord.jsx";
 import Unauthorized from "./pages/Unauthorized.jsx"
 import ListUsers from "./component/ListUsers.jsx";
 import AdminLayout from "./component/AdminLayout.jsx";
+import ListCategories from "./component/ListCategories.jsx";
 
 //create your first component
 const Layout = () => {
@@ -44,6 +45,7 @@ const Layout = () => {
                         {/* Admin routes */}
                         <Route path="/admin" element={<AdminLayout />}>
                             <Route path="users" index element={<ListUsers />} />
+                            <Route path="categories" index element={<ListCategories />} />
                         </Route>
                         
                         {/* Login */}

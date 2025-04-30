@@ -11,7 +11,6 @@ const AdminLayout = () => {
   
   return (
     <div className="d-flex">
-      {/* Sidebar */}
       <div className="bg-dark text-white vh-100 p-3" style={{ width: "220px" }}>
         <h4 className="mb-4">Admin</h4>
         <ul className="nav flex-column">
@@ -33,16 +32,16 @@ const AdminLayout = () => {
           </li>
           <li className="nav-item">
             <Link
-              to="/admin/configuracion"
-              className={`nav-link text-white ${location.pathname.includes("/admin/configuracion") ? "fw-bold" : ""}`}
+              to="/admin/categories"
+              className={`nav-link text-white ${location.pathname.includes("/admin/categories") ? "fw-bold" : ""}`}
             >
-              Configuración
+              Categorias
             </Link>
           </li>
         </ul>
       </div>
 
-      {/* Área de contenido */}
+      {/* Contenido, ya sea paginas o componentes, depende la ruta */}
       <div className="flex-grow-1 p-4" style={{ background: "#f8f9fa", minHeight: "100vh" }}>
         <Outlet />
       </div>
