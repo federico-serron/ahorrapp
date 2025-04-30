@@ -222,7 +222,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			// Action Registro de Usuario
 
-			signup: async (name, email, password) => {
+			signup: async (name, email, password, role) => {
 				const URLregister = `${apiUrl}/api/signup`;
 				const store = getStore();
 	
@@ -236,6 +236,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						name: name,
 						email: email,
 						password: password,
+						role: role
 					};
 	
 					let response = await fetch(URLregister, {

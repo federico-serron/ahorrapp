@@ -11,7 +11,6 @@ from api.routes import api
 from flask_jwt_extended import JWTManager
 from api.admin import setup_admin
 from api.commands import setup_commands
-from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 
 # from models import Person
@@ -23,7 +22,6 @@ app = Flask(__name__)
 app.url_map.strict_slashes = False
 
 bcrypt = Bcrypt(app)
-CORS(app)
 
 # database condiguration
 db_url = os.getenv("DATABASE_URL")
