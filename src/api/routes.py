@@ -692,7 +692,7 @@ def get_progress_from_goal(id):
 
 
 # Nueva ruta Jose
-# Listas a todos los usuarios regitrados en la plataforma
+# Listas a todos los usuarios regitrados en la plataforma, funcion solo para admin
 @api.route('/admin/get-users', methods=['GET'])
 @jwt_required()
 def get_all_users():
@@ -714,7 +714,7 @@ def get_all_users():
     except Exception as e:
         return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
    
-
+# Ruta para borrar un usuario, solo siendo un admin
 @api.route('/admin/user/delete/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_user(id):
