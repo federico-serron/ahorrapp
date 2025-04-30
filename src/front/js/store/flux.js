@@ -1,4 +1,4 @@
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 
 const getState = ({ getStore, getActions, setStore }) => {
 
@@ -9,65 +9,65 @@ const getState = ({ getStore, getActions, setStore }) => {
 			message: null,
 			categories: {
 				Restaurante: [
-				  "restaurante", "parrillada", "pizzeria", "cafeteria", "bar", "chiviteria",
-				  "sushi", "bistro", "comida rapida", "hamburgueseria", "brunch", "almuerzo",
-				  "cena", "brindis", "cerveceria", "gastrobar", "birra"
+					"restaurante", "parrillada", "pizzeria", "cafeteria", "bar", "chiviteria",
+					"sushi", "bistro", "comida rapida", "hamburgueseria", "brunch", "almuerzo",
+					"cena", "brindis", "cerveceria", "gastrobar", "birra"
 				],
 				Supermercado: [
-				  "supermercado", "almacen", "minimercado", "autoservicio", "mercado",
-				  "hipermercado", "despensa", "kiosco", "feria", "verduleria", "fruteria",
-				  "carniceria", "pescaderia", "panaderia", "granja"
+					"supermercado", "almacen", "minimercado", "autoservicio", "mercado",
+					"hipermercado", "despensa", "kiosco", "feria", "verduleria", "fruteria",
+					"carniceria", "pescaderia", "panaderia", "granja"
 				],
 				Transporte: [
-				  "uber", "taxi", "omnibus", "bus", "colectivo", "peaje", "nafta", "combustible",
-				  "estacionamiento", "subte", "tren", "bicicleta", "bici", "pasaje", "aeropuerto",
-				  "vuelo", "remise", "moto"
+					"uber", "taxi", "omnibus", "bus", "colectivo", "peaje", "nafta", "combustible",
+					"estacionamiento", "subte", "tren", "bicicleta", "bici", "pasaje", "aeropuerto",
+					"vuelo", "remise", "moto"
 				],
 				Vivienda: [
-				  "alquiler", "renta", "hipoteca", "gastos comunes", "contribucion", "impuesto",
-				  "UTE", "OSE", "ANTEL", "electricidad", "agua", "telefono", "internet", "gas",
-				  "seguro hogar", "mantencion"
+					"alquiler", "renta", "hipoteca", "gastos comunes", "contribucion", "impuesto",
+					"UTE", "OSE", "ANTEL", "electricidad", "agua", "telefono", "internet", "gas",
+					"seguro hogar", "mantencion"
 				],
 				Entretenimiento: [
-				  "cine", "teatro", "concierto", "evento", "recital", "festival", "espectaculo",
-				  "museo", "exposicion", "karaoke", "parque de diversiones", "juegos", "videojuegos",
-				  "netflix", "spotify", "plataforma", "streaming"
+					"cine", "teatro", "concierto", "evento", "recital", "festival", "espectaculo",
+					"museo", "exposicion", "karaoke", "parque de diversiones", "juegos", "videojuegos",
+					"netflix", "spotify", "plataforma", "streaming"
 				],
 				Salud: [
-				  "farmacia", "medicamentos", "mutualista", "consultas", "analisis", "dentista",
-				  "oftalmologo", "psicologo", "fisioterapia", "examen medico", "salud"
+					"farmacia", "medicamentos", "mutualista", "consultas", "analisis", "dentista",
+					"oftalmologo", "psicologo", "fisioterapia", "examen medico", "salud"
 				],
 				Educacion: [
-				  "colegiatura", "cuota", "universidad", "curso", "taller", "clases", "academia",
-				  "seminario", "libros", "materiales", "examen", "educacion"
+					"colegiatura", "cuota", "universidad", "curso", "taller", "clases", "academia",
+					"seminario", "libros", "materiales", "examen", "educacion"
 				],
 				Compras: [
-				  "ropa", "calzado", "indumentaria", "zapatos", "accesorios", "perfumeria",
-				  "cosmeticos", "tecnologia", "electronica", "celular", "computadora", "notebook",
-				  "auriculares", "gaming", "decoracion", "muebles", "repuesto"
+					"ropa", "calzado", "indumentaria", "zapatos", "accesorios", "perfumeria",
+					"cosmeticos", "tecnologia", "electronica", "celular", "computadora", "notebook",
+					"auriculares", "gaming", "decoracion", "muebles", "repuesto"
 				],
 				Deporte: [
-				  "gimnasio", "fitness", "deporte", "entrenamiento", "yoga", "pilates", "pesas",
-				  "cancha", "futbol", "basquet", "padel", "correr", "maraton"
+					"gimnasio", "fitness", "deporte", "entrenamiento", "yoga", "pilates", "pesas",
+					"cancha", "futbol", "basquet", "padel", "correr", "maraton"
 				],
 				Finanzas: [
-				  "banco", "transferencia", "tarjeta", "pago", "prestamo", "intereses",
-				  "credito", "debito", "inversion", "comision", "gastos bancarios"
+					"banco", "transferencia", "tarjeta", "pago", "prestamo", "intereses",
+					"credito", "debito", "inversion", "comision", "gastos bancarios"
 				],
 				Mascotas: [
-				  "veterinaria", "alimento", "mascota", "perro", "gato", "vacuna", "bano",
-				  "accesorios mascotas", "paseador"
+					"veterinaria", "alimento", "mascota", "perro", "gato", "vacuna", "bano",
+					"accesorios mascotas", "paseador"
 				],
 				Viajes: [
-				  "hotel", "hostel", "alojamiento", "pasaje", "vuelo", "excursion",
-				  "tour", "viaje", "transporte turistico", "souvenir", "paquete turistico"
+					"hotel", "hostel", "alojamiento", "pasaje", "vuelo", "excursion",
+					"tour", "viaje", "transporte turistico", "souvenir", "paquete turistico"
 				],
 				Otros: [
-				  "regalo", "donacion", "caridad", "cobro", "perdida", "error bancario",
-				  "servicio tecnico", "reparacion", "multas", "papeleria", "tramite",
-				  "gastos varios", "sin categoria"
+					"regalo", "donacion", "caridad", "cobro", "perdida", "error bancario",
+					"servicio tecnico", "reparacion", "multas", "papeleria", "tramite",
+					"gastos varios", "sin categoria"
 				]
-			  },			  
+			},
 			demo: [
 				{
 					title: "FIRST",
@@ -83,7 +83,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			//Info de Usuario actualmente logeado
 			logged_user: [],
 			//Listado de todos los usuarios de la plataforma
-			users: [ {
+			users: [{
 				id: 1,
 				name: "Lucía Fernández",
 				email: "lucia.fernandez@example.com",
@@ -94,18 +94,18 @@ const getState = ({ getStore, getActions, setStore }) => {
 				is_active: true,
 				is_premium: true,
 				wallets: [
-				  { id: 1, name: "Santander", balance: 5000, currency: "UYU" },
-				  { id: 2, name: "Paypal", balance: 300, currency: "USD" }
+					{ id: 1, name: "Santander", balance: 5000, currency: "UYU" },
+					{ id: 2, name: "Paypal", balance: 300, currency: "USD" }
 				],
 				records: [
-				  { id: 1, concept: "Compra supermercado", amount: 1200, date: "2025-04-25T14:00:00Z" },
-				  { id: 2, concept: "Pago Netflix", amount: 390, date: "2025-04-20T08:30:00Z" }
+					{ id: 1, concept: "Compra supermercado", amount: 1200, date: "2025-04-25T14:00:00Z" },
+					{ id: 2, concept: "Pago Netflix", amount: 390, date: "2025-04-20T08:30:00Z" }
 				],
 				goals: [
-				  { id: 1, title: "Ahorro viaje", target_amount: 20000, current_amount: 5000 }
+					{ id: 1, title: "Ahorro viaje", target_amount: 20000, current_amount: 5000 }
 				]
-			  },
-			  {
+			},
+			{
 				id: 2,
 				name: "Martín Rodríguez",
 				email: "martin.rodriguez@example.com",
@@ -116,14 +116,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 				is_active: true,
 				is_premium: false,
 				wallets: [
-				  { id: 3, name: "BROU", balance: 7800, currency: "UYU" }
+					{ id: 3, name: "BROU", balance: 7800, currency: "UYU" }
 				],
 				records: [
-				  { id: 3, concept: "Nafta", amount: 2100, date: "2025-04-23T12:00:00Z" }
+					{ id: 3, concept: "Nafta", amount: 2100, date: "2025-04-23T12:00:00Z" }
 				],
 				goals: []
-			  },
-			  {
+			},
+			{
 				id: 3,
 				name: "Sofía García",
 				email: "sofia.garcia@example.com",
@@ -136,13 +136,47 @@ const getState = ({ getStore, getActions, setStore }) => {
 				wallets: [],
 				records: [],
 				goals: []
-			  }],
+			}],
+
+			//Categorias de prueba, eliminar luego
+			categories_db: [
+				{
+					id: 1,
+					name: "Alimentación",
+					descritpion: "Gastos en comida y supermercado",
+					records_count: 15
+				},
+				{
+					id: 2,
+					name: "Transporte",
+					descritpion: "Gastos en ómnibus, taxi o combustible",
+					records_count: 8
+				},
+				{
+					id: 3,
+					name: "Entretenimiento",
+					descritpion: "Cine, Netflix, salidas y ocio",
+					records_count: 5
+				},
+				{
+					id: 4,
+					name: "Salud",
+					descritpion: "Consultas médicas, farmacia, mutualista",
+					records_count: 3
+				},
+				{
+					id: 5,
+					name: "Educación",
+					descritpion: "Cursos, libros, materiales de estudio",
+					records_count: 7
+				}
+			],
 
 			//Registros de gastos/ingresos
 			records: [],
 
 			// Registros de Metas (Goals)
-			goals: [], 
+			goals: [],
 
 			// Progreso actual de la meta seleccionada. Es null si no hay una meta seleccionada.
 			goalProgress: null,
@@ -154,14 +188,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			getMessage: async () => {
-				try{
+				try {
 					// fetching data from the backend
 					const resp = await fetch(process.env.BACKEND_URL + "/api/hello")
 					const data = await resp.json()
 					setStore({ message: data.message })
 					// don't forget to return something, that is how the async resolves
 					return data;
-				}catch(error){
+				} catch (error) {
 					console.log("Error loading message from backend", error)
 				}
 			},
@@ -192,10 +226,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 					let response = await fetch(URLlogin, {
 						method: "POST",
-						body: JSON.stringify({'email': email, 'password': password}),
+						body: JSON.stringify({ 'email': email, 'password': password }),
 						headers: {
 							"Content-type": "application/json; charset=UTF-8"
-						} 
+						}
 					})
 					if (!response.ok) {
 						console.error("Error trying to login, pelase try again.");
@@ -211,7 +245,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					localStorage.setItem("token", data.access_token)
 					console.log("Successfully logged in!")
-					setStore({...store, logged_user: data })
+					setStore({ ...store, logged_user: data })
 					return true
 
 				} catch (error) {
@@ -225,20 +259,20 @@ const getState = ({ getStore, getActions, setStore }) => {
 			signup: async (name, email, password, role) => {
 				const URLregister = `${apiUrl}/api/signup`;
 				const store = getStore();
-	
+
 				try {
 					if (!email || !password || !name) {
 						console.log("Falta correo electrónico, contraseña o contraseña de confirmación");
 						return false;
 					}
-	
+
 					const userData = {
 						name: name,
 						email: email,
 						password: password,
 						role: role
 					};
-	
+
 					let response = await fetch(URLregister, {
 						method: "POST",
 						body: JSON.stringify(userData),
@@ -246,35 +280,35 @@ const getState = ({ getStore, getActions, setStore }) => {
 							"Content-type": "application/json; charset=UTF-8"
 						}
 					});
-	
+
 					if (!response.ok) {
 						console.error("Error al intentar registrar el usuario, por favor inténtelo nuevamente.");
 						throw new Error(response.statusText);
 					}
-	
+
 					const data = await response.json();
 					console.log("¡Registrado exitosamente!", data);
 					return true;
-	
+
 				} catch (error) {
 					console.error("Hubo un error durante el registro:", error);
 					return false;
 				}
 			},
-			
+
 			// Acción para obtener registros filtrados por usuario y categoría en un período de tiempo (get-records)
 			get_records: async (category_id, start_date) => {
 				const baseURL = `${apiUrl}/api/records/list`;
 				const queryParams = [];
 				const store = getStore();
 
-		
+
 				if (category_id) queryParams.push(`category_id=${category_id}`);
 				if (start_date) queryParams.push(`start_date=${new Date(start_date).toISOString()}`);
-		
+
 				const URLlistRecords = queryParams.length > 0 ? `${baseURL}?${queryParams.join('&')}` : baseURL;
-				
-		
+
+
 				try {
 					const response = await fetch(URLlistRecords, {
 						method: 'GET',
@@ -283,16 +317,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 							'Content-Type': 'application/json'
 						}
 					});
-		
+
 					if (!response.ok) {
 						const errorData = await response.json();
 						throw new Error(`Error en la petición: ${response.status} - ${errorData?.message || response.statusText}`);
 					}
-		
+
 					const data = await response.json();
-					setStore({ ...store, records: data.records}); 
+					setStore({ ...store, records: data.records });
 					return true;
-		
+
 				} catch (error) {
 					console.error("Error al obtener los registros:", error);
 					setStore({ recordsError: error.message || "Ocurrió un error al cargar los registros." });
@@ -303,51 +337,51 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 			// Action para agregar un nuevo registro (Record)
-		addRecord: async (description, amount, type, category_name, wallet_id) => {
-                const URLaddRecord = `${apiUrl}/api/records/add`;
-				        const store = getStore();
+			addRecord: async (description, amount, type, category_name, wallet_id) => {
+				const URLaddRecord = `${apiUrl}/api/records/add`;
+				const store = getStore();
 
-                try {
-                    if (!description || !amount || !type || !category_name || !wallet_id) {
-                        console.error("Faltan campos requeridos para agregar el registro.");
-                        return false;
-                    }
+				try {
+					if (!description || !amount || !type || !category_name || !wallet_id) {
+						console.error("Faltan campos requeridos para agregar el registro.");
+						return false;
+					}
 
-                    const recordData = {
-                        description: description,
-                        amount: parseFloat(amount),
-                        type: type,
-                        category_name: category_name, 
-                        wallet_id: parseInt(wallet_id),   
-                    };
+					const recordData = {
+						description: description,
+						amount: parseFloat(amount),
+						type: type,
+						category_name: category_name,
+						wallet_id: parseInt(wallet_id),
+					};
 
-                    const response = await fetch(URLaddRecord, {
-                        method: "POST",
-                        body: JSON.stringify(recordData),
-                        headers: {
-                            "Content-type": "application/json; charset=UTF-8",
+					const response = await fetch(URLaddRecord, {
+						method: "POST",
+						body: JSON.stringify(recordData),
+						headers: {
+							"Content-type": "application/json; charset=UTF-8",
 
-                            "Authorization": `Bearer ${localStorage.getItem('token')}`
-                        }
-                    });
+							"Authorization": `Bearer ${localStorage.getItem('token')}`
+						}
+					});
 
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        console.error("Error al agregar el registro:", errorData?.msg || response.statusText);
-                        return false;
-                    }
+					if (!response.ok) {
+						const errorData = await response.json();
+						console.error("Error al agregar el registro:", errorData?.msg || response.statusText);
+						return false;
+					}
 
-                    const data = await response.json();
-                    console.log("Registro agregado exitosamente:", data);
+					const data = await response.json();
+					console.log("Registro agregado exitosamente:", data);
 
-                    setStore({ ...store, records: [...store.records, data] });
-                    return true;
+					setStore({ ...store, records: [...store.records, data] });
+					return true;
 
-                } catch (error) {
-                    console.error("Hubo un error al agregar el registro:", error);
-                    return false;
-                }
-            },
+				} catch (error) {
+					console.error("Hubo un error al agregar el registro:", error);
+					return false;
+				}
+			},
 
 
 			//Actions Juan
@@ -356,44 +390,44 @@ const getState = ({ getStore, getActions, setStore }) => {
 			setGoal: async (name_goal, goal_value) => {
 				const urlSetGoal = `${apiUrl}/api/goal/add`;
 				const store = getStore();
-			
+
 				try {
-					
+
 					if (!name_goal || !goal_value) {
 						console.error("Completa todos los campos requeridos .");
 						return false;
 					}
-			
-					
+
+
 					const response = await fetch(urlSetGoal, {
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
-							
+
 							Authorization: `Bearer ${localStorage.getItem('token')}`
 						},
 						body: JSON.stringify({
-							name: name_goal, 
+							name: name_goal,
 							goal_value: goal_value
 						})
 					});
-			
-					
+
+
 					if (!response.ok) {
 						const errorData = await response.json();
 						console.error("Error al crear la meta:", errorData.msg);
 						return false;
 					}
-			
+
 					const data = await response.json();
-					
-			
-					
-					setStore({ 
-						...store, 
-						goals: [...store.goals, data] 
+
+
+
+					setStore({
+						...store,
+						goals: [...store.goals, data]
 					});
-			
+
 					return true;
 				} catch (error) {
 					console.error("Ocurrió un error al realizar la operación:", error);
@@ -406,17 +440,17 @@ const getState = ({ getStore, getActions, setStore }) => {
 			editGoal: async (goal_id, name_goal, goal_value) => {
 				const urlEditGoal = `${apiUrl}/api/goal/edit/${goal_id}`;
 				const store = getStore();
-		
+
 				try {
 					if (!goal_id || (!name_goal && !goal_value)) {
 						console.error("Faltan campos requeridos para modificar la Meta.");
 						return false;
 					}
-		
+
 					const goalData = {};
 					if (name_goal) goalData.name = name_goal;
 					if (goal_value) goalData.goal_value = goal_value;
-		
+
 					const response = await fetch(urlEditGoal, {
 						method: "PUT",
 						headers: {
@@ -425,25 +459,25 @@ const getState = ({ getStore, getActions, setStore }) => {
 						},
 						body: JSON.stringify(goalData)
 					});
-		
+
 					if (!response.ok) {
 						const errorData = await response.json();
 						console.error("Error al modificar la Meta:", errorData?.msg || response.statusText);
 						return false;
 					}
-		
+
 					const data = await response.json();
 					console.log("modificado exitosamente:", data);
-		
-					
-					setStore({ 
-						...store, 
-						goals: store.goals.map(goal => 
+
+
+					setStore({
+						...store,
+						goals: store.goals.map(goal =>
 							goal.id === goal_id ? data : goal
-						) 
+						)
 					});
 					return true;
-		
+
 				} catch (error) {
 					console.error("Hubo un error al modificar la Meta:", error);
 					return false;
@@ -455,36 +489,36 @@ const getState = ({ getStore, getActions, setStore }) => {
 			deleteGoal: async (goal_id) => {
 				const urlDeleteGoal = `${apiUrl}/api/goal/delete/${goal_id}`;
 				const store = getStore();
-		
+
 				try {
 					if (!goal_id) {
 						console.error("Falta el ID  para eliminar.");
 						return false;
 					}
-		
+
 					const response = await fetch(urlDeleteGoal, {
 						method: "DELETE",
 						headers: {
 							Authorization: `Bearer ${localStorage.getItem('token')}`
 						}
 					});
-		
+
 					if (!response.ok) {
 						const errorData = await response.json();
 						console.error("Error al eliminar la Meta:", errorData?.msg || response.statusText);
 						return false;
 					}
-		
-					
-		
-					
-					setStore({ 
-						...store, 
-						goals: store.goals.filter(goal => goal.id !== goal_id) 
+
+
+
+
+					setStore({
+						...store,
+						goals: store.goals.filter(goal => goal.id !== goal_id)
 					});
-					
+
 					return true;
-		
+
 				} catch (error) {
 					console.error("Hubo un error al eliminar la meta :", error);
 					return false;
@@ -496,7 +530,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			getAllGoals: async () => {
 				const urlGetAllGoals = `${apiUrl}/api/goal/get-all`;
 				const store = getStore();
-		
+
 				try {
 					const response = await fetch(urlGetAllGoals, {
 						method: "GET",
@@ -505,23 +539,23 @@ const getState = ({ getStore, getActions, setStore }) => {
 							"Content-Type": "application/json"
 						}
 					});
-		
+
 					if (!response.ok) {
 						const errorData = await response.json();
 						console.error("Error al obtener los datos:", errorData?.msg || response.statusText);
 						return false;
 					}
-		
+
 					const data = await response.json();
-					
-		
-					
-					setStore({ 
-						...store, 
-						goals: [...data] 
+
+
+
+					setStore({
+						...store,
+						goals: [...data]
 					});
 					return true;
-		
+
 				} catch (error) {
 					console.error("Hubo un error al obtener los datos :", error);
 					return false;
@@ -533,13 +567,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 			getGoalById: async (goal_id) => {
 				const urlGetGoalById = `${apiUrl}/api/goal/get/${goal_id}`;
 				const store = getStore();
-		
+
 				try {
 					if (!goal_id) {
 						console.error("Falta el ID  para buscar.");
 						return false;
 					}
-		
+
 					const response = await fetch(urlGetGoalById, {
 						method: "GET",
 						headers: {
@@ -547,24 +581,24 @@ const getState = ({ getStore, getActions, setStore }) => {
 							"Content-Type": "application/json"
 						}
 					});
-		
+
 					if (!response.ok) {
 						const errorData = await response.json();
 						console.error("Error al obtener la Meta:", errorData?.msg || response.statusText);
 						return false;
 					}
-		
+
 					const data = await response.json();
-					
-		
-					
-					setStore({ 
-						...store, 
-						goals: store.goals.map(goal => 
+
+
+
+					setStore({
+						...store,
+						goals: store.goals.map(goal =>
 							goal.id === goal_id ? data : goal
-						) 
+						)
 					});
-		
+
 					return data;
 				} catch (error) {
 					console.error("Hubo un error al obtener  la Meta:", error);
@@ -577,13 +611,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 			getGoalProgress: async (goal_id) => {
 				const urlGetGoalProgress = `${apiUrl}/api/goal/get-progress/${goal_id}`;
 				const store = getStore();
-			
+
 				try {
 					if (!goal_id) {
 						console.error("Falta el ID  para obtener el progreso.");
 						return false;
 					}
-			
+
 					const response = await fetch(urlGetGoalProgress, {
 						method: "GET",
 						headers: {
@@ -591,30 +625,30 @@ const getState = ({ getStore, getActions, setStore }) => {
 							"Content-Type": "application/json"
 						}
 					});
-			
+
 					if (!response.ok) {
 						const errorData = await response.json();
 						console.error("Error al obtener el progreso:", errorData?.msg || response.statusText);
 						return false;
 					}
-			
+
 					const data = await response.json();
-					
-			
-					
-					setStore({ 
-						...store, 
-						goalProgress: data 
+
+
+
+					setStore({
+						...store,
+						goalProgress: data
 					});
-			
+
 					return data;
-			
+
 				} catch (error) {
 					console.error("Hubo un error al obtener el progreso :", error);
 					return false;
 				}
 			},
-			
+
 			//Actions Rafa
 
 			//Actions Fede
@@ -622,23 +656,23 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const token = localStorage.getItem("token");
 
 				if (!token) return null;
-			  
+
 				try {
 
-				  const decoded = jwtDecode(token);
-				  return decoded.role || null;
+					const decoded = jwtDecode(token);
+					return decoded.role || null;
 
 				} catch (err) {
 
-				  console.error("Error al decodificar token:", err);
-				  return null;
+					console.error("Error al decodificar token:", err);
+					return null;
 				}
 			},
 
 			//Actions Jose
-			
-        }
-    };
+
+		}
+	};
 };
 
 export default getState;

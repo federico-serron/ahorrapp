@@ -43,46 +43,58 @@ const ListUsers = () => {
     return (
         <div className="container mt-4">
             <h2 className="mb-4">Lista de Usuarios</h2>
-            <table className="table table-hover table-bordered align-middle">
-                <thead className="table-dark">
-                    <tr>
-                        <th>#</th>
-                        <th>Nombre</th>
-                        <th>Email</th>
-                        <th>Billeteras</th>
-                        <th>Último Login</th>
-                        <th>Premium</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {loading ? (
-                        <div className="d-flex justify-content-center my-5">
-                            <div className="spinner-border text-primary" role="status">
-                                <span className="visually-hidden">Cargando...</span>
-                            </div>
-                        </div>
-                    ) : (
-                        users.map((user, index) => (
-                            <tr key={user.id}>
-                                <td>{index + 1}</td>
-                                <td><i class="fas fa-trash delete-fa show" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"
-                                    role='button'
-                                    onClick={() => { setUserToDelete(user.id) }}></i>
-                                    {user.name}
-                                </td>
-                                <td>{user.email}</td>
-                                <td>{user.wallets.length}</td>
-                                <td>{new Date(user.last_login).toLocaleString('es-UY')}</td>
-                                <td>
-                                    <span className={`badge ${user.is_premium ? 'bg-success' : 'bg-secondary'}`}>
-                                        {user.is_premium ? 'Sí' : 'No'}
-                                    </span>
+            <div className="table-responsive">
+                <table className="table table-hover table-bordered align-middle">
+                    <thead className="table-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Billeteras</th>
+                            <th>Último Login</th>
+                            <th>Premium</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {loading ? (
+                            <tr>
+                                <td colSpan="6">
+                                    <div className="d-flex justify-content-center my-3">
+                                        <div className="spinner-border text-primary" role="status">
+                                            <span className="visually-hidden">Cargando...</span>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
-                        ))
-                    )}
-                </tbody>
-            </table>
+                        ) : (
+                            users.map((user, index) => (
+                                <tr key={user.id}>
+                                    <td>{index + 1}</td>
+                                    <td>
+                                        <i
+                                            className="fas fa-trash delete-fa show me-2"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#confirmDeleteModal"
+                                            role="button"
+                                            onClick={() => setUserToDelete(user.id)}
+                                        ></i>
+                                        {user.name}
+                                    </td>
+                                    <td>{user.email}</td>
+                                    <td>{user.wallets.length}</td>
+                                    <td>{new Date(user.last_login).toLocaleString('es-UY')}</td>
+                                    <td>
+                                        <span className={`badge ${user.is_premium ? 'bg-success' : 'bg-secondary'}`}>
+                                            {user.is_premium ? 'Sí' : 'No'}
+                                        </span>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
+                    </tbody>
+                </table>
+            </div>
+
             <ConfirmModal
                 id="confirmDeleteModal"
                 message="¿Estás seguro de que quieres eliminar este usuario?"
@@ -90,8 +102,8 @@ const ListUsers = () => {
                 onCancel={() => setUserToDelete(null)}
             />
         </div>
+    );
 
-    )
 }
 
 export default ListUsers;
