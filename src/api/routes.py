@@ -697,3 +697,54 @@ def get_progress_from_goal(id):
 
 
 # Nueva ruta Jose
+# Listas a todos los usuarios regitrados en la plataforma, funcion solo para admin
+@api.route('/admin/get-users', methods=['GET'])
+@jwt_required()
+def get_all_users():
+    try:
+        is_not_admin = check_user_is_admin(get_jwt_identity())
+
+        if is_not_admin:
+            return is_not_admin
+
+        users = User.query.all()
+
+        if not users:
+            return jsonify({'msg': 'No hay usuarios creados'}), 400
+        
+        users = list(map(lambda user: user.serialize(), users))
+
+        return jsonify(users), 200
+
+    except Exception as e:
+        return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
+   
+# Ruta para borrar un usuario, solo siendo un admin
+@api.route('/admin/user/delete/<int:id>', methods=['DELETE'])
+@jwt_required()
+def delete_user(id):
+    try:
+        is_not_admin = check_user_is_admin(get_jwt_identity())
+        admin_user_id = get_jwt_identity()
+
+        if int(admin_user_id) == int(id):
+            return jsonify({'msg': 'No puedes eliminar tu propio usuario'}), 400
+        
+        if is_not_admin:
+            return is_not_admin
+
+        user = User.query.filter_by(id = id).first()
+
+        if not user:
+            return ({'msg': 'El usuario no existe'}), 400
+
+        db.session.delete(user)
+        db.session.commit()
+
+        return (jsonify({'msg': 'Usuario eliminado con exito'})), 200 
+
+
+    except Exception as e:
+        return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
+   
+
