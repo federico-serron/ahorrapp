@@ -684,6 +684,7 @@ def get_progress_from_goal(id):
         progress = (sum_all_wallets_balance * 100) // goal_from_user.goal_value
 
         return jsonify({
+            "name": goal_from_user.name,
             "goal": goal_from_user.goal_value,
             "balance": sum_all_wallets_balance,
             "remaining":  remaining ,
