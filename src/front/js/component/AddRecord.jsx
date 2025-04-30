@@ -49,17 +49,12 @@ const AddRecord = () => {
         const response = await actions.addRecord(words.join(" "), amount, type, matchedCategory, 1)
         if (!response) {
             console.log("Hubo un error al intentar agregar el registro.")
+            toast.warn("Debes agregar una breve descripcion y un monto");
+
+            return;
         }
         toast.success("Registro agregado exitosamente!");
 
-        // return store.records = [...store.records, {
-        //     id: store.records.length + 1,
-        //     description: words.join(" "),
-        //     amount: amount,
-        //     category:{
-        //         name: matchedCategory
-        //     }
-        // }];
     };
 
     useEffect(()=>{
@@ -69,6 +64,10 @@ const AddRecord = () => {
                 totalValue = totalValue + store.records[i].amount;
             }
             setTotalValueWallet(totalValue)
+        }
+
+        return ()=>{
+            setTotalValueWallet(0)
         }
     }, [store.records])
 

@@ -83,7 +83,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 			//Registros de gastos/ingresos
 			records: [],
 
-			//Siguientes funciones a crear
+			// Registros de Metas (Goals)
+			goals: [], 
+
+			// Progreso actual de la meta seleccionada. Es null si no hay una meta seleccionada.
+			goalProgress: null,
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -198,16 +202,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return false;
 				}
 			},
-
-			//Action 1
-
-			//Action 2
-
-			//Action 3
-
-			//Action 4
-
-			//Siguientes actions aqui debajo
 			
 			// Acción para obtener registros filtrados por usuario y categoría en un período de tiempo (get-records)
 			get_records: async (category_id, start_date) => {
@@ -250,7 +244,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 			// Action para agregar un nuevo registro (Record)
-			addRecord: async (description, amount, type, category_name, wallet_id) => {
+		addRecord: async (description, amount, type, category_name, wallet_id) => {
                 const URLaddRecord = `${apiUrl}/api/records/add`;
 				        const store = getStore();
 
@@ -295,6 +289,279 @@ const getState = ({ getStore, getActions, setStore }) => {
                     return false;
                 }
             },
+
+
+			//Actions Juan
+			// Action  para crear nueva meta (goal)
+
+			setGoal: async (name_goal, goal_value) => {
+				const urlSetGoal = `${apiUrl}/api/goal/add`;
+				const store = getStore();
+			
+				try {
+					
+					if (!name_goal || !goal_value) {
+						console.error("Completa todos los campos requeridos .");
+						return false;
+					}
+			
+					
+					const response = await fetch(urlSetGoal, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							
+							Authorization: `Bearer ${localStorage.getItem('token')}`
+						},
+						body: JSON.stringify({
+							name: name_goal, 
+							goal_value: goal_value
+						})
+					});
+			
+					
+					if (!response.ok) {
+						const errorData = await response.json();
+						console.error("Error al crear la meta:", errorData.msg);
+						return false;
+					}
+			
+					const data = await response.json();
+					
+			
+					
+					setStore({ 
+						...store, 
+						goals: [...store.goals, data] 
+					});
+			
+					return true;
+				} catch (error) {
+					console.error("Ocurrió un error al realizar la operación:", error);
+					return false;
+				}
+			},
+
+			// Action  para Modificar meta  ( Goal )
+
+			editGoal: async (goal_id, name_goal, goal_value) => {
+				const urlEditGoal = `${apiUrl}/api/goal/edit/${goal_id}`;
+				const store = getStore();
+		
+				try {
+					if (!goal_id || (!name_goal && !goal_value)) {
+						console.error("Faltan campos requeridos para modificar la Meta.");
+						return false;
+					}
+		
+					const goalData = {};
+					if (name_goal) goalData.name = name_goal;
+					if (goal_value) goalData.goal_value = goal_value;
+		
+					const response = await fetch(urlEditGoal, {
+						method: "PUT",
+						headers: {
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${localStorage.getItem('token')}`
+						},
+						body: JSON.stringify(goalData)
+					});
+		
+					if (!response.ok) {
+						const errorData = await response.json();
+						console.error("Error al modificar la Meta:", errorData?.msg || response.statusText);
+						return false;
+					}
+		
+					const data = await response.json();
+					console.log("modificado exitosamente:", data);
+		
+					
+					setStore({ 
+						...store, 
+						goals: store.goals.map(goal => 
+							goal.id === goal_id ? data : goal
+						) 
+					});
+					return true;
+		
+				} catch (error) {
+					console.error("Hubo un error al modificar la Meta:", error);
+					return false;
+				}
+			},
+
+			// Action para eliminar una meta (Goal)
+
+			deleteGoal: async (goal_id) => {
+				const urlDeleteGoal = `${apiUrl}/api/goal/delete/${goal_id}`;
+				const store = getStore();
+		
+				try {
+					if (!goal_id) {
+						console.error("Falta el ID  para eliminar.");
+						return false;
+					}
+		
+					const response = await fetch(urlDeleteGoal, {
+						method: "DELETE",
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem('token')}`
+						}
+					});
+		
+					if (!response.ok) {
+						const errorData = await response.json();
+						console.error("Error al eliminar la Meta:", errorData?.msg || response.statusText);
+						return false;
+					}
+		
+					
+		
+					
+					setStore({ 
+						...store, 
+						goals: store.goals.filter(goal => goal.id !== goal_id) 
+					});
+					
+					return true;
+		
+				} catch (error) {
+					console.error("Hubo un error al eliminar la meta :", error);
+					return false;
+				}
+			},
+
+			// Action para obtener todas las metas (Goals ) del usuario 
+
+			getAllGoals: async () => {
+				const urlGetAllGoals = `${apiUrl}/api/goal/get-all`;
+				const store = getStore();
+		
+				try {
+					const response = await fetch(urlGetAllGoals, {
+						method: "GET",
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem('token')}`,
+							"Content-Type": "application/json"
+						}
+					});
+		
+					if (!response.ok) {
+						const errorData = await response.json();
+						console.error("Error al obtener los datos:", errorData?.msg || response.statusText);
+						return false;
+					}
+		
+					const data = await response.json();
+					
+		
+					
+					setStore({ 
+						...store, 
+						goals: [...data] 
+					});
+					return true;
+		
+				} catch (error) {
+					console.error("Hubo un error al obtener los datos :", error);
+					return false;
+				}
+			},
+
+			// Action para obtener una meta (Goal ) por su ID 
+
+			getGoalById: async (goal_id) => {
+				const urlGetGoalById = `${apiUrl}/api/goal/get/${goal_id}`;
+				const store = getStore();
+		
+				try {
+					if (!goal_id) {
+						console.error("Falta el ID  para buscar.");
+						return false;
+					}
+		
+					const response = await fetch(urlGetGoalById, {
+						method: "GET",
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem('token')}`,
+							"Content-Type": "application/json"
+						}
+					});
+		
+					if (!response.ok) {
+						const errorData = await response.json();
+						console.error("Error al obtener la Meta:", errorData?.msg || response.statusText);
+						return false;
+					}
+		
+					const data = await response.json();
+					
+		
+					
+					setStore({ 
+						...store, 
+						goals: store.goals.map(goal => 
+							goal.id === goal_id ? data : goal
+						) 
+					});
+		
+					return data;
+				} catch (error) {
+					console.error("Hubo un error al obtener  la Meta:", error);
+					return false;
+				}
+			},
+
+			// Action Progreso de la meta (Goal)
+
+			getGoalProgress: async (goal_id) => {
+				const urlGetGoalProgress = `${apiUrl}/api/goal/get-progress/${goal_id}`;
+				const store = getStore();
+			
+				try {
+					if (!goal_id) {
+						console.error("Falta el ID  para obtener el progreso.");
+						return false;
+					}
+			
+					const response = await fetch(urlGetGoalProgress, {
+						method: "GET",
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem('token')}`,
+							"Content-Type": "application/json"
+						}
+					});
+			
+					if (!response.ok) {
+						const errorData = await response.json();
+						console.error("Error al obtener el progreso:", errorData?.msg || response.statusText);
+						return false;
+					}
+			
+					const data = await response.json();
+					
+			
+					
+					setStore({ 
+						...store, 
+						goalProgress: data 
+					});
+			
+					return data;
+			
+				} catch (error) {
+					console.error("Hubo un error al obtener el progreso :", error);
+					return false;
+				}
+			},
+			
+			//Actions Rafa
+
+			//Actions Fede
+
+			//Actions Jose
+			
         }
     };
 };

@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Record, Category, Wallet
+from api.models import db, User, Record, Category, Wallet, Goal, Currency
 from api.utils import generate_sitemap, APIException, validate_relationships, validate_required_fields, parse_date, check_user_is_admin
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
@@ -103,6 +103,11 @@ def create_wallet():
     name_wallet = request.json.get('name')
     initial_value = request.json.get('total_value')
     currency_id = request.json.get('currency_id')
+
+    currency = Currency.query.filter_by(id = currency_id).first()
+
+    if not currency:
+        return jsonify({'msg': 'Ese moneda no existe, debe crearse o agregar una que exista'}), 400
 
 
     # hacer verificacaciones para asegurar de que se incluya los 4 items de arriba
@@ -539,5 +544,202 @@ def delete_category(id):
       
       
 # Nueva ruta 1 Jose
+# Ruta para crear la nueva meta o Goal
+@api.route('/goal/add', methods=['POST'])
+@jwt_required()
+def set_goal():
+    try:
+        user_id = get_jwt_identity()
+        name_goal = request.json.get('name')
+        goal_value = request.json.get('goal_value')
+        is_complete = False
 
-# Nueva ruta 2 Fede
+        if not user_id or not name_goal or not goal_value:
+            return jsonify({'msg':'Completar todos los campos solicitados'}), 404
+        goal = Goal.query.filter_by(user_id = user_id, name = name_goal).first()
+
+        if goal:
+            return(jsonify({'msg':'El nombre de Goal ya existe'})), 404
+            
+        new_goal = Goal(name = name_goal, goal_value = goal_value, is_complete = is_complete, user_id = user_id)
+        
+        db.session.add(new_goal)
+        db.session.commit()        
+        return jsonify(new_goal.serialize()),201
+    except Exception as e:
+        return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
+
+# Ruta para Modificar el Goal
+@api.route('/goal/edit/<int:id>', methods = ['PUT'])
+@jwt_required()
+def edit_goal(id):
+
+    try:
+        user_id = get_jwt_identity()
+        name_goal = request.json.get('name')
+        goal_value = request.json.get('goal_value')
+
+        goal_from_user = Goal.query.filter_by(user_id = user_id, id = id).first()
+
+        if not goal_from_user:
+            return jsonify({'msg': "El goal no existe"}), 404
+        
+        if name_goal:
+            goal_from_user.name = name_goal
+        
+        if goal_value:
+            goal_from_user.goal_value = goal_value
+
+        db.session.commit()
+
+        return jsonify(goal_from_user.serialize()), 201
+
+    except Exception as e:
+        return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
+  
+
+# Ruta para eliminar el Goal
+@api.route('/goal/delete/<int:id>', methods = ['DELETE'])
+@jwt_required()
+def delete_goal(id):
+    try:
+        user_id = get_jwt_identity()
+
+        goal_from_user = Goal.query.filter_by(user_id = user_id, id = id).first()
+
+        if not goal_from_user:
+            return jsonify({'msg':"EL Goal no existe para ese usuario"}), 404
+
+        db.session.delete(goal_from_user)
+        db.session.commit()
+
+        return (jsonify({'msg': 'Goal eliminada con exito'})), 200 
+    except Exception as e:
+        return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
+
+@api.route('/goal/get-all', methods = ['GET'])
+@jwt_required()
+def get_all_goals_from_user():
+    try:
+        user_id = get_jwt_identity()
+        goals_from_user = Goal.query.filter_by(user_id = user_id).all()
+
+        if not goals_from_user:
+            return jsonify({'msg':"El usuario no tiene goals"}), 404
+        
+        goals_from_user = list(map(lambda goal: goal.serialize(),goals_from_user))
+
+        return jsonify(goals_from_user),201
+    
+    except Exception as e:
+        return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
+
+@api.route('/goal/get/<int:id>', methods = ['GET'])
+@jwt_required()
+def get_goal_by_id(id):
+    try:
+        user_id = get_jwt_identity()
+        goal_from_user = Goal.query.filter_by(user_id = user_id,id=id).first()
+
+        if not goal_from_user:
+            return jsonify({'msg':"Este goal no existe del usuario"}), 404
+
+        return jsonify(goal_from_user.serialize()),201
+    
+    except Exception as e:
+        return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
+    
+@api.route('/goal/get-progress/<int:id>', methods=['GET'])
+@jwt_required()
+def get_progress_from_goal(id):
+    
+    try:
+        user_id = get_jwt_identity()
+        goal_from_user = Goal.query.filter_by(user_id = user_id,id=id).first()
+        wallets_by_user = Wallet.query.filter_by(user_id = user_id).all()
+        sum_all_wallets_balance = 0
+        
+        if wallets_by_user:
+            for wallet in wallets_by_user:
+                sum_all_wallets_balance += wallet.total_value
+                
+        if not goal_from_user:
+            return jsonify({'msg':"Este goal no existe del usuario"}), 404
+
+        if sum_all_wallets_balance < 0:
+            sum_all_wallets_balance = 0
+         
+        remaining = goal_from_user.goal_value - sum_all_wallets_balance
+        progress = (sum_all_wallets_balance * 100) // goal_from_user.goal_value
+
+        return jsonify({
+            "goal": goal_from_user.goal_value,
+            "balance": sum_all_wallets_balance,
+            "remaining":  remaining ,
+            "progress":  progress       
+        }), 201
+    except Exception as e:
+        return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
+   
+
+# Nueva ruta Juan
+
+
+# Nueva ruta Rafa
+
+
+# Nueva ruta Fede
+
+
+# Nueva ruta Jose
+# Listas a todos los usuarios regitrados en la plataforma, funcion solo para admin
+@api.route('/admin/get-users', methods=['GET'])
+@jwt_required()
+def get_all_users():
+    try:
+        is_not_admin = check_user_is_admin(get_jwt_identity())
+
+        if is_not_admin:
+            return is_not_admin
+
+        users = User.query.all()
+
+        if not users:
+            return jsonify({'msg': 'No hay usuarios creados'}), 400
+        
+        users = list(map(lambda user: user.serialize(), users))
+
+        return jsonify(users), 200
+
+    except Exception as e:
+        return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
+   
+# Ruta para borrar un usuario, solo siendo un admin
+@api.route('/admin/user/delete/<int:id>', methods=['DELETE'])
+@jwt_required()
+def delete_user(id):
+    try:
+        is_not_admin = check_user_is_admin(get_jwt_identity())
+        admin_user_id = get_jwt_identity()
+
+        if int(admin_user_id) == int(id):
+            return jsonify({'msg': 'No puedes eliminar tu propio usuario'}), 400
+        
+        if is_not_admin:
+            return is_not_admin
+
+        user = User.query.filter_by(id = id).first()
+
+        if not user:
+            return ({'msg': 'El usuario no existe'}), 400
+
+        db.session.delete(user)
+        db.session.commit()
+
+        return (jsonify({'msg': 'Usuario eliminado con exito'})), 200 
+
+
+    except Exception as e:
+        return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
+   
+
