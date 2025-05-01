@@ -461,6 +461,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						...store, 
 						goals: [...data] 
 					});
+					console.log(store.goals)
 					return true;
 		
 				} catch (error) {

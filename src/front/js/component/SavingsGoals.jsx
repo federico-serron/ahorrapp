@@ -3,34 +3,26 @@ import React, { useEffect, useState, useContext } from "react";
 import { Context } from "../store/appContext";
 
 const SavingsGoals = () => {
-    const { actions } = useContext(Context);
-    const [goals, setGoals] = useState([]);
+    const { store, actions } = useContext(Context);
+    const [metas, setMetas] = useState(store.goals);
+    const [goalIds, setGoalIds] = useState ([]);
 
-    useEffect(() => {
-        // Simulamos IDs de metas que quieres consultar
-        const goalIds = [1, 2, 3];
 
-        // Función para traer datos reales
-        const fetchGoals = async () => {
-            const fetchedGoals = [];
 
-            for (const id of goalIds) {
-                const data = await actions.getGoalProgress(id);
-                if (data) {
-                    fetchedGoals.push({
-                        id: data.id,
-                        name: data.name,
-                        target: data.target,
-                        saved: data.saved
-                    });
-                }
+    useEffect (() => {
+        
+        const fetchData=async () =>{
+            try {
+                let resp = await actions.getAllGoals()
+                //await actions.getGoalProgress()
+                console.log(metas)
+            } catch (error) {
+                console.log(error)
             }
-
-            setGoals(fetchedGoals);
-        };
-
-        fetchGoals();
-    }, [actions]);
+        }
+        fetchData()
+        
+    },[])
 
     return (
         <div style={{
@@ -49,11 +41,11 @@ const SavingsGoals = () => {
                 Progreso de Ahorros
             </h2>
 
-            {goals.map((goal) => {
-                const percentage = Math.round((goal.saved / goal.target) * 100);
+            {store.goals.map((goal, index) => {
+
 
                 return (
-                    <div key={goal.id} style={{
+                    <div key={index} style={{
                         marginBottom: "25px",
                         padding: "15px",
                         backgroundColor: "white",
@@ -68,9 +60,9 @@ const SavingsGoals = () => {
                             <h3 style={{ margin: "0", color: "#444" }}>{goal.name}</h3>
                             <span style={{
                                 fontWeight: "bold",
-                                color: percentage === 100 ? "#28a745" : "#007bff"
+                                color: goal.progress === 100 ? "#28a745" : "#007bff"
                             }}>
-                                {percentage}%
+                                {goal.progress}%
                             </span>
                         </div>
 
@@ -82,9 +74,9 @@ const SavingsGoals = () => {
                             marginBottom: "8px"
                         }}>
                             <div style={{
-                                width: `${percentage}%`,
+                                width: `${goal.progress}%`,
                                 height: "100%",
-                                backgroundColor: percentage === 100 ? "#28a745" : "#17a2b8",
+                                //backgroundColor: percentage === 100 ? "#28a745" : "#17a2b8",
                                 borderRadius: "5px"
                             }} />
                         </div>
@@ -96,12 +88,12 @@ const SavingsGoals = () => {
                             fontSize: "14px",
                             color: "#666"
                         }}>
-                            <span>Ahorrado: <strong>${goal.saved.toLocaleString()}</strong></span>
-                            <span>Meta: <strong>${goal.target.toLocaleString()}</strong></span>
+                           {/* //<span>Ahorrado: <strong>${goal.remaining.toLocaleString()}</strong></span>
+                            <span>Meta: <strong>${goal.goal.toLocaleString()}</strong></span> */}
                         </div>
 
                         {/* Mensaje si está completo */}
-                        {percentage === 100 && (
+                        {goal.progress === 100 && (
                             <p style={{
                                 margin: "10px 0 0",
                                 color: "#28a745",
