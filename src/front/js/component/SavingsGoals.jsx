@@ -4,7 +4,7 @@ import { Context } from "../store/appContext";
 
 const SavingsGoals = () => {
     const { store, actions } = useContext(Context);
-    const [metas, setMetas] = useState(store.goals);
+    //const [metas, setMetas] = useState(store.goals);
     const [goalIds, setGoalIds] = useState ([]);
 
 
@@ -13,9 +13,9 @@ const SavingsGoals = () => {
         
         const fetchData=async () =>{
             try {
-                let resp = await actions.getAllGoals()
+                let resp = await actions.getGoalProgress()
                 //await actions.getGoalProgress()
-                console.log(metas)
+                console.log(store.goalProgress)
             } catch (error) {
                 console.log(error)
             }
@@ -41,7 +41,7 @@ const SavingsGoals = () => {
                 Progreso de Ahorros
             </h2>
 
-            {store.goals.map((goal, index) => {
+            {store.goalProgress.map((goal, index) => {
 
 
                 return (
@@ -76,7 +76,7 @@ const SavingsGoals = () => {
                             <div style={{
                                 width: `${goal.progress}%`,
                                 height: "100%",
-                                //backgroundColor: percentage === 100 ? "#28a745" : "#17a2b8",
+                                backgroundColor: goal.progress === 100 ? "#28a745" : "#17a2b8",
                                 borderRadius: "5px"
                             }} />
                         </div>
@@ -88,8 +88,8 @@ const SavingsGoals = () => {
                             fontSize: "14px",
                             color: "#666"
                         }}>
-                           {/* //<span>Ahorrado: <strong>${goal.remaining.toLocaleString()}</strong></span>
-                            <span>Meta: <strong>${goal.goal.toLocaleString()}</strong></span> */}
+                            <span>Ahorrado: <strong>${goal.remaining.toLocaleString()}</strong></span>
+                            <span>Meta: <strong>${goal.goal_value.toLocaleString()}</strong></span> 
                         </div>
 
                         {/* Mensaje si está completo */}

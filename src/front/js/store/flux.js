@@ -87,7 +87,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			goals: [], 
 
 			// Progreso actual de la meta seleccionada. Es null si no hay una meta seleccionada.
-			goalProgress: null,
+			goalProgress: [],
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -516,15 +516,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			// Action Progreso de la meta (Goal)
 
-			getGoalProgress: async (goal_id) => {
-				const urlGetGoalProgress = `${apiUrl}/api/goal/get-progress/${goal_id}`;
+			getGoalProgress: async () => {
+				const urlGetGoalProgress = `${apiUrl}/api/goal/get-progress`;
 				const store = getStore();
 			
 				try {
-					if (!goal_id) {
-						console.error("Falta el ID  para obtener el progreso.");
-						return false;
-					}
+					// if (!goal_id) {
+					// 	console.error("Falta el ID  para obtener el progreso.");
+					// 	return false;
+					// }
 			
 					const response = await fetch(urlGetGoalProgress, {
 						method: "GET",
@@ -541,12 +541,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 			
 					const data = await response.json();
-					
+					console.log(data)
 			
 					
 					setStore({ 
 						...store, 
-						goalProgress: data 
+						goalProgress: [...data]
 					});
 			
 					return data;
