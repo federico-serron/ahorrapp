@@ -9,7 +9,86 @@ const ListCategories = () => {
     const { store, actions } = useContext(Context);
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true)
-    const [categoryToDelete, setCategoryToDelete] = useState(null);
+    const [categoryId, setCategoryId] = useState(null);
+    const [name, setName] = useState("");
+    const [description, setDescription] = useState("")
+
+
+
+    const handleAddCategory = async (e) => {
+
+        if (name == "" || description == "") {
+            toast.warn("Debe ingresar todos los campos!")
+            setName("")
+            setDescription("")
+            return;
+        }
+        const response = await actions.addCategory(name, description)
+
+        if (!response) {
+            toast.error(`Hubo un error al intentar crear la categoria ${name}`)
+            console.log(`Hubo un error al intentar crear la categoria ${name}`)
+            setName("");
+            setDescription("");
+            return;
+        } else {
+            setCategories(store.categories_db)
+            toast.success(`Categoria ${name} creda exitosamente!`)
+            setName("");
+            setDescription("");
+            return;
+        }
+
+        // PARA SIMULAR AGREGAR CATEGORIA
+        // const new_category = {
+        //     id: store.categories_db.length + 1,
+        //     name: name,
+        //     description: description,
+        //     records_count: 10
+        // }
+        // const updatedCategories_db = [...categories, new_category]
+        // setCategories(updatedCategories_db)
+        // setName("")
+        // setDescription("")
+        // toast.success(`Categoria ${name} creda exitosamente!`)
+
+    }
+
+    const handeEditCategory = async (id) => {
+        if (name == "" || description == "") {
+            toast.warn("Debe ingresar todos los campos!")
+            return;
+        }
+        const response = await actions.editCategory(id, name, description);
+
+        if (!response) {
+            toast.error("Hubo un error al editar la categoría");
+            return;
+        }
+
+        toast.success("Categoría editada exitosamente");
+        setCategories(store.categories_db); // o volver a llamar a getCategories
+        setName("");
+        setDescription("");
+        setCategoryId(null);
+
+        // PARA SIMULAR EDITAR CATEGORIA
+        // const updatedCategories_db = categories.map(cat => {
+        //     if (cat.id === id) {
+        //         return {
+        //             ...cat,
+        //             name: name,
+        //             description: description
+        //         };
+        //     }
+        //     setCategories(cat)
+        //     return cat;
+        // });
+    
+        // setCategories(updatedCategories_db);
+        // toast.success(`Categoría "${name}" editada exitosamente`);
+
+    };
 
 
     const handleDelete = async (id) => {
@@ -21,6 +100,7 @@ const ListCategories = () => {
         } else {
             toast.success("La categoria ha sido eliminada correcamente")
             setCategories(store.categories_db)
+            setCategoryId(null)
         }
     }
 
@@ -28,13 +108,13 @@ const ListCategories = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                // const data = await actions.getCategories();
+                const data = await actions.getCategories();
 
-                // if(!data){
-                //     console.log("No hay categorias")
-                //     setLoading(false)
-                //     return;
-                // }
+                if(!data){
+                    console.log("No hay categorias")
+                    setLoading(false)
+                    return;
+                }
 
                 setCategories(store.categories_db)
                 setLoading(false)
@@ -42,6 +122,7 @@ const ListCategories = () => {
 
             } catch (error) {
                 console.error(`Hubo un error al intentar traer las categorias: ${error}`)
+                setLoading(false)
             }
         }
 
@@ -53,10 +134,10 @@ const ListCategories = () => {
 
             <div className="d-flex align-items-center mb-4 ">
                 <h2 className="mb-0">Lista de Categorias</h2>
-                <i class="ms-2 fa-solid fa-circle-plus fs-3 text-success"
-                role="button"
-                data-bs-toggle="modal"
-                data-bs-target="#createCategoryModal"></i>
+                <i className="ms-2 fa-solid fa-circle-plus fs-3 text-success"
+                    role="button"
+                    data-bs-toggle="modal"
+                    data-bs-target="#createCategoryModal"></i>
             </div>
             <div className="row">
                 <div className="col-12">
@@ -88,16 +169,23 @@ const ListCategories = () => {
                                         <tr key={category.id}>
                                             <td>{index + 1}</td>
                                             <td>{category.name}</td>
-                                            <td>{category.descritpion}</td>
+                                            <td>{category.description}</td>
                                             <td style={{ minWidth: "15px", width: "5%" }}>{category.records_count}</td>
                                             <td style={{ minWidth: "50px", width: "6%" }}><i
                                                 className="fas fa-trash show me-2 text-danger"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#confirmDeleteModal"
                                                 role="button"
-                                                onClick={() => setCategoryToDelete(category.id)}
+                                                onClick={() => setCategoryId(category.id)}
                                             ></i>
-                                                <i className="fa-solid fa-pen text-primary" role="button"></i>
+                                                <i className="fa-solid fa-pen text-primary" role="button"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#editCategoryModal"
+                                                    onClick={() => {
+                                                        setCategoryId(category.id)
+                                                        setName(category.name)
+                                                        setDescription(category.description)
+                                                    }}></i>
 
                                             </td>
 
@@ -113,12 +201,36 @@ const ListCategories = () => {
             <ConfirmModal
                 id="confirmDeleteModal"
                 message="¿Estás seguro de que quieres eliminar esta categoria?"
-                onConfirm={() => handleDelete(categoryToDelete)}
+                onConfirm={() => handleDelete(categoryId)}
                 onCancel={() => setUserToDelete(null)}
             />
-            <FormCategoryModal 
+
+            <FormCategoryModal
                 id="createCategoryModal"
                 message="Crea una nueva categoria"
+                onCancel={() => {
+                    setName("")
+                    setDescription("")
+                }}
+                onConfirm={() => { handleAddCategory() }}
+                name={name}
+                description={description}
+                onChangeName={(e) => setName(e.target.value)}
+                onChangeDescription={(e) => setDescription(e.target.value)}
+            />
+
+            <FormCategoryModal
+                id="editCategoryModal"
+                message="Editar"
+                onCancel={() => {
+                    setName("")
+                    setDescription("")
+                }}
+                onConfirm={() => { handeEditCategory(categoryId) }}
+                name={name}
+                description={description}
+                onChangeName={(e) => setName(e.target.value)}
+                onChangeDescription={(e) => setDescription(e.target.value)}
             />
         </div>
     );
