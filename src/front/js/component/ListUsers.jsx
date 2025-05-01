@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { Context } from "../store/appContext";
 import ConfirmModal from './ConfrimModal.jsx';
+import { toast } from "react-toastify";
 
 const ListUsers = () => {
     const { store, actions } = useContext(Context);

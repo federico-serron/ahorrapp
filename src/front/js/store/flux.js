@@ -143,31 +143,31 @@ const getState = ({ getStore, getActions, setStore }) => {
 				{
 					id: 1,
 					name: "Alimentación",
-					descritpion: "Gastos en comida y supermercado",
+					description: "Gastos en comida y supermercado",
 					records_count: 15
 				},
 				{
 					id: 2,
 					name: "Transporte",
-					descritpion: "Gastos en ómnibus, taxi o combustible",
+					description: "Gastos en ómnibus, taxi o combustible",
 					records_count: 8
 				},
 				{
 					id: 3,
 					name: "Entretenimiento",
-					descritpion: "Cine, Netflix, salidas y ocio",
+					description: "Cine, Netflix, salidas y ocio",
 					records_count: 5
 				},
 				{
 					id: 4,
 					name: "Salud",
-					descritpion: "Consultas médicas, farmacia, mutualista",
+					description: "Consultas médicas, farmacia, mutualista",
 					records_count: 3
 				},
 				{
 					id: 5,
 					name: "Educación",
-					descritpion: "Cursos, libros, materiales de estudio",
+					description: "Cursos, libros, materiales de estudio",
 					records_count: 7
 				}
 			],
