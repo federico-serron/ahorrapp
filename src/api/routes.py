@@ -110,39 +110,55 @@ def login():
 @api.route('/wallet/add', methods = ['POST'])
 @jwt_required()
 def create_wallet():
-    user_id = get_jwt_identity()
-    name_wallet = request.json.get('name')
-    initial_value = request.json.get('total_value')
-    currency_id = request.json.get('currency_id')
 
-    currency = Currency.query.filter_by(id = currency_id).first()
+    try:
 
-    if not currency:
-        return jsonify({'msg': 'Ese moneda no existe, debe crearse o agregar una que exista'}), 400
+        user_id = get_jwt_identity()
+        name_wallet = request.json.get('name')
+        initial_value = request.json.get('total_value')
+        currency_id = request.json.get('currency_id')
+
+        currency = Currency.query.filter_by(id = currency_id).first()
+
+        if not currency:
+            return jsonify({'msg': 'Ese moneda no existe, debe crearse o agregar una que exista'}), 400
 
 
-    # hacer verificacaciones para asegurar de que se incluya los 4 items de arriba
-    if not name_wallet or initial_value == None or not currency_id:
-        return jsonify({'msg': 'Por favor completar todos los campos'}), 400
+        # hacer verificacaciones para asegurar de que se incluya los 4 items de arriba
+        if not name_wallet or initial_value == None or not currency_id:
+            return jsonify({'msg': 'Por favor completar todos los campos'}), 400
+        
+        # Verifica si el usuario no existe
+        user = User.query.filter_by(id = user_id).first()
+        if not user:
+            return jsonify({'msg': 'Este usuario no existe'}), 400
+        
+        all_wallets = list(Wallet.query.filter_by(user_id = user_id).all())
+
+        # Condicion pars verificar que el usuario no es premium y si tiene mas de 2 wallets creadas, llego a si lumite de prueba
+        if not user.is_premium and len(all_wallets) >= 2:
+            return jsonify({'msg': 'El usuario es Free y ya tiene mas de 2 wallets creadas'}), 404
+        
+        # Si cumple, que se cree el wallet con la clase Wallet
+        wallet = Wallet.query.filter_by( name = name_wallet ,user_id = user_id).first()
+
+        if wallet:
+            return jsonify({'msg': 'Este nombre de wallet ya esta registrado en tu cuenta'}),400
+        
+        new_wallet = Wallet(name = name_wallet, total_value = initial_value, currency_id = currency_id, user_id = user_id)
+
+        db.session.add(new_wallet)
+        db.session.commit()
+
+
+        return jsonify(new_wallet.serialize()), 201
+
+    except Exception as e:
+        return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
+
+
+
     
-    # Verifica si el usuario no existe
-    user = User.query.filter_by(id = user_id).first()
-    if not user:
-        return jsonify({'msg': 'Este usuario no existe'}), 400
-    
-    # Si cumple, que se cree el wallet con la clase Wallet
-    wallet = Wallet.query.filter_by( name = name_wallet ,user_id = user_id).first()
-
-    if wallet:
-        return jsonify({'msg': 'Este nombre de wallet ya esta registrado en tu cuenta'}),400
-    
-    new_wallet = Wallet(name = name_wallet, total_value = initial_value, currency_id = currency_id, user_id = user_id)
-
-    db.session.add(new_wallet)
-    db.session.commit()
-
-
-    return jsonify(new_wallet.serialize()), 201
 
 # Ruta para obtener todas las wallets registradas en la app (funcion solo para admin)
 @api.route('/wallet/all', methods = ['GET'])
