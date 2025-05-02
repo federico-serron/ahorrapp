@@ -777,7 +777,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						throw new Error("Se presento el siguiente error: ", error)
 					}
 
-					setStore({...getStore(), wallets_from_user: getStore().wallets_from_user.filter(wallet => wallet.id !== wallet_id)})
+					//setStore({...getStore(), wallets_from_user: getStore().wallets_from_user.filter(wallet => wallet.id !== wallet_id)})
 					console.log(`El wallet ${wallet_id} fue eliminado con exito`)
 
 					return true
