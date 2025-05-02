@@ -712,7 +712,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				if (data.status === "COMPLETED") {
 					return data;
-					// Actualizás wallet, redireccionás, etc.
+					
 				} else {
 					alert("El pago no se completó.");
 				}

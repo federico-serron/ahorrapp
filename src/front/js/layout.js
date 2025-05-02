@@ -23,6 +23,7 @@ import AdminLayout from "./component/AdminLayout.jsx";
 import ListCategories from "./component/ListCategories.jsx";
 import PayPalSuccess from "./pages/PayPalSuccess.jsx";
 import PayPalCancel from "./pages/PayPalCancel.jsx";
+import WalletDetail from "./pages/WalletDetail.jsx";
 
 //create your first component
 const Layout = () => {
@@ -59,6 +60,9 @@ const Layout = () => {
                         {/* Siguientes rutas */}
                         <Route element={<Signup/>} path="/signup" />
                         <Route element={<AddRecord/>} path="/records/add" />
+
+                        {/* Wallets */}
+                        <Route element={<WalletDetail/>} path="/wallet/:id" />
 
                         <Route element={<h1>Not found!</h1>} />
 

@@ -1,48 +1,30 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PayPalBtn from "./PayPalBtn.jsx";
-
+import WalletCard from "./WalletCard.jsx";
+import AddWallet from "./AddWallet.jsx";
 
 export const Dashboard = () => {
-const navigate = useNavigate()
+    const navigate = useNavigate()
 
 
-useEffect(()=>{
-    if (!localStorage.getItem("token")) {
-        navigate('/login')
-    }
-},[])
+    useEffect(() => {
+        if (!localStorage.getItem("token")) {
+            navigate('/login')
+        }
+    }, [])
 
     return (
-        <div className="container justify-content-center">
-            <div>
+        <div className="container my-3">
+            <div id="header" className="">
                 <h1>Dashboard User</h1>
-                <a href="#" class="paypal-button">
-  <h3>Convertirse en Premium!</h3>
-</a>
-<PayPalBtn />
+                <h3>Convertirse en Premium!</h3>
+                <PayPalBtn />
             </div>
 
-            <select className="form-select form-select-sm" aria-label="Small select example" style={{ marginTop: "20px" }}>
-                <option selected>Select the Category</option>
-                <option value="1">Alquiler</option>
-                <option value="2">Comida</option>
-                <option value="3">Otros</option>
-            </select>
-
-            <select className="form-select form-select-sm" aria-label="Small select example" style={{ marginTop: "20px" }}>
-                <option selected>Amount</option>
-                <option value="1">10</option>
-                <option value="2">20</option>
-                <option value="3">Otro Monto</option>
-            </select>
-
-            <select className="form-select form-select-sm" aria-label="Small select example" style={{ marginTop: "20px" }}>
-                <option selected>Type of Currency</option>
-                <option value="1">$</option>
-                <option value="2">€</option>
-                <option value="3">Otros</option>
-            </select>
+            <div>
+                <AddWallet />
+            </div>
 
             <div>
 
