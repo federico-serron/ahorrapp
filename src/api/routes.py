@@ -640,6 +640,7 @@ def delete_goal(id):
     except Exception as e:
         return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
 
+# Ruta para obtener todos los goals de un usuario
 @api.route('/goal/get-all', methods = ['GET'])
 @jwt_required()
 def get_all_goals_from_user():
@@ -657,6 +658,7 @@ def get_all_goals_from_user():
     except Exception as e:
         return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
 
+# Ruta para obtener un goal de un usuario por ID
 @api.route('/goal/get/<int:id>', methods = ['GET'])
 @jwt_required()
 def get_goal_by_id(id):
@@ -671,37 +673,44 @@ def get_goal_by_id(id):
     
     except Exception as e:
         return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
-    
-@api.route('/goal/get-progress/<int:id>', methods=['GET'])
+# Ruta para obtener todos los progresos de los goals de un usuario 
+@api.route('/goal/get-progress', methods=['GET'])
 @jwt_required()
-def get_progress_from_goal(id):
+def get_progress_from_goal():
     
     try:
         user_id = get_jwt_identity()
-        goal_from_user = Goal.query.filter_by(user_id = user_id,id=id).first()
+        goals_from_user = Goal.query.filter_by(user_id = user_id).all()
         wallets_by_user = Wallet.query.filter_by(user_id = user_id).all()
         sum_all_wallets_balance = 0
+        list_of_progress_goals = []
         
         if wallets_by_user:
             for wallet in wallets_by_user:
                 sum_all_wallets_balance += wallet.total_value
                 
-        if not goal_from_user:
-            return jsonify({'msg':"Este goal no existe del usuario"}), 404
+        if not goals_from_user:
+            return jsonify({'msg':"No se tienen metas (goals) de este usuario"}), 404
 
         if sum_all_wallets_balance < 0:
             sum_all_wallets_balance = 0
-         
-        remaining = goal_from_user.goal_value - sum_all_wallets_balance
-        progress = (sum_all_wallets_balance * 100) // goal_from_user.goal_value
 
-        return jsonify({
-            "name": goal_from_user.name,
-            "goal": goal_from_user.goal_value,
-            "balance": sum_all_wallets_balance,
-            "remaining":  remaining ,
-            "progress":  progress       
-        }), 201
+        for goal in goals_from_user:
+
+            remaining = goal.goal_value - sum_all_wallets_balance
+            progress = (sum_all_wallets_balance * 100) // goal.goal_value
+            list_of_progress_goals.append({
+                "id":goal.id,
+                "name":goal.name,
+                "goal_value": goal.goal_value,
+                "balance": sum_all_wallets_balance,
+                "remaining":  remaining ,
+                "progress":  progress  
+            })
+
+
+        return jsonify(list_of_progress_goals), 201
+
     except Exception as e:
         return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
    
