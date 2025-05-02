@@ -742,7 +742,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 
 					const data = await result.json();
-					//setStore({...getStore(), wallets_from_user:[...data]})
+					setStore({...getStore(), wallets_from_user:[...data]})
 					return true
 					
 				} catch (error) {
@@ -797,9 +797,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 						throw new Error("Se presento el siguiente error: ", error)
 					}
 					const data = await result.json();
-					// listaModificada = getStore().wallets_from_user.map(wallet => {
-					// 	return wallet.id === wallet_id ? {...wallet, ...data} : wallet
-					// })
+					 listaModificada = getStore().wallets_from_user.map(wallet => {
+					 	return wallet.id === wallet_id ? {...wallet, ...data} : wallet
+					 })
 					return true
 					
 				} 
@@ -823,7 +823,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						throw new Error("Se presento el siguiente error: ", error)
 					}
 
-					//setStore({...getStore(), wallets_from_user: getStore().wallets_from_user.filter(wallet => wallet.id !== wallet_id)})
+					setStore({...getStore(), wallets_from_user: getStore().wallets_from_user.filter(wallet => wallet.id !== wallet_id)})
 					console.log(`El wallet ${wallet_id} fue eliminado con exito`)
 
 					return true
@@ -858,6 +858,56 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("Se presento el siguiente error: ", error)
 				}
 
+			},
+
+			getAllUsers: async()=> {
+				try {
+					const result = await fetch(`${apiUrl}/api/admin/get-users`, {
+						method: "GET",
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem('token')}`,
+							"Content-Type": "application/json",
+						}
+					})
+
+					if(!result.ok){
+						throw new Error("Se presento el siguiente error: ", error)
+					}
+
+					const data = await result.json()
+
+					setStore({...getStore(), users:[...getStore().users, ...data]})
+	
+					
+				} catch (error) {
+					console.error("Se presento el siguiente error: ", error)
+				}
+			},
+
+			deleteUserAsAdmin: async(user_id) => {
+				try {
+
+					const result = await fetch(`${apiUrl}/api/admin/user/delete/${user_id}`, {
+						method: "DELETE",
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem('token')}`,
+							"Content-Type": "application/json",
+						}
+					})
+
+					if(!result.ok){
+						throw new Error("Se presento el siguiente error: ", error)
+					}
+
+					const data = await result.json()
+
+					setStore({...getStore(), users: getStore().users.filter(user => user.id !== user_id)})
+
+
+					
+				} catch (error) {
+					console.error("Se presento el siguiente error: ", error)
+				}
 			}
 
 		}
