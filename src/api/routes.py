@@ -145,50 +145,51 @@ def login():
 @api.route("/wallet/add", methods=["POST"])
 @jwt_required()
 def create_wallet():
-    user_id = get_jwt_identity()
-    name_wallet = request.json.get("name")
-    initial_value = request.json.get("total_value")
-    currency_id = request.json.get("currency_id")
 
-    currency = Currency.query.filter_by(id=currency_id).first()
+    try:
 
-    if not currency:
-        return (
-            jsonify(
-                {"msg": "Ese moneda no existe, debe crearse o agregar una que exista"}
-            ),
-            400,
-        )
+        user_id = get_jwt_identity()
+        name_wallet = request.json.get('name')
+        initial_value = request.json.get('total_value')
+        currency_id = request.json.get('currency_id')
 
-    # hacer verificacaciones para asegurar de que se incluya los 4 items de arriba
-    if not name_wallet or initial_value == None or not currency_id:
-        return jsonify({"msg": "Por favor completar todos los campos"}), 400
+        currency = Currency.query.filter_by(id = currency_id).first()
 
-    # Verifica si el usuario no existe
-    user = User.query.filter_by(id=user_id).first()
-    if not user:
-        return jsonify({"msg": "Este usuario no existe"}), 400
+        if not currency:
+            return jsonify({'msg': 'Ese moneda no existe, debe crearse o agregar una que exista'}), 400
 
-    # Si cumple, que se cree el wallet con la clase Wallet
-    wallet = Wallet.query.filter_by(name=name_wallet, user_id=user_id).first()
 
-    if wallet:
-        return (
-            jsonify({"msg": "Este nombre de wallet ya esta registrado en tu cuenta"}),
-            400,
-        )
+        # hacer verificacaciones para asegurar de que se incluya los 4 items de arriba
+        if not name_wallet or initial_value == None or not currency_id:
+            return jsonify({'msg': 'Por favor completar todos los campos'}), 400
+        
+        # Verifica si el usuario no existe
+        user = User.query.filter_by(id = user_id).first()
+        if not user:
+            return jsonify({'msg': 'Este usuario no existe'}), 400
+        
+        all_wallets = list(Wallet.query.filter_by(user_id = user_id).all())
 
-    new_wallet = Wallet(
-        name=name_wallet,
-        total_value=initial_value,
-        currency_id=currency_id,
-        user_id=user_id,
-    )
+        # Condicion pars verificar que el usuario no es premium y si tiene mas de 2 wallets creadas, llego a si lumite de prueba
+        if not user.is_premium and len(all_wallets) >= 2:
+            return jsonify({'msg': 'El usuario es Free y ya tiene mas de 2 wallets creadas'}), 404
+        
+        # Si cumple, que se cree el wallet con la clase Wallet
+        wallet = Wallet.query.filter_by( name = name_wallet ,user_id = user_id).first()
 
-    db.session.add(new_wallet)
-    db.session.commit()
+        if wallet:
+            return jsonify({'msg': 'Este nombre de wallet ya esta registrado en tu cuenta'}),400
+        
+        new_wallet = Wallet(name = name_wallet, total_value = initial_value, currency_id = currency_id, user_id = user_id)
 
-    return jsonify(new_wallet.serialize()), 201
+        db.session.add(new_wallet)
+        db.session.commit()
+
+
+        return jsonify(new_wallet.serialize()), 201
+
+    except Exception as e:
+        return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
 
 
 # Ruta para obtener todas las wallets registradas en la app (funcion solo para admin)
@@ -718,43 +719,44 @@ def get_goal_by_id(id):
 
     except Exception as e:
         return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
-
-
-@api.route("/goal/get-progress/<int:id>", methods=["GET"])
+# Ruta para obtener todos los progresos de los goals de un usuario 
+@api.route('/goal/get-progress', methods=['GET'])
 @jwt_required()
-def get_progress_from_goal(id):
-
+def get_progress_from_goal():
+    
     try:
         user_id = get_jwt_identity()
-        goal_from_user = Goal.query.filter_by(user_id=user_id, id=id).first()
-        wallets_by_user = Wallet.query.filter_by(user_id=user_id).all()
+        goals_from_user = Goal.query.filter_by(user_id = user_id).all()
+        wallets_by_user = Wallet.query.filter_by(user_id = user_id).all()
         sum_all_wallets_balance = 0
-
+        list_of_progress_goals = []
+        
         if wallets_by_user:
             for wallet in wallets_by_user:
                 sum_all_wallets_balance += wallet.total_value
-
-        if not goal_from_user:
-            return jsonify({"msg": "Este goal no existe del usuario"}), 404
+                
+        if not goals_from_user:
+            return jsonify({'msg':"No se tienen metas (goals) de este usuario"}), 404
 
         if sum_all_wallets_balance < 0:
             sum_all_wallets_balance = 0
 
-        remaining = goal_from_user.goal_value - sum_all_wallets_balance
-        progress = (sum_all_wallets_balance * 100) // goal_from_user.goal_value
+        for goal in goals_from_user:
 
-        return (
-            jsonify(
-                {
-                    "name": goal_from_user.name,
-                    "goal": goal_from_user.goal_value,
-                    "balance": sum_all_wallets_balance,
-                    "remaining": remaining,
-                    "progress": progress,
-                }
-            ),
-            201,
-        )
+            remaining = goal.goal_value - sum_all_wallets_balance
+            progress = (sum_all_wallets_balance * 100) // goal.goal_value
+            list_of_progress_goals.append({
+                "id":goal.id,
+                "name":goal.name,
+                "goal_value": goal.goal_value,
+                "balance": sum_all_wallets_balance,
+                "remaining":  remaining ,
+                "progress":  progress  
+            })
+
+
+        return jsonify(list_of_progress_goals), 201
+
     except Exception as e:
         return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
 

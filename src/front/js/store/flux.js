@@ -179,7 +179,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 			goals: [],
 
 			// Progreso actual de la meta seleccionada. Es null si no hay una meta seleccionada.
-			goalProgress: null,
+			goalProgress: [],
+
+			wallets_from_user: [],
+
+			currentWallet: {},
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -554,6 +558,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						...store,
 						goals: [...data]
 					});
+					console.log(store.goals)
 					return true;
 
 				} catch (error) {
@@ -608,16 +613,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			// Action Progreso de la meta (Goal)
 
-			getGoalProgress: async (goal_id) => {
-				const urlGetGoalProgress = `${apiUrl}/api/goal/get-progress/${goal_id}`;
+			getGoalProgress: async () => {
+				const urlGetGoalProgress = `${apiUrl}/api/goal/get-progress`;
 				const store = getStore();
 
 				try {
-					if (!goal_id) {
-						console.error("Falta el ID  para obtener el progreso.");
-						return false;
-					}
-
 					const response = await fetch(urlGetGoalProgress, {
 						method: "GET",
 						headers: {
@@ -633,12 +633,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 
 					const data = await response.json();
+					console.log(data)
+			
+					
+					setStore({ 
+						...store, 
+						goalProgress: [...data]
 
-
-
-					setStore({
-						...store,
-						goalProgress: data
 					});
 
 					return data;
@@ -719,6 +720,145 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			//Actions Jose
+
+			addUserWallet: async (name_wallet,initial_value,currency_id) => {
+
+				try {
+					const result = await fetch(`${apiUrl}/api/wallet/edit`, {
+						method: "POST",
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem('token')}`,
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							name:name_wallet,
+							total_value: initial_value,
+							currency_id:currency_id
+						})
+					});
+
+					if(!result.ok){
+						throw new Error("Ha ocurrido el siguiente error: ", result.status)
+					}
+
+					const data = await result.json();
+					//setStore({...getStore(), wallets_from_user:[...data]})
+					return true
+					
+				} catch (error) {
+					console.error("Se presento el siguiente error: ", error)
+					
+				}
+			},
+
+			getAllUserWallets: async()=> {
+				try {
+
+					const result = await fetch(`${apiUrl}/api/wallet/get`, {
+						method: "GET",
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem('token')}`,
+							"Content-Type": "application/json",
+						}
+					})
+
+					if(!result.ok){
+						throw new Error("Ha ocurrido el siguiente error: ", result.status)
+					}
+
+					const data = await result.json()
+					setStore({...getStore(), wallets_from_user:[...data]});
+
+					return true;
+					
+				} catch (error) {
+					console.error("Se presento el siguiente error: ", error)
+				}
+			},
+
+			editUserWallet: async(name_wallet,initial_value,currency_id,wallet_id)=>{
+
+				try {
+
+					const result = await fetch(`${apiUrl}/api/wallet/edit/${wallet_id}`, {
+						method: "POST",
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem('token')}`,
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							name:name_wallet,
+							total_value: initial_value,
+							currency_id:currency_id
+						})
+					});
+					
+					if(!result.ok){
+						throw new Error("Se presento el siguiente error: ", error)
+					}
+					const data = await result.json();
+					// listaModificada = getStore().wallets_from_user.map(wallet => {
+					// 	return wallet.id === wallet_id ? {...wallet, ...data} : wallet
+					// })
+					return true
+					
+				} 
+				catch (error) {
+					console.error("Se presento el siguiente error: ", error)
+				}
+			},
+
+			deleteUserWallet: async(wallet_id) => {
+				try {
+
+					const result = await fetch(`${apiUrl}/api/wallet/delete/${wallet_id}`, {
+						method: "DELETE",
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem('token')}`,
+							"Content-Type": "application/json",
+						}
+					})
+
+					if(!result.ok){
+						throw new Error("Se presento el siguiente error: ", error)
+					}
+
+					//setStore({...getStore(), wallets_from_user: getStore().wallets_from_user.filter(wallet => wallet.id !== wallet_id)})
+					console.log(`El wallet ${wallet_id} fue eliminado con exito`)
+
+					return true
+					
+				} catch (error) {
+					console.error("Se presento el siguiente error: ", error)
+				}
+			},
+
+			getSingleUserWallet: async(wallet_id) => {
+
+				try {
+					const result = await fetch(`${apiUrl}/api/wallet/get/${wallet_id}`, {
+						method: "GET",
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem('token')}`,
+							"Content-Type": "application/json",
+						}
+					})
+
+					
+					if(!result.ok){
+						throw new Error("Se presento el siguiente error: ", error)
+					}
+
+					const data = result.json()
+
+					setStore({...getStore(),currentWallet:data})
+					return true
+
+				} catch (error) {
+					console.error("Se presento el siguiente error: ", error)
+				}
+
+			}
 
 		}
 	};
