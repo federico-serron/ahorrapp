@@ -17,10 +17,12 @@ import { Dashboard } from "./component/Dashboard.jsx";
 import Signup from "./pages/Signup.jsx";
 import Wallet from "./component/Wallet.jsx";
 import AddRecord from "./component/AddRecord.jsx";
+import SavingsGoals from "./component/SavingsGoals.jsx";
 import Unauthorized from "./pages/Unauthorized.jsx"
 import ListUsers from "./component/ListUsers.jsx";
 import AdminLayout from "./component/AdminLayout.jsx";
 import ListCategories from "./component/ListCategories.jsx";
+
 
 //create your first component
 const Layout = () => {
@@ -38,6 +40,7 @@ const Layout = () => {
                     <Routes>
                         <Route element={<Home />} path="/" />
                         <Route element={<Demo />} path="/demo" />
+                        <Route element={<SavingsGoals />} path="/savingsgoals" />
                         <Route element={<Wallet />} path="/wallet/:id" />
                         <Route element={<Dashboard />} path="/dashboard" />
                         <Route element={<Single />} path="/single/:theid" />
