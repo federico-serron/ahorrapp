@@ -653,6 +653,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			//Actions Rafa
 
 			//Actions Fede
+			//Captura el rol desencriptando el token
 			getUserRoleFromToken: () => {
 				const token = localStorage.getItem("token");
 
@@ -667,6 +668,54 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					console.error("Error al decodificar token:", err);
 					return null;
+				}
+			},
+
+			//PayPal functions
+			//Crear order -> ver PayPalBtn.jsx
+			createOrderPayPal: async (amount) => {
+				try {
+					const response = await fetch(`${apiUrl}/api/paypal/create-order`, {
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({ amount: amount }),
+					});
+
+					const data = await response.json();
+					const approvalUrl = data.links.find((link) => link.rel === "approve")?.href;
+
+					if (approvalUrl) {
+						return approvalUrl
+					} else {
+						console.error("No hay approvalLink:", data);
+						return false;
+					}
+				} catch (error) {
+					console.error("Error en la solicitud PayPal:", error);
+					alert("Hubo un problema al iniciar el pago.");
+				}
+			},
+
+			//Capturar orden -> ver useEffect en PayPalSuccess.jsx
+			captureOrderPayPal: async (token) => {
+
+				const response = await fetch(`${apiUrl}/api/paypal/capture-order`, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						Authorization: `Bearer ${localStorage.getItem("token")}`
+					},
+					body: JSON.stringify({ order_id: token }),
+
+				});
+
+				const data = await response.json();
+
+				if (data.status === "COMPLETED") {
+					return data;
+					// Actualizás wallet, redireccionás, etc.
+				} else {
+					alert("El pago no se completó.");
 				}
 			},
 

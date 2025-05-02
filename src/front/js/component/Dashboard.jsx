@@ -1,5 +1,6 @@
 import React, {useEffect} from "react";
 import { useNavigate } from "react-router-dom";
+import PayPalBtn from "./PayPalBtn.jsx";
 
 
 export const Dashboard = () => {
@@ -16,6 +17,10 @@ useEffect(()=>{
         <div className="container justify-content-center">
             <div>
                 <h1>Dashboard User</h1>
+                <a href="#" class="paypal-button">
+  <h3>Convertirse en Premium!</h3>
+</a>
+<PayPalBtn />
             </div>
 
             <select className="form-select form-select-sm" aria-label="Small select example" style={{ marginTop: "20px" }}>

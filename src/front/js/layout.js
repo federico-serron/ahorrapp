@@ -22,6 +22,8 @@ import Unauthorized from "./pages/Unauthorized.jsx"
 import ListUsers from "./component/ListUsers.jsx";
 import AdminLayout from "./component/AdminLayout.jsx";
 import ListCategories from "./component/ListCategories.jsx";
+import PayPalSuccess from "./pages/PayPalSuccess.jsx";
+import PayPalCancel from "./pages/PayPalCancel.jsx";
 
 
 //create your first component
@@ -50,6 +52,10 @@ const Layout = () => {
                             <Route path="users" index element={<ListUsers />} />
                             <Route path="categories" index element={<ListCategories />} />
                         </Route>
+                        
+                        {/* Paypal */}
+                        <Route path="/paypal/success" element={<PayPalSuccess />} />
+                        <Route path="/paypal/cancel" element={<PayPalCancel />} />
                         
                         {/* Login */}
                         <Route element={<Login/>} path="/login" />
