@@ -156,10 +156,6 @@ def create_wallet():
     except Exception as e:
         return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
 
-
-
-    
-
 # Ruta para obtener todas las wallets registradas en la app (funcion solo para admin)
 @api.route('/wallet/all', methods = ['GET'])
 @jwt_required()
