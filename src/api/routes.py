@@ -185,7 +185,6 @@ def create_wallet():
         db.session.add(new_wallet)
         db.session.commit()
 
-
         return jsonify(new_wallet.serialize()), 201
 
     except Exception as e:
@@ -687,7 +686,8 @@ def delete_goal(id):
         return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
 
 
-@api.route("/goal/get-all", methods=["GET"])
+# Ruta para obtener todos los goals de un usuario
+@api.route("/goal/get-all", methods = ['GET'])
 @jwt_required()
 def get_all_goals_from_user():
     try:
@@ -705,7 +705,8 @@ def get_all_goals_from_user():
         return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
 
 
-@api.route("/goal/get/<int:id>", methods=["GET"])
+# Ruta para obtener un goal de un usuario por ID
+@api.route("/goal/get/<int:id>", methods = ['GET'])
 @jwt_required()
 def get_goal_by_id(id):
     try:
@@ -719,6 +720,8 @@ def get_goal_by_id(id):
 
     except Exception as e:
         return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
+
+      
 # Ruta para obtener todos los progresos de los goals de un usuario 
 @api.route('/goal/get-progress', methods=['GET'])
 @jwt_required()
