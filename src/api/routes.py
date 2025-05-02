@@ -33,31 +33,37 @@ def handle_hello():
 @api.route('/signup', methods=['POST'])
 def signup_user():
 
-    name = request.json.get('name')
-    email = request.json.get('email')
-    password = request.json.get('password')
-    role = request.json.get('role')
+    try:
+        name = request.json.get('name')
+        email = request.json.get('email')
+        password = request.json.get('password')
+        role = request.json.get('role')
 
 
-    if not name or not email or not password:
-        return jsonify({'msg': 'Datos incompletos, por favor llenar todos los datos del usuario'}), 400
+        if not name or not email or not password:
+            return jsonify({'msg': 'Datos incompletos, por favor llenar todos los datos del usuario'}), 400
+        
+        if role:
+            if role != 'user' and role != 'admin':
+                return jsonify({"msg": "No se pudo asignar el role"}), 400
 
-    user = User.query.filter_by(email = email).first()
+        user = User.query.filter_by(email = email).first()
 
-    if user:
-        return jsonify({'msg' : 'El email utilizado ya esta registrado, por favor utilizar otro'}), 400
-    
-    password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
-
-
-    new_user = User(name = name, password = password_hash, email = email, role=role)
-
-    db.session.add(new_user)
-    db.session.commit()
+        if user:
+            return jsonify({'msg' : 'El email utilizado ya esta registrado, por favor utilizar otro'}), 400
+        
+        password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
 
 
-    return jsonify(new_user.serialize()), 201
+        new_user = User(name = name, password = password_hash, email = email, role=role)
 
+        db.session.add(new_user)
+        db.session.commit()
+
+
+        return jsonify(new_user.serialize()), 201
+    except Exception as e:
+        return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
 
 # Login
 @api.route('/login', methods=['POST'])
@@ -83,7 +89,12 @@ def login():
     if true_false: 
         expires= timedelta(days=1)
         user_id=user.id
-        access_token=create_access_token(identity=str(user_id),expires_delta=expires)
+        user_role=user.role
+        
+        access_token=create_access_token(identity=str(user_id),expires_delta=expires, additional_claims={"role": user_role})
+        
+        user.last_login=datetime.now(timezone.utc)
+        
         return jsonify({
                 "messagge": "Logueado exitosamente",
                 "access_token": access_token
@@ -687,6 +698,7 @@ def get_progress_from_goal():
 
 
         return jsonify(list_of_progress_goals), 201
+
     except Exception as e:
         return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
    

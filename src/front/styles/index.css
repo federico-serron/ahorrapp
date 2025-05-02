@@ -41,3 +41,13 @@
     opacity: 1;
     transform: translateY(0);
 }
+
+.delete-fa{
+    color: red;
+    display: none;
+}
+
+tr:hover .delete-fa {
+    display: inline;
+    cursor: pointer;
+  }

@@ -17,6 +17,8 @@ class User(db.Model):
     role: Mapped[str] = mapped_column(String(20), nullable=False, default="user")
     last_login: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.now(timezone.utc))
     is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False, default=True)
+    is_premium: Mapped[bool] = mapped_column(Boolean(), nullable=False, default=False)
+    
 
     wallets: Mapped[list["Wallet"]] = relationship(back_populates="user")
     records: Mapped[list["Record"]] = relationship(back_populates="user")
@@ -33,8 +35,11 @@ class User(db.Model):
             "role": self.role,
             "last_login": self.last_login.isoformat(),
             "is_active": self.is_active,
+            "is_premium": self.is_premium,
+            "wallets": [wallet.serialize() for wallet in self.wallets],
+            "records": [record.serialize() for record in self.records],
+            "goals": [goal.serialize() for goal in self.goals]
         }
-
 
 class Record(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -82,7 +87,8 @@ class Category(db.Model):
         return {
             "id": self.id,
             "name": self.name,
-            "description": self.description
+            "description": self.description,
+            "records_count": len(self.records)
         }
 
 
