@@ -139,38 +139,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			}],
 
 			//Categorias de prueba, eliminar luego
-			categories_db: [
-				{
-					id: 1,
-					name: "Alimentación",
-					description: "Gastos en comida y supermercado",
-					records_count: 15
-				},
-				{
-					id: 2,
-					name: "Transporte",
-					description: "Gastos en ómnibus, taxi o combustible",
-					records_count: 8
-				},
-				{
-					id: 3,
-					name: "Entretenimiento",
-					description: "Cine, Netflix, salidas y ocio",
-					records_count: 5
-				},
-				{
-					id: 4,
-					name: "Salud",
-					description: "Consultas médicas, farmacia, mutualista",
-					records_count: 3
-				},
-				{
-					id: 5,
-					name: "Educación",
-					description: "Cursos, libros, materiales de estudio",
-					records_count: 7
-				}
-			],
+			categories_db: [],
 
 			//Registros de gastos/ingresos
 			records: [],
@@ -801,6 +770,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 					 listaModificada = getStore().wallets_from_user.map(wallet => {
 					 	return wallet.id === wallet_id ? {...wallet, ...data} : wallet
 					 })
+
+					 setStore({...getStore(), wallets_from_user:listaModificada})
+
+					 
 					return true
 					
 				} 
@@ -927,7 +900,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						})
 					})
 
-					if(result.ok){
+					if(!result.ok){
 						throw new Error("Se presento el siguiente error: ", error)
 					}
 
@@ -954,13 +927,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 							}
 					})
 
-					if(result.ok){
+					if(!result.ok){
 						throw new Error("Se presento el siguiente error: ", error)
 					}
 
 					const data = await result.json()
 
-					setStore({...getStore(), categories_db: [...getStore().categories_db,data]})
+					setStore({...getStore(), categories_db: [...getStore().categories_db, ...data.categories]})
+					console.log(getStore().categories_db)
 					return true
 				} catch (error) {
 					console.error("Se presento el siguiente error: ", error)	
@@ -985,12 +959,18 @@ const getState = ({ getStore, getActions, setStore }) => {
 						})
 					})
 
-					if(result.ok){
+					if(!result.ok){
 						throw new Error("Se presento el siguiente error: ", error)
 					}
 
 					const data = await result.json()
-					setStore({...getStore(), categories_db: [...getStore().categories_db,data]})
+
+					setStore({
+						...getStore(),
+						categories_db: getStore().categories_db.map(category =>
+							category.id === id ? data : category
+						)
+					});
 					return true
 					
 				} catch (error) {
@@ -1012,7 +992,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 							}
 					})
 
-					if(result.ok){
+					if(!result.ok){
 						throw new Error("Se presento el siguiente error: ", error)
 					}
 
@@ -1026,10 +1006,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					
 				}
 			}
-
-
-
-
 		}
 	};
 };
