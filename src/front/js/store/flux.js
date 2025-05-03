@@ -83,60 +83,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			//Info de Usuario actualmente logeado
 			logged_user: [],
 			//Listado de todos los usuarios de la plataforma
-			users: [{
-				id: 1,
-				name: "Lucía Fernández",
-				email: "lucia.fernandez@example.com",
-				phone: "+598 94 123 456",
-				address: "Canelones 1234, Montevideo",
-				role: "admin",
-				last_login: "2025-04-28T10:45:00.000Z",
-				is_active: true,
-				is_premium: true,
-				wallets: [
-					{ id: 1, name: "Santander", balance: 5000, currency: "UYU" },
-					{ id: 2, name: "Paypal", balance: 300, currency: "USD" }
-				],
-				records: [
-					{ id: 1, concept: "Compra supermercado", amount: 1200, date: "2025-04-25T14:00:00Z" },
-					{ id: 2, concept: "Pago Netflix", amount: 390, date: "2025-04-20T08:30:00Z" }
-				],
-				goals: [
-					{ id: 1, title: "Ahorro viaje", target_amount: 20000, current_amount: 5000 }
-				]
-			},
-			{
-				id: 2,
-				name: "Martín Rodríguez",
-				email: "martin.rodriguez@example.com",
-				phone: "+598 92 654 321",
-				address: "Av. Italia 4567, Montevideo",
-				role: "user",
-				last_login: "2025-04-26T14:20:00.000Z",
-				is_active: true,
-				is_premium: false,
-				wallets: [
-					{ id: 3, name: "BROU", balance: 7800, currency: "UYU" }
-				],
-				records: [
-					{ id: 3, concept: "Nafta", amount: 2100, date: "2025-04-23T12:00:00Z" }
-				],
-				goals: []
-			},
-			{
-				id: 3,
-				name: "Sofía García",
-				email: "sofia.garcia@example.com",
-				phone: "+598 93 987 654",
-				address: "18 de Julio 789, Montevideo",
-				role: "user",
-				last_login: "2025-04-27T09:10:00.000Z",
-				is_active: false,
-				is_premium: false,
-				wallets: [],
-				records: [],
-				goals: []
-			}],
+			users: [],
 
 			//Categorias de prueba, eliminar luego
 			categories_db: [],
@@ -854,6 +801,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const data = await result.json()
 
 					setStore({...getStore(), users:[...getStore().users, ...data]})
+					console.log(getStore().users)
+					return true
 	
 					
 				} catch (error) {
@@ -873,12 +822,17 @@ const getState = ({ getStore, getActions, setStore }) => {
 						}
 					})
 
+					if(result.status == "403"){
+						return "403"
+					}
+
 					if(!result.ok){
 						throw new Error("Se presento el siguiente error: ", error)
 					}
 
 					const data = await result.json()
-					setStore({...getStore(), users: getStore().users.filter(user => user.id !== user_id)})			
+					setStore({...getStore(), users: getStore().users.filter(user => user.id !== user_id)})	
+					return true		
 				} catch (error) {
 					console.error("Se presento el siguiente error: ", error)
 					return false
