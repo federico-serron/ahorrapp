@@ -886,7 +886,7 @@ def delete_user(id):
         admin_user_id = get_jwt_identity()
 
         if int(admin_user_id) == int(id):
-            return jsonify({"msg": "No puedes eliminar tu propio usuario"}), 400
+            return jsonify({"msg": "No puedes eliminar tu propio usuario"}), 403
 
         if is_not_admin:
             return is_not_admin
