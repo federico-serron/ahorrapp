@@ -84,7 +84,7 @@ const ListCategories = () => {
         //     setCategories(cat)
         //     return cat;
         // });
-    
+
         // setCategories(updatedCategories_db);
         // toast.success(`Categoría "${name}" editada exitosamente`);
 
@@ -110,7 +110,7 @@ const ListCategories = () => {
             try {
                 const data = await actions.getCategories();
 
-                if(!data){
+                if (!data) {
                     console.log("No hay categorias")
                     setLoading(false)
                     return;

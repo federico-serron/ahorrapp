@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PayPalBtn from "./PayPalBtn.jsx";
 import WalletCard from "./WalletCard.jsx";
@@ -13,8 +13,7 @@ export const Dashboard = () => {
 
     const navigate = useNavigate()
     const { store, actions } = useContext(Context);
-
-
+    const [selectedWallet, setSelectedWallet] = useState(null)
 
     useEffect(() => {
         const fetchWallets = async () => {
@@ -28,6 +27,8 @@ export const Dashboard = () => {
         }
 
         fetchWallets();
+        localStorage.setItem("wallets", store.logged_user)
+
     }, []);
 
 
@@ -36,6 +37,7 @@ export const Dashboard = () => {
             navigate('/login')
         }
     }, [])
+
 
     return (
         <div className="container my-3">
@@ -57,7 +59,13 @@ export const Dashboard = () => {
                 {store.wallets_from_user && store.wallets_from_user.length > 0 ? (
                     store.wallets_from_user.map((wallet) => (
                         <div className="col-lg-3 col-sm-4 col-sm-6 mb-3" key={wallet.id}>
-                            <WalletCard id={wallet.id} balance={wallet.balance} name={wallet.name} currency={wallet.currency.symbol} />
+                            <WalletCard
+                                id={wallet.id}
+                                balance={wallet.balance}
+                                name={wallet.name}
+                                currency={wallet.currency.symbol}
+                                setSelectedWallet={setSelectedWallet}
+                                selectedWallet={selectedWallet} />
                         </div>
                     ))
                 ) : (

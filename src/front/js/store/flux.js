@@ -68,16 +68,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 					"gastos varios", "sin categoria"
 				]
 			},
-			demo: [
+			currencies: [
 				{
-					title: "FIRST",
-					background: "white",
-					initial: "white"
+					id: 1,
+					name: "Dolares",
+					symbol: "USD"
 				},
 				{
-					title: "SECOND",
-					background: "white",
-					initial: "white"
+					id: 2,
+					name: "Bolivares",
+					symbol: "Bs"
 				}
 			],
 			//Info de Usuario actualmente logeado
@@ -162,7 +162,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					localStorage.setItem("token", data.access_token)
 					console.log("Successfully logged in!")
-					setStore({ ...store, logged_user: data })
+					setStore({ ...store, logged_user: data.logged_user_wallets })
+					localStorage.setItem("wallets", data.logged_user_wallets)
 					return true
 
 				} catch (error) {
@@ -214,7 +215,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			// Acción para obtener registros filtrados por usuario y categoría en un período de tiempo (get-records)
-			get_records: async (category_id, start_date) => {
+			get_records: async (category_id, start_date, wallet_id) => {
 				const baseURL = `${apiUrl}/api/records/list`;
 				const queryParams = [];
 				const store = getStore();
@@ -222,6 +223,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				if (category_id) queryParams.push(`category_id=${category_id}`);
 				if (start_date) queryParams.push(`start_date=${new Date(start_date).toISOString()}`);
+				if (wallet_id) queryParams.push(`wallet_id=${wallet_id}`);
+
 
 				const URLlistRecords = queryParams.length > 0 ? `${baseURL}?${queryParams.join('&')}` : baseURL;
 
@@ -637,7 +640,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			addUserWallet: async (name_wallet,initial_value,currency_id) => {
 
 				try {
-					const result = await fetch(`${apiUrl}/api/wallet/edit`, {
+					const result = await fetch(`${apiUrl}/api/wallet/add`, {
 						method: "POST",
 						headers: {
 							Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -650,12 +653,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 						})
 					});
 
+					if(result.status == "403"){
+						return "403";
+						
+					}
 					if(!result.ok){
 						throw new Error("Ha ocurrido el siguiente error: ", result.status)
 					}
 
 					const data = await result.json();
-					//setStore({...getStore(), wallets_from_user:[...data]})
+					setStore({...getStore(), wallets_from_user: [...getStore().wallets_from_user, data]})
 					return true
 					
 				} catch (error) {

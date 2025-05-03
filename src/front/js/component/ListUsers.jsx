@@ -26,12 +26,12 @@ const ListUsers = () => {
 
     useEffect(() => {
         const fetchUsers = async () => {
-            // const response = await actions.getUsers();
-            // if (!response) {
-            //     console.log("No se pudieron traer los usuarios desde la BD.")
-            //     setLoading(false)
-            //     return users;
-            // }
+            const response = await actions.getUsers();
+            if (!response) {
+                console.log("No se pudieron traer los usuarios desde la BD.")
+                setLoading(false)
+                return users;
+            }
 
             setUsers(store.users)
             setLoading(false)

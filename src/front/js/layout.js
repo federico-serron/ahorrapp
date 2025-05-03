@@ -15,7 +15,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import { Dashboard } from "./component/Dashboard.jsx";
 import Signup from "./pages/Signup.jsx";
-import Wallet from "./component/Wallet.jsx";
 import AddRecord from "./component/AddRecord.jsx";
 import SavingsGoals from "./component/SavingsGoals.jsx";
 import Unauthorized from "./pages/Unauthorized.jsx"
@@ -44,7 +43,6 @@ const Layout = () => {
                         <Route element={<Home />} path="/" />
                         <Route element={<Demo />} path="/demo" />
                         <Route element={<SavingsGoals />} path="/savingsgoals" />
-                        <Route element={<Wallet />} path="/wallet/:id" />
 
                         <Route element={<Dashboard />} path="/dashboard" />
                         <Route element={<Single />} path="/single/:theid" />
@@ -65,7 +63,7 @@ const Layout = () => {
                         <Route element={<AddRecord />} path="/records/add" />
 
                         {/* Wallets */}
-                        <Route element={<WalletDetail />} path="wallet/:id" />
+                        <Route element={<WalletDetail />} path="wallet/:wallet_id" />
 
                         <Route path="/unauthorized" element={<Unauthorized />} />
                         <Route element={<h1>Not found!</h1>} />

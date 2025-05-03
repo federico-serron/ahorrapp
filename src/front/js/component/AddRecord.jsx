@@ -46,7 +46,7 @@ const AddRecord = () => {
         console.log(amount, matchedCategory, words.join(" "))
         setInputValue("")
 
-        const response = await actions.addRecord(words.join(" "), amount, type, matchedCategory, 1)
+        const response = await actions.addRecord(words.join(" "), amount, type, matchedCategory, localStorage.getItem("wallets"))
         if (!response) {
             console.log("Hubo un error al intentar agregar el registro.")
             toast.warn("Debes agregar una breve descripcion y un monto");
@@ -54,6 +54,7 @@ const AddRecord = () => {
             return;
         }
         toast.success("Registro agregado exitosamente!");
+        console.log(store.logged_user)
 
     };
 

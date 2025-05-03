@@ -5,15 +5,7 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 from flask import Flask, request, jsonify, url_for, Blueprint
 import os
 from api.models import db, User, Record, Category, Wallet, Goal, Currency
-from api.utils import (
-    generate_sitemap,
-    APIException,
-    validate_relationships,
-    validate_required_fields,
-    parse_date,
-    check_user_is_admin,
-    get_access_token,
-)
+from api.utils import generate_sitemap, APIException, validate_relationships, validate_required_fields, parse_date, check_user_is_admin, get_access_token
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import create_access_token
@@ -86,8 +78,13 @@ def signup_user():
         password_hash = bcrypt.generate_password_hash(password).decode("utf-8")
 
         new_user = User(name=name, password=password_hash, email=email, role=role)
-
+        
         db.session.add(new_user)
+        db.session.flush()
+        
+        new_wallet_user = Wallet(name=name, total_value=0, currency_id=1, user_id=new_user.id)
+        db.session.add(new_wallet_user)
+        
         db.session.commit()
 
         return jsonify(new_user.serialize()), 201
@@ -131,7 +128,7 @@ def login():
 
         return (
             jsonify(
-                {"messagge": "Logueado exitosamente", "access_token": access_token}
+                {"messagge": "Logueado exitosamente", "access_token": access_token, "logged_user_wallets": [w.id for w in user.wallets]}
             ),
             200,
         )
@@ -172,7 +169,7 @@ def create_wallet():
 
         # Condicion pars verificar que el usuario no es premium y si tiene mas de 2 wallets creadas, llego a si lumite de prueba
         if not user.is_premium and len(all_wallets) >= 2:
-            return jsonify({'msg': 'El usuario es Free y ya tiene mas de 2 wallets creadas'}), 404
+            return jsonify({'msg': 'El usuario es Free y ya tiene mas de 2 wallets creadas'}), 403
         
         # Si cumple, que se cree el wallet con la clase Wallet
         wallet = Wallet.query.filter_by( name = name_wallet ,user_id = user_id).first()
@@ -391,6 +388,7 @@ def get_records():
         user_id = get_jwt_identity()
 
         category_id = request.args.get("category_id", type=int, default=None)
+        wallet_id = request.args.get('wallet_id', type=int, default=None)
         start_date = parse_date(
             request.args.get("start_date"), datetime(2025, 1, 1, tzinfo=timezone.utc)
         )
@@ -404,6 +402,9 @@ def get_records():
             query = query.filter(Record.timestamp >= start_date)
         if end_date:
             query = query.filter(Record.timestamp <= end_date)
+        if wallet_id:
+            query = query.filter(Record.wallet_id == wallet_id)
+            
 
         records = query.all()
 
@@ -809,7 +810,7 @@ def create_order():
 
 """
 Captura la orden luego que el usuario le dio pagar en la web de PayPal 
-See llama a esta ruta desde el useEffect que esta en la pagina PayPalSuccess.jsx
+Se llama a esta ruta desde el useEffect que esta en la pagina PayPalSuccess.jsx
 La cual llama a la funcion que esta en flux, y es esta la que llama a esta ruta
 >- Si lo que devuelve paypal es COMPLETED, se modifica el campo is_premium del usuario que esta logueado -<
 """
