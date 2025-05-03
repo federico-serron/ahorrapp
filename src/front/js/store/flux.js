@@ -720,7 +720,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			//Actions Jose
-
+			// action para añadir una nueva wallet
 			addUserWallet: async (name_wallet,initial_value,currency_id) => {
 
 				try {
@@ -747,10 +747,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 					
 				} catch (error) {
 					console.error("Se presento el siguiente error: ", error)
-					
+					return false
 				}
 			},
-
+			/// Action para obtener todos los wallets de un usuario
 			getAllUserWallets: async()=> {
 				try {
 
@@ -773,9 +773,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 					
 				} catch (error) {
 					console.error("Se presento el siguiente error: ", error)
+					return false
 				}
 			},
-
+			// action para actualizar la info de un wallet
 			editUserWallet: async(name_wallet,initial_value,currency_id,wallet_id)=>{
 
 				try {
@@ -805,9 +806,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 				} 
 				catch (error) {
 					console.error("Se presento el siguiente error: ", error)
+					return false
 				}
 			},
-
+			// action para borrar un wallet
 			deleteUserWallet: async(wallet_id) => {
 				try {
 
@@ -830,9 +832,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 					
 				} catch (error) {
 					console.error("Se presento el siguiente error: ", error)
+					return false
 				}
 			},
-
+			// Action para obtener un solo wallet
 			getSingleUserWallet: async(wallet_id) => {
 
 				try {
@@ -856,11 +859,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				} catch (error) {
 					console.error("Se presento el siguiente error: ", error)
+					return false
 				}
 
 			},
-
-			getAllUsers: async()=> {
+			//Action para obtener todos los usuarios y actualizarlo en el store
+			getUsers: async()=> {
 				try {
 					const result = await fetch(`${apiUrl}/api/admin/get-users`, {
 						method: "GET",
@@ -881,10 +885,11 @@ const getState = ({ getStore, getActions, setStore }) => {
 					
 				} catch (error) {
 					console.error("Se presento el siguiente error: ", error)
+					return false
 				}
 			},
-
-			deleteUserAsAdmin: async(user_id) => {
+			// Action para eliminar un usuario y actualizarlo en el store
+			deleteUser: async(user_id) => {
 				try {
 
 					const result = await fetch(`${apiUrl}/api/admin/user/delete/${user_id}`, {
@@ -900,15 +905,130 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 
 					const data = await result.json()
+					setStore({...getStore(), users: getStore().users.filter(user => user.id !== user_id)})			
+				} catch (error) {
+					console.error("Se presento el siguiente error: ", error)
+					return false
+				}
+			},
+			// Action para añadir categorias al API y guardar en el store
+			addCategory: async(name,description) => {
+				try {
 
-					setStore({...getStore(), users: getStore().users.filter(user => user.id !== user_id)})
+					const result = await fetch(`${apiUrl}/api/categories/add`, {
+						method: "POST",
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem('token')}`,
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							name:name,
+							description:description
+						})
+					})
 
+					if(result.ok){
+						throw new Error("Se presento el siguiente error: ", error)
+					}
+
+					const data = await result.json()
+
+					console.log(data)
+					setStore({...getStore(), categories_db:[...getStore().categories_db, data]})
+
+					return true
+				} catch (error) {
+					console.error("Se presento el siguiente error: ", error)
+					return false
+				}
+			},
+			// Action para obtener todas las categorias y guardarlas en el store
+			getCategories: async()=>{
+				try {
+
+					const result = await fetch(`${apiUrl}/api/categories`, {
+						method: "GET",
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem('token')}`,
+							"Content-Type": "application/json",
+							}
+					})
+
+					if(result.ok){
+						throw new Error("Se presento el siguiente error: ", error)
+					}
+
+					const data = await result.json()
+
+					setStore({...getStore(), categories_db: [...getStore().categories_db,data]})
+					return true
+				} catch (error) {
+					console.error("Se presento el siguiente error: ", error)	
+					return false			
+				}
+
+			},
+			// Action para editar la categoria, enviarla al API y actualizar en el store
+			editCategory: async(id,name,description)=> {
+
+				try {
+
+					const result = await fetch(`${apiUrl}/api/categories/edit/${id}`, {
+						method: "PUT",
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem('token')}`,
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							name:name,
+							description:description
+						})
+					})
+
+					if(result.ok){
+						throw new Error("Se presento el siguiente error: ", error)
+					}
+
+					const data = await result.json()
+					setStore({...getStore(), categories_db: [...getStore().categories_db,data]})
+					return true
+					
+				} catch (error) {
+					console.error("Se presento el siguiente error: ", error)	
+					return false
+					
+				}
+
+			},
+			// Action para eliminar la categoria y actualizarlo en el store
+			deleteCategory: async(id) => {
+				try {
+
+					const result = await fetch(`${apiUrl}/api/categories/delete/${id}`, {
+						method: "DELETE",
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem('token')}`,
+							"Content-Type": "application/json",
+							}
+					})
+
+					if(result.ok){
+						throw new Error("Se presento el siguiente error: ", error)
+					}
+
+					setStore({...getStore(), categories_db: getStore().categories_db.filter(category => category.id !== id)})
+					return true
 
 					
 				} catch (error) {
-					console.error("Se presento el siguiente error: ", error)
+					console.error("Se presento el siguiente error: ", error)	
+					return false
+					
 				}
 			}
+
+
+
 
 		}
 	};
