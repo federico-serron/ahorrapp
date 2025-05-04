@@ -1,37 +1,33 @@
-import React, { useState } from "react";
+import React, { useState,useEffect,useContext, useActionState } from "react";
+import {Context} from "../store/appContext"
+//import HandleUpdateUser from "./HandleUpdateUser.jsx";
 
-const HandleUpdateUser = ({ userId, apiUrl }) => {
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
+const HandleUpdateUser = () => {
+    const [name, setName] = useState(store.currentUser.name);
+    const [email, setEmail] = useState(store.currentUser.email);
     const [password, setPassword] = useState("");
-    const [phone, setPhone] = useState("");
-    const [address, setAddress] = useState("");
+    const [phone, setPhone] = useState(store.currentUser.phone);
+    const [address, setAddress] = useState(store.currentUser.address);
 
-    const handleUpdateUser = async () => {
-        const userData = { name, email, password, phone, address };
+    const {store,actions}= useContext(Context)
+    const handleUpdateUser = async ()=> {
 
         try {
-            const response = await fetch(`${apiUrl}/api/user/${userId}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${localStorage.getItem('token')}`
-                },
-                body: JSON.stringify(userData)
-            });
 
-            const data = await response.json();
+           const actualizar = await actions.handleUpdateUser()
+           if (!actualizar){
 
-            if (response.ok) {
-                console.log("Usuario actualizado:", data);
-            } else {
-                console.error("Error en la actualización:", data.msg || response.statusText);
-            }
+            console.log("Hubo un error ")
+           }
+
+            
         } catch (error) {
-            console.error("Error en la solicitud:", error);
+            console.log (error)
+            
         }
-    };
+    }
 
+    
     return (
         <div>
             <h2>Actualizar Usuario</h2>

@@ -1,10 +1,47 @@
-import React, {useEffect} from "react";
+import React, {useEffect,useState,useContext} from "react";
 import { useNavigate } from "react-router-dom";
 import HandleUpdateUser from "./HandleUpdateUser.jsx";
-
+import {Context} from "../store/appContext.js"
 
 export const Dashboard = () => {
 const navigate = useNavigate()
+
+const {store,actions}= useContext(Context)
+let info = {
+
+    
+    name: "",
+    email: "",
+    password: "",
+    phone: "",
+    address: "",
+   
+}
+const handleGetUser = async ()=>{
+
+    try {
+
+       const user = await actions.getUser()
+
+        if (!user){
+            console.log ("HUbo un error ")
+            return;
+        }
+
+        info.name = store.currentUser.name 
+        info.email= store.currentUser.email
+        info.address= store.currentUser.address
+        info.phone= store.currentUser.phone 
+
+
+
+
+        
+    } catch (error) {
+        console.log(error)
+        
+    }
+}
 
 
 useEffect(()=>{
@@ -69,9 +106,16 @@ useEffect(()=>{
 
 
                 </div>
-                <HandleUpdateUser userId={1} apiUrl="https://laughing-space-system-wrrqr6q9pr7q29g7w-3001.app.github.dev" />
 
+               
+               
             </div>
+            <div >
+                <button className="btn btn-primary" onClick= {handleGetUser}>Editar Usuario</button>
+            </div>
+
+            <HandleUpdateUser/>
+            
         </div>
     )
 };

@@ -7,6 +7,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			message: null,
+			currentUser:{},
 			categories: {
 				Restaurante: [
 					"restaurante", "parrillada", "pizzeria", "cafeteria", "bar", "chiviteria",
@@ -385,18 +386,50 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 			//Actions Juan
+			// Action Get MOstrar Usuario Por ID 
+			getUser: async ()=>{
+
+				
+				try {
+					const response = await fetch(`${apiUrl}/api/user/get`, {
+						method: "GET",
+						
+						headers: {
+							"Content-type": "application/json; charset=UTF-8",
+
+							"Authorization": `Bearer ${localStorage.getItem('token')}`
+						}})
+
+						if (!response.ok){
+							throw new Error("se presento un error ", response.status)
+						}
+
+						
+						const data = await response.json()
+						console.log(data)
+						setStore({...getStore(),currentUser:data})
+						return true
+					
+				} catch (error) {
+					console.error("Hubo un error al actualizar el usuario:", error);
+					return false;
+					
+				}
+
+
+			},
 
 			// Action para Editar Usuario por ID
 
-			updateUser: async (user_id, name, email, password, phone, address) => {
-				const URLupdateUser = `${apiUrl}/api/user/${user_id}`;
+			updateUser: async ( name, email, password, phone, address) => {
+				const URLupdateUser = `${apiUrl}/api/user/edit`;
 				const store = getStore();
 			
 				try {
-					if (!user_id || (!name && !email && !password && !phone && !address)) {
-						console.error("Debe proporcionarse al menos un campo para actualizar.");
-						return false;
-					}
+					// if ( (!name && !email && !password && !phone && !address)) {
+					// 	console.error("Debe proporcionarse al menos un campo para actualizar.");
+					// 	return false;
+					// }
 			
 					let userData = {};
 					if (name) userData.name = name;
@@ -427,7 +460,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 						...store,
 						users: store.users.map(user =>
 							user.id === user_id ? updatedUser : user
-						)
+
+					
+						),currentUser:updatedUser
 					});
 			
 					return true;

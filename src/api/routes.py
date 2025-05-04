@@ -726,7 +726,24 @@ def actualizar_usuario():
         return jsonify({"msg": "Error al actualizar el usuario", "error": str(e)}), 500
 
 
+@api.route('/user/get', methods=['GET'])
+@jwt_required()
+def get_user():
+    try: 
 
+        user_id= get_jwt_identity()
+        user= User.query.filter_by(id=user_id).first()
+        if not user : 
+            return jsonify({"msg":"usuario no encontrado"}),404
+        return jsonify(user.serialize())
+    
+    except Exception as e:
+        
+        return jsonify({"msg": "Error al obtener el usuario", "error": str(e)}), 500
+    
+
+        
+       
 
 
 
