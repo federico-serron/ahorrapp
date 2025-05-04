@@ -1,5 +1,6 @@
 import React, {useEffect} from "react";
 import { useNavigate } from "react-router-dom";
+import HandleUpdateUser from "./HandleUpdateUser.jsx";
 
 
 export const Dashboard = () => {
@@ -17,6 +18,10 @@ useEffect(()=>{
             <div>
                 <h1>Dashboard User</h1>
             </div>
+
+           
+
+            
 
             <select className="form-select form-select-sm" aria-label="Small select example" style={{ marginTop: "20px" }}>
                 <option selected>Select the Category</option>
@@ -57,7 +62,15 @@ useEffect(()=>{
                     </ul>
                     <div className="card-footer">Total: 20$ (ejemplo) <i className="fa-brands fa-cc-diners-club"></i>
                     </div>
+                    
+
+            
+
+
+
                 </div>
+                <HandleUpdateUser userId={1} apiUrl="https://laughing-space-system-wrrqr6q9pr7q29g7w-3001.app.github.dev" />
+
             </div>
         </div>
     )

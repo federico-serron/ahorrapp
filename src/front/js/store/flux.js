@@ -385,6 +385,57 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 			//Actions Juan
+
+			// Action para Editar Usuario por ID
+
+			updateUser: async (user_id, name, email, password, phone, address) => {
+				const URLupdateUser = `${apiUrl}/api/user/${user_id}`;
+				const store = getStore();
+			
+				try {
+					if (!user_id || (!name && !email && !password && !phone && !address)) {
+						console.error("Debe proporcionarse al menos un campo para actualizar.");
+						return false;
+					}
+			
+					let userData = {};
+					if (name) userData.name = name;
+					if (email) userData.email = email;
+					if (password) userData.password = password;
+					if (phone) userData.phone = phone;
+					if (address) userData.address = address;
+			
+					const response = await fetch(URLupdateUser, {
+						method: "PUT",
+						headers: {
+							"Content-Type": "application/json",
+							"Authorization": `Bearer ${localStorage.getItem('token')}`
+						},
+						body: JSON.stringify(userData)
+					});
+			
+					if (!response.ok) {
+						const errorData = await response.json();
+						console.error("Error al actualizar el usuario:", errorData.msg || response.statusText);
+						return false;
+					}
+			
+					const updatedUser = await response.json();
+					console.log("Usuario actualizado exitosamente:", updatedUser);
+			
+					setStore({
+						...store,
+						users: store.users.map(user =>
+							user.id === user_id ? updatedUser : user
+						)
+					});
+			
+					return true;
+				} catch (error) {
+					console.error("Hubo un error al actualizar el usuario:", error);
+					return false;
+				}
+			},
 			// Action  para crear nueva meta (goal)
 
 			setGoal: async (name_goal, goal_value) => {
