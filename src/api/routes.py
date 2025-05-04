@@ -721,6 +721,20 @@ def actualizar_usuario():
     db.session.commit()
     return jsonify(user.serialize()), 200
 
+# ruta get
+
+@api.route('/user/get', methods=['GET'])
+@jwt_required()
+def get_user():
+    user_id = get_jwt_identity()
+    user = User.query.filter_by(id=user_id).first()
+
+    if not user:
+        return jsonify({"msg": "Usuario no encontrado"}), 404
+
+    return jsonify(user.serialize()), 200
+
+
 
 
 
