@@ -695,6 +695,7 @@ def get_progress_from_goal(id):
    
 
 # Nueva ruta Juan
+# Nueva ruta Juan
 @api.route('/user/edit', methods=['PUT'])
 @jwt_required()
 def actualizar_usuario():
@@ -703,7 +704,7 @@ def actualizar_usuario():
         return jsonify({"msg": "No se proporcionan datos"}), 400
 
     user_id = get_jwt_identity()
-    user=User.query.filter_by(id=user_id).first()
+    user = User.query.filter_by(id=user_id).first()
     if not user:
         return jsonify({"msg": "User not found"}), 404
 
@@ -715,35 +716,11 @@ def actualizar_usuario():
                 hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
                 setattr(user, 'password', hashed_password)
             else:
-                setattr(user, campo, data[campo])
-            
+                setattr(user, campo, data[campo] if data[campo] is not None else None)
 
-    try:
-        db.session.commit()
-        return jsonify(user.serialize()), 200
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"msg": "Error al actualizar el usuario", "error": str(e)}), 500
+    db.session.commit()
+    return jsonify(user.serialize()), 200
 
-
-@api.route('/user/get', methods=['GET'])
-@jwt_required()
-def get_user():
-    try: 
-
-        user_id= get_jwt_identity()
-        user= User.query.filter_by(id=user_id).first()
-        if not user : 
-            return jsonify({"msg":"usuario no encontrado"}),404
-        return jsonify(user.serialize())
-    
-    except Exception as e:
-        
-        return jsonify({"msg": "Error al obtener el usuario", "error": str(e)}), 500
-    
-
-        
-       
 
 
 

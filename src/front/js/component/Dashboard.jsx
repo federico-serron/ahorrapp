@@ -7,48 +7,33 @@ export const Dashboard = () => {
 const navigate = useNavigate()
 
 const {store,actions}= useContext(Context)
-let info = {
 
-    
-    name: "",
-    email: "",
-    password: "",
-    phone: "",
-    address: "",
-   
-}
-const handleGetUser = async ()=>{
-
+const handleGetUser = async () => {
     try {
+        const user = await actions.getUser();
 
-       const user = await actions.getUser()
-
-        if (!user){
-            console.log ("HUbo un error ")
+        if (!user) {
+            console.log("Hubo un error ");
             return;
         }
 
-        info.name = store.currentUser.name 
-        info.email= store.currentUser.email
-        info.address= store.currentUser.address
-        info.phone= store.currentUser.phone 
+        console.log("Usuario obtenido correctamente:", store.currentUser);
 
-
-
-
-        
     } catch (error) {
-        console.log(error)
-        
+        console.log("Error al obtener el usuario:", error);
     }
-}
+};
 
 
-useEffect(()=>{
+
+useEffect(() => {
     if (!localStorage.getItem("token")) {
-        navigate('/login')
+        navigate('/login');
+    } else {
+        actions.getUser(); // << Llamada automática
     }
-},[])
+}, []);
+
 
     return (
         <div className="container justify-content-center">

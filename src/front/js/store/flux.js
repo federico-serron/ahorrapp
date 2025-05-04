@@ -387,90 +387,66 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			//Actions Juan
 			// Action Get MOstrar Usuario Por ID 
-			getUser: async ()=>{
-
-				
+			getUser: async () => {
 				try {
 					const response = await fetch(`${apiUrl}/api/user/get`, {
 						method: "GET",
-						
 						headers: {
 							"Content-type": "application/json; charset=UTF-8",
-
 							"Authorization": `Bearer ${localStorage.getItem('token')}`
-						}})
-
-						if (!response.ok){
-							throw new Error("se presento un error ", response.status)
 						}
-
-						
-						const data = await response.json()
-						console.log(data)
-						setStore({...getStore(),currentUser:data})
-						return true
-					
+					});
+					if (!response.ok) {
+						throw new Error("Hubo un error al obtener el usuario");
+					}
+		
+					const data = await response.json();
+					console.log("Usuario obtenido correctamente:", data);
+					setStore({ ...getStore(), currentUser: data });
+					return true;
 				} catch (error) {
-					console.error("Hubo un error al actualizar el usuario:", error);
+					console.error("Error al obtener el usuario:", error);
 					return false;
-					
 				}
-
-
 			},
 
 			// Action para Editar Usuario por ID
 
-			updateUser: async ( name, email, password, phone, address) => {
+			updateUser: async (name, email, password, phone, address) => {
 				const URLupdateUser = `${apiUrl}/api/user/edit`;
 				const store = getStore();
 			
-				try {
-					// if ( (!name && !email && !password && !phone && !address)) {
-					// 	console.error("Debe proporcionarse al menos un campo para actualizar.");
-					// 	return false;
-					// }
+				let userData = {};
+				if (name !== undefined) userData.name = name;
+				if (email !== undefined) userData.email = email;
+				if (password !== undefined) userData.password = password;
+				if (phone !== undefined) userData.phone = phone;
+				if (address !== undefined) userData.address = address;
 			
-					let userData = {};
-					if (name) userData.name = name;
-					if (email) userData.email = email;
-					if (password) userData.password = password;
-					if (phone) userData.phone = phone;
-					if (address) userData.address = address;
+				const response = await fetch(URLupdateUser, {
+					method: "PUT",
+					headers: {
+						"Content-Type": "application/json",
+						"Authorization": `Bearer ${localStorage.getItem('token')}`
+					},
+					body: JSON.stringify(userData)
+				});
 			
-					const response = await fetch(URLupdateUser, {
-						method: "PUT",
-						headers: {
-							"Content-Type": "application/json",
-							"Authorization": `Bearer ${localStorage.getItem('token')}`
-						},
-						body: JSON.stringify(userData)
-					});
-			
-					if (!response.ok) {
-						const errorData = await response.json();
-						console.error("Error al actualizar el usuario:", errorData.msg || response.statusText);
-						return false;
-					}
-			
-					const updatedUser = await response.json();
-					console.log("Usuario actualizado exitosamente:", updatedUser);
-			
-					setStore({
-						...store,
-						users: store.users.map(user =>
-							user.id === user_id ? updatedUser : user
-
-					
-						),currentUser:updatedUser
-					});
-			
-					return true;
-				} catch (error) {
-					console.error("Hubo un error al actualizar el usuario:", error);
+				if (!response.ok) {
+					console.error("Error al actualizar el usuario");
 					return false;
 				}
+			
+				const updatedUser = await response.json();
+				console.log("Usuario actualizado:", updatedUser);
+			
+				// Actualiza el estado del store con el usuario actualizado
+				setStore({ ...store, currentUser: updatedUser });
+			
+				return true;
 			},
+			
+		
 			// Action  para crear nueva meta (goal)
 
 			setGoal: async (name_goal, goal_value) => {
