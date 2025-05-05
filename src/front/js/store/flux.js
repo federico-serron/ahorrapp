@@ -77,7 +77,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				{
 					id: 2,
 					name: "Bolivares",
-					symbol: "Bs"
+					symbol: "Br"
 				}
 			],
 			//Info de Usuario actualmente logeado
