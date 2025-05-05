@@ -15,7 +15,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import { Dashboard } from "./component/Dashboard.jsx";
 import Signup from "./pages/Signup.jsx";
-import Wallet from "./component/Wallet.jsx";
 import AddRecord from "./component/AddRecord.jsx";
 import SavingsGoals from "./component/SavingsGoals.jsx";
 import Unauthorized from "./pages/Unauthorized.jsx"
@@ -24,6 +23,7 @@ import AdminLayout from "./component/AdminLayout.jsx";
 import ListCategories from "./component/ListCategories.jsx";
 import PayPalSuccess from "./pages/PayPalSuccess.jsx";
 import PayPalCancel from "./pages/PayPalCancel.jsx";
+import WalletDetail from "./pages/WalletDetail.jsx";
 
 
 //create your first component
@@ -32,7 +32,7 @@ const Layout = () => {
     // you can set the basename on the .env file located at the root of this project, E.g: BASENAME=/react-hello-webapp/
     const basename = process.env.BASENAME || "";
 
-    if(!process.env.BACKEND_URL || process.env.BACKEND_URL == "") return <BackendURL/ >;
+    if (!process.env.BACKEND_URL || process.env.BACKEND_URL == "") return <BackendURL />;
 
     return (
         <div>
@@ -43,26 +43,29 @@ const Layout = () => {
                         <Route element={<Home />} path="/" />
                         <Route element={<Demo />} path="/demo" />
                         <Route element={<SavingsGoals />} path="/savingsgoals" />
-                        <Route element={<Wallet />} path="/wallet/:id" />
+
                         <Route element={<Dashboard />} path="/dashboard" />
                         <Route element={<Single />} path="/single/:theid" />
-                        <Route path="/unauthorized" element={<Unauthorized />} />
                         {/* Admin routes */}
                         <Route path="/admin" element={<AdminLayout />}>
                             <Route path="users" index element={<ListUsers />} />
                             <Route path="categories" index element={<ListCategories />} />
                         </Route>
-                        
+
                         {/* Paypal */}
                         <Route path="/paypal/success" element={<PayPalSuccess />} />
                         <Route path="/paypal/cancel" element={<PayPalCancel />} />
-                        
-                        {/* Login */}
-                        <Route element={<Login/>} path="/login" />
-                        {/* Siguientes rutas */}
-                        <Route element={<Signup/>} path="/signup" />
-                        <Route element={<AddRecord/>} path="/records/add" />
 
+                        {/* Login */}
+                        <Route element={<Login />} path="/login" />
+                        {/* Siguientes rutas */}
+                        <Route element={<Signup />} path="/signup" />
+                        <Route element={<AddRecord />} path="/records/add" />
+
+                        {/* Wallets */}
+                        <Route element={<WalletDetail />} path="wallet/:wallet_id" />
+
+                        <Route path="/unauthorized" element={<Unauthorized />} />
                         <Route element={<h1>Not found!</h1>} />
 
 
