@@ -21,6 +21,7 @@ import Unauthorized from "./pages/Unauthorized.jsx"
 import ListUsers from "./component/ListUsers.jsx";
 import AdminLayout from "./component/AdminLayout.jsx";
 import ListCategories from "./component/ListCategories.jsx";
+import HandleUpdateUser from "./component/HandleUpdateUser.jsx"; // ruta para editar usuario 
 
 //create your first component
 const Layout = () => {
@@ -53,6 +54,8 @@ const Layout = () => {
                         {/* Siguientes rutas */}
                         <Route element={<Signup/>} path="/signup" />
                         <Route element={<AddRecord/>} path="/records/add" />
+                        {/* Editar Usuario */}
+                        <Route path="/edit-user" element={<HandleUpdateUser />} /> 
 
                         <Route element={<h1>Not found!</h1>} />
 

@@ -1,6 +1,6 @@
 import React, {useEffect,useState,useContext} from "react";
 import { useNavigate } from "react-router-dom";
-import HandleUpdateUser from "./HandleUpdateUser.jsx";
+
 import {Context} from "../store/appContext.js"
 
 export const Dashboard = () => {
@@ -8,21 +8,14 @@ const navigate = useNavigate()
 
 const {store,actions}= useContext(Context)
 
-const handleGetUser = async () => {
-    try {
-        const user = await actions.getUser();
 
-        if (!user) {
-            console.log("Hubo un error ");
-            return;
-        }
+/*
+⚠️ Importante: el componente HandleUpdateUser necesita que se llame a actions.getUser() antes de renderizarse, para poder llenar correctamente el formulario con los datos del usuario.
 
-        console.log("Usuario obtenido correctamente:", store.currentUser);
+Actualmente, esa llamada está en el useEffect del componente Dashboard (justo debajo de este comentario).
 
-    } catch (error) {
-        console.log("Error al obtener el usuario:", error);
-    }
-};
+✅ Si mueves el botón o renderizas HandleUpdateUser en otro lugar, asegúrate de incluir este useEffect completo para que el botón funcione correctamente y se cargue la información del usuario.
+*/
 
 
 
@@ -95,11 +88,21 @@ useEffect(() => {
                
                
             </div>
-            <div >
-                <button className="btn btn-primary" onClick= {handleGetUser}>Editar Usuario</button>
-            </div>
 
-            <HandleUpdateUser/>
+            
+           
+
+           {/* Botón para navegar a HandleUpdateUser */}
+         
+    <button
+        className="btn btn-primary"
+        style={{ width: "200px" }}
+        onClick={() => navigate("/edit-user")}
+    >
+        Editar Usuario
+    </button>
+
+
             
         </div>
     )

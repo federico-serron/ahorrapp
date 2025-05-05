@@ -695,7 +695,7 @@ def get_progress_from_goal(id):
    
 
 # Nueva ruta Juan
-# Nueva ruta Juan
+# Ruta Editar Usuario
 @api.route('/user/edit', methods=['PUT'])
 @jwt_required()
 def actualizar_usuario():
@@ -721,7 +721,7 @@ def actualizar_usuario():
     db.session.commit()
     return jsonify(user.serialize()), 200
 
-# ruta get
+# ruta get Obtener Datos de Usuario
 
 @api.route('/user/get', methods=['GET'])
 @jwt_required()

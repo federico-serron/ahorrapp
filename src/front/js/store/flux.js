@@ -386,7 +386,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 			//Actions Juan
-			// Action Get MOstrar Usuario Por ID 
+			// Action Get Mostrar Usuario Por ID 
 			getUser: async () => {
 				try {
 					const response = await fetch(`${apiUrl}/api/user/get`, {
