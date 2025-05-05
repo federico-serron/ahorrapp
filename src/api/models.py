@@ -20,9 +20,9 @@ class User(db.Model):
     is_premium: Mapped[bool] = mapped_column(Boolean(), nullable=False, default=False)
     
 
-    wallets: Mapped[list["Wallet"]] = relationship(back_populates="user")
-    records: Mapped[list["Record"]] = relationship(back_populates="user")
-    goals: Mapped[list["Goal"]] = relationship(back_populates='user')
+    wallets: Mapped[list["Wallet"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    records: Mapped[list["Record"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+    goals: Mapped[list["Goal"]] = relationship(back_populates='user', cascade="all, delete-orphan")
 
 
     def serialize(self):
@@ -119,7 +119,7 @@ class Wallet(db.Model):
 
     currency: Mapped["Currency"] = relationship(back_populates="wallets")
     user: Mapped["User"] = relationship(back_populates="wallets")
-    records: Mapped[list["Record"]] = relationship(back_populates="wallet")
+    records: Mapped[list["Record"]] = relationship(back_populates="wallet", cascade="all, delete-orphan")
 
     def serialize(self):
         return {

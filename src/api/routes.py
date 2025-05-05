@@ -368,8 +368,12 @@ def add_record():
             wallet_id=fields["wallet_id"],
             user_id=user_id,
         )
+        
+        wallet = Wallet.query.filter_by(id=fields.get("wallet_id"), user_id=user_id).first()
+        wallet.total_value += fields['amount']
 
         db.session.add(new_record)
+                
         db.session.commit()
 
         return jsonify(new_record.serialize()), 201

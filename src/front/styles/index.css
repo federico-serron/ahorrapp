@@ -52,10 +52,10 @@ tr:hover .delete-fa {
     cursor: pointer;
 }
 
-
+/* Wallet Cards */
 .border-neon {
-    border: 2px solid #00f0ff !important;
-    box-shadow: 0 0 10px #00f0ff;
+    border: 2px solid red !important;
+    box-shadow: 0 0 10px red;
     border-radius: 0.375rem;
 
 }

@@ -43,7 +43,7 @@ const WalletDetail = () => {
                     </div>
               ) : (
                 <h2 className="display-5 fw-bold">
-                  ${store.records?.balance?.toFixed(2) || "0.00"}
+                  ${store.wallets_from_user.find(wallet => wallet.id === parseInt(wallet_id))?.balance?.toFixed(2) || "0.00"}
                 </h2>
               )}
 

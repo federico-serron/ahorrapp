@@ -4,16 +4,17 @@ import PayPalBtn from "./PayPalBtn.jsx";
 import WalletCard from "./WalletCard.jsx";
 import AddWallet from "./AddWallet.jsx";
 import AddRecord from "./AddRecord.jsx"
-import ListRecord from "./ListRecord.jsx"
-import { toast } from "react-toastify";
 import { Context } from "../store/appContext";
+import ConfirmModal from "./ConfrimModal.jsx";
 
 
 export const Dashboard = () => {
 
     const navigate = useNavigate()
     const { store, actions } = useContext(Context);
-    const [selectedWallet, setSelectedWallet] = useState(null)
+    const [selectedWalletId, setSelectedWalletId] = useState(localStorage.getItem("selected_wallet"));
+    const [walletToDelete, setWalletToDelete] = useState(null);
+
 
     useEffect(() => {
         const fetchWallets = async () => {
@@ -23,11 +24,8 @@ export const Dashboard = () => {
                 console.log("Parece que hubo un error o no hay wallets")
                 return;
             }
-
         }
-
         fetchWallets();
-        localStorage.setItem("wallets", store.logged_user)
 
     }, []);
 
@@ -58,14 +56,19 @@ export const Dashboard = () => {
             <div className="row">
                 {store.wallets_from_user && store.wallets_from_user.length > 0 ? (
                     store.wallets_from_user.map((wallet) => (
-                        <div className="col-lg-3 col-sm-4 col-sm-6 mb-3" key={wallet.id}>
+                        <div onClick={() => {
+                            setSelectedWalletId(wallet.id);
+                            localStorage.setItem("selected_wallet", wallet.id);
+                            console.log(selectedWalletId)
+                        }} className="col-lg-3 col-sm-4 col-sm-6 mb-3" key={wallet.id}>
                             <WalletCard
                                 id={wallet.id}
                                 balance={wallet.balance}
                                 name={wallet.name}
                                 currency={wallet.currency.symbol}
-                                setSelectedWallet={setSelectedWallet}
-                                selectedWallet={selectedWallet} />
+                                selectedWallet={selectedWalletId}
+                                onDelete={() => setWalletToDelete(wallet.id)} // ← nuevo prop
+                            />
                         </div>
                     ))
                 ) : (
@@ -84,6 +87,16 @@ export const Dashboard = () => {
                     Meter grafiquitas aca
                 </div>
             </div>
+            <ConfirmModal
+                id="confirmDeleteModal"
+                message="¿Estás seguro de que querés eliminar esta billetera?"
+                onConfirm={async () => {
+                    const success = await actions.deleteUserWallet(walletToDelete);
+                    if (success) toast.success("Billetera eliminada");
+                    else toast.error("Error al eliminar billetera");
+                }}
+                onCancel={() => setWalletToDelete(null)}
+            />
         </div>
     )
 };

@@ -12,9 +12,9 @@ const AddWallet = () => {
 
     const handleAddWallet = async (e) => {
 
-        if (name == "" || initialValue == 0 || currency == "") {
+        if (name == "" || initialValue <= 0 || currency == "") {
             console.log(name, initialValue, currency)
-            toast.warn("Debe ingresar todos los campos!")
+            toast.warn("Debe ingresar todos los campos o el monto debe ser mayor a 0.")
             setName("")
             setCurrency("")
             return;
@@ -26,7 +26,6 @@ const AddWallet = () => {
         }
         if (!response) {
             toast.error(`Hubo un error al intentar crear la billetera ${name}`)
-            console.log(`Hubo un error al intentar crear la billetera ${name}`)
             setName("");
             setCurrency("");
             return;
