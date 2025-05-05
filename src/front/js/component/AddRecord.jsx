@@ -46,7 +46,7 @@ const AddRecord = () => {
         console.log(amount, matchedCategory, words.join(" "))
         setInputValue("")
 
-        const response = await actions.addRecord(words.join(" "), amount, type, matchedCategory, 1)
+        const response = await actions.addRecord(words.join(" "), amount, type, matchedCategory, localStorage.getItem("selected_wallet"))
         if (!response) {
             console.log("Hubo un error al intentar agregar el registro.")
             toast.warn("Debes agregar una breve descripcion y un monto");
@@ -54,14 +54,15 @@ const AddRecord = () => {
             return;
         }
         toast.success("Registro agregado exitosamente!");
+        console.log(store.logged_user)
 
     };
 
     useEffect(()=>{
         let totalValue = 0
-        if (store.records && store.records.length > 0) {
-            for (let i = 0; i < store.records.length; i++) {
-                totalValue = totalValue + store.records[i].amount;
+        if (store.wallets_from_user && store.wallets_from_user.length > 0) {
+            for (let i = 0; i < store.wallets_from_user.length; i++) {
+                totalValue = totalValue + store.wallets_from_user[i].balance;
             }
             setTotalValueWallet(totalValue)
         }

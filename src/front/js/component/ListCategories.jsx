@@ -84,7 +84,7 @@ const ListCategories = () => {
         //     setCategories(cat)
         //     return cat;
         // });
-    
+
         // setCategories(updatedCategories_db);
         // toast.success(`Categoría "${name}" editada exitosamente`);
 
@@ -110,7 +110,7 @@ const ListCategories = () => {
             try {
                 const data = await actions.getCategories();
 
-                if(!data){
+                if (!data) {
                     console.log("No hay categorias")
                     setLoading(false)
                     return;
@@ -165,7 +165,7 @@ const ListCategories = () => {
                                         </td>
                                     </tr>
                                 ) : (
-                                    categories.map((category, index) => (
+                                    store.categories_db.map((category, index) => (
                                         <tr key={category.id}>
                                             <td>{index + 1}</td>
                                             <td>{category.name}</td>

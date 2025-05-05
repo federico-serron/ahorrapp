@@ -1,6 +1,13 @@
 from flask import jsonify, url_for
 from datetime import datetime, timezone
 from .models import User
+import requests
+import os
+
+# paypal configuration
+PAYPAL_CLIENT_ID = os.getenv("PAYPAL_CLIENT_ID")
+PAYPAL_SECRET = os.getenv("PAYPAL_SECRET")
+PAYPAL_BASE_URL = os.getenv("PAYPAL_BASE_URL")
 
 class APIException(Exception):
     status_code = 400
@@ -70,3 +77,24 @@ def check_user_is_admin(user_id):
         return jsonify({"msg": "Debe ser administrador para poder acceder a este ruta"}), 401
         
     return None
+
+def get_access_token():
+    auth = (PAYPAL_CLIENT_ID, PAYPAL_SECRET)
+
+    headers = {
+        "Accept": "application/json",
+        "Accept-Language": "en_US",
+    }
+
+    data = {
+        "grant_type": "client_credentials"
+    }
+
+    response = requests.post(
+        f"{PAYPAL_BASE_URL}/v1/oauth2/token",
+        headers=headers,
+        data=data,
+        auth=auth
+    )
+
+    return response.json()["access_token"]

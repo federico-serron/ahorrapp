@@ -13,6 +13,12 @@ const ListUsers = () => {
     const handleDelete = async (id) => {
 
         const response = await actions.deleteUser(id);
+
+        if(response == "403"){
+            toast.error("No puedes eliminar tu propio usuario")
+            return;
+        }
+
         if (!response) {
             toast.error("No se pudo eliminar el usuario")
             return;
@@ -26,12 +32,12 @@ const ListUsers = () => {
 
     useEffect(() => {
         const fetchUsers = async () => {
-            // const response = await actions.getUsers();
-            // if (!response) {
-            //     console.log("No se pudieron traer los usuarios desde la BD.")
-            //     setLoading(false)
-            //     return users;
-            // }
+            const response = await actions.getUsers();
+            if (!response) {
+                 console.log("No se pudieron traer los usuarios desde la BD.")
+                 setLoading(false)
+                 return users;
+             }
 
             setUsers(store.users)
             setLoading(false)

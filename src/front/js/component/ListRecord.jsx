@@ -1,23 +1,32 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext";
+import { useParams } from "react-router-dom";
+
 
 const ListRecord = () => {
 
     const { store, actions } = useContext(Context);
+    const { wallet_id } = useParams();
     let records = store.records
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
 
         let isMounted = true;
 
         const fetchRecords = async () => {
-            const success = await actions.get_records();
+            setLoading(true);
+
+            const success = await actions.get_records(null, null, wallet_id);
             if (success && isMounted) {
                 records = store.records
+                setLoading(false)
             }
         }
 
         fetchRecords();
+        setLoading(false);
+
 
         return () => {
             isMounted = false;
@@ -26,39 +35,50 @@ const ListRecord = () => {
     return (
         <div>
             <h2>Registros</h2>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                <thead>
-                    <tr>
-                        <th style={{ border: "1px solid #ddd", padding: "8px" }}>ID</th>
-                        <th style={{ border: "1px solid #ddd", padding: "8px" }}>Descripcion</th>
-                        <th style={{ border: "1px solid #ddd", padding: "8px" }}>Monto</th>
-                        <th style={{ border: "1px solid #ddd", padding: "8px" }}>Tipo</th>
-                        <th style={{ border: "1px solid #ddd", padding: "8px" }}>Categoria</th>
-                        <th style={{ border: "1px solid #ddd", padding: "8px" }}>Fecha</th>
-
-                    </tr>
-                </thead>
-                <tbody>
-                    {records && records.length > 0 ? (
-                        records.map((record, index) => (
-                            <tr key={index}>
-                                <td style={{ border: "1px solid #ddd", padding: "8px" }}>{index+1}</td>
-                                <td style={{ border: "1px solid #ddd", padding: "8px" }}>{record.description}</td>
-                                <td style={{ border: "1px solid #ddd", padding: "8px" }}>{record.amount}</td>
-                                <td style={{ border: "1px solid #ddd", padding: "8px" }}>{record.type == "Ingreso" ? `✅` : `📛`}</td>
-                                <td style={{ border: "1px solid #ddd", padding: "8px" }}>{record.category.name}</td>
-                                <td style={{ border: "1px solid #ddd", padding: "8px" }}>{new Date(record.timestamp).toLocaleString('es-UY')}</td>
-
-                            </tr>
-                        ))) : (
+            <div className="table-responsive">
+                <table className="table table-striped table-bordered table-hover">
+                    <thead className="table-dark">
                         <tr>
-                            <td colSpan="4" style={{ textAlign: "center", padding: "20px" }}>
-                                No hay registros todavía.
-                            </td>
+                            <th>ID</th>
+                            <th>Descripcion</th>
+                            <th>Monto</th>
+                            <th>Categoria</th>
+                            <th>Fecha</th>
                         </tr>
-                    )}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {loading && (
+                            <tr>
+                                <td colSpan="4">
+                                    <div className="d-flex justify-content-center mx-auto my-3">
+                                        <div className="spinner-border text-primary" role="status">
+                                            <span className="visually-hidden">Cargando...</span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        )}
+                        {records && records.length > 0 ? (
+                            records.map((record, index) => (
+                                <tr key={index}>
+                                    <td>{index + 1}</td>
+                                    <td>{record.description}</td>
+                                    <td className={record.amount < 0 ? "text-danger" : "text-success"}>${parseFloat(record.amount).toFixed(2)}</td>
+                                    <td>{record.category.name}</td>
+                                    <td>{new Date(record.timestamp).toLocaleString("es-UY")}</td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="6" className="text-center py-3">
+                                    No hay registros todavía.
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+
         </div>
     );
 };
