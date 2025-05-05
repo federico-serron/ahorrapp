@@ -165,7 +165,7 @@ const ListCategories = () => {
                                         </td>
                                     </tr>
                                 ) : (
-                                    categories.map((category, index) => (
+                                    store.categories_db.map((category, index) => (
                                         <tr key={category.id}>
                                             <td>{index + 1}</td>
                                             <td>{category.name}</td>
