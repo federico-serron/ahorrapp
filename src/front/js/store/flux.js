@@ -7,6 +7,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			message: null,
+			currentUser:{},
 			categories: {
 				Restaurante: [
 					"restaurante", "parrillada", "pizzeria", "cafeteria", "bar", "chiviteria",
@@ -314,6 +315,67 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 			//Actions Juan
+			// Action Get Mostrar Usuario Por ID 
+			getUser: async () => {
+				try {
+					const response = await fetch(`${apiUrl}/api/user/get`, {
+						method: "GET",
+						headers: {
+							"Content-type": "application/json; charset=UTF-8",
+							"Authorization": `Bearer ${localStorage.getItem('token')}`
+						}
+					});
+					if (!response.ok) {
+						throw new Error("Hubo un error al obtener el usuario");
+					}
+		
+					const data = await response.json();
+					console.log("Usuario obtenido correctamente:", data);
+					setStore({ ...getStore(), currentUser: data });
+					return true;
+				} catch (error) {
+					console.error("Error al obtener el usuario:", error);
+					return false;
+				}
+			},
+
+			// Action para Editar Usuario por ID
+
+			updateUser: async (name, email, password, phone, address) => {
+				const URLupdateUser = `${apiUrl}/api/user/edit`;
+				const store = getStore();
+			
+				let userData = {};
+				if (name !== undefined) userData.name = name;
+				if (email !== undefined) userData.email = email;
+				if (password !== undefined) userData.password = password;
+				if (phone !== undefined) userData.phone = phone;
+				if (address !== undefined) userData.address = address;
+			
+				const response = await fetch(URLupdateUser, {
+					method: "PUT",
+					headers: {
+						"Content-Type": "application/json",
+						"Authorization": `Bearer ${localStorage.getItem('token')}`
+					},
+					body: JSON.stringify(userData)
+				});
+			
+				if (!response.ok) {
+					console.error("Error al actualizar el usuario");
+					return false;
+				}
+			
+				const updatedUser = await response.json();
+				console.log("Usuario actualizado:", updatedUser);
+			
+				// Actualiza el estado del store con el usuario actualizado
+				setStore({ ...store, currentUser: updatedUser });
+			
+				return true;
+			},
+			
+		
 			// Action  para crear nueva meta (goal)
 
 			setGoal: async (name_goal, goal_value) => {
