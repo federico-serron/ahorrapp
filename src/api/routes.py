@@ -770,6 +770,47 @@ def get_progress_from_goal():
 
 
 # Nueva ruta Juan
+# Ruta Editar Usuario
+@api.route('/user/edit', methods=['PUT'])
+@jwt_required()
+def actualizar_usuario():
+    data = request.get_json()
+    if not data:
+        return jsonify({"msg": "No se proporcionan datos"}), 400
+
+    user_id = get_jwt_identity()
+    user = User.query.filter_by(id=user_id).first()
+    if not user:
+        return jsonify({"msg": "User not found"}), 404
+
+    campos_actualizables = ['name', 'email', 'password', 'phone', 'address']
+
+    for campo in campos_actualizables:
+        if campo in data:
+            if campo == 'password':
+                hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
+                setattr(user, 'password', hashed_password)
+            else:
+                setattr(user, campo, data[campo] if data[campo] is not None else None)
+
+    db.session.commit()
+    return jsonify(user.serialize()), 200
+
+# ruta get Obtener Datos de Usuario
+
+@api.route('/user/get', methods=['GET'])
+@jwt_required()
+def get_user():
+    user_id = get_jwt_identity()
+    user = User.query.filter_by(id=user_id).first()
+
+    if not user:
+        return jsonify({"msg": "Usuario no encontrado"}), 404
+
+    return jsonify(user.serialize()), 200
+
+
+
 
 
 # Nueva ruta Rafa

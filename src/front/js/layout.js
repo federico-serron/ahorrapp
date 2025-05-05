@@ -21,10 +21,10 @@ import Unauthorized from "./pages/Unauthorized.jsx"
 import ListUsers from "./component/ListUsers.jsx";
 import AdminLayout from "./component/AdminLayout.jsx";
 import ListCategories from "./component/ListCategories.jsx";
+import HandleUpdateUser from "./component/HandleUpdateUser.jsx"; 
 import PayPalSuccess from "./pages/PayPalSuccess.jsx";
 import PayPalCancel from "./pages/PayPalCancel.jsx";
 import WalletDetail from "./pages/WalletDetail.jsx";
-
 
 //create your first component
 const Layout = () => {
@@ -59,6 +59,10 @@ const Layout = () => {
                         {/* Login */}
                         <Route element={<Login />} path="/login" />
                         {/* Siguientes rutas */}
+
+                        {/* Editar Usuario */}
+                        <Route path="/edit-user" element={<HandleUpdateUser />} /> 
+
                         <Route element={<Signup />} path="/signup" />
                         <Route element={<AddRecord />} path="/records/add" />
 
