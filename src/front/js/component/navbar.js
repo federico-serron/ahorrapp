@@ -10,6 +10,8 @@ export const Navbar = () => {
 
 	const [isVisible, setIsVisible] = useState(false);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const currentTheme = store.theme;
+
 	const navigate = useNavigate()
 
 	const handleLogout = () => {
@@ -28,7 +30,8 @@ export const Navbar = () => {
 	}, [])
 
 	return (
-		<nav className={`navbar navbar-expand-lg navbar-light bg-light shadow-sm animated-navbar ${isVisible ? "fade-slide" : ""}`}>
+		<nav className={`navbar navbar-expand-lg ${currentTheme === 'dark' ? 'navbar-dark bg-dark' : 'navbar-light bg-light'} shadow-sm animated-navbar ${isVisible ? "fade-slide" : ""}`}>
+
 			<div className="container">
 				<Link className="navbar-brand text-success fw-bold" to="/">
 					AhorrApp
@@ -65,7 +68,7 @@ export const Navbar = () => {
 						)}
 						<li className="nav-item">
 							{localStorage.getItem("token") ? (
-								<button className="nav-link btn btn-danger text-white px-3 ms-2" onClick={handleLogout}>
+								<button className="nav-link btn btn-danger px-3 ms-2" onClick={handleLogout}>
 									Salir
 								</button>
 							) : (
@@ -74,11 +77,19 @@ export const Navbar = () => {
 						</li>
 						{!localStorage.getItem("token") && (
 							<li className="nav-item">
-								<Link className="nav-link btn btn-success text-white px-3 ms-2" to="/signup">
+								<Link className="nav-link btn btn-register px-3 ms-2" to="/signup">
 									Registrarse
 								</Link>
 							</li>
 						)}
+						<li className="nav-item">
+							<button
+								className="btn btn-outline-secondary mx-2"
+								onClick={() => actions.setTheme(currentTheme === "light" ? "dark" : "light")}
+							>
+								 {currentTheme === "dark" ? <i className="fas fa-sun" /> : <i className="fas fa-moon" />}
+							</button>
+						</li>
 					</ul>
 				</div>
 			</div>

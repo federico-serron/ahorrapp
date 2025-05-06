@@ -81,6 +81,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					symbol: "Br"
 				}
 			],
+			theme: localStorage.getItem("theme") || "light",
 			//Info de Usuario actualmente logeado
 			logged_user: [],
 			//Listado de todos los usuarios de la plataforma
@@ -134,6 +135,21 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				//reset the global store
 				setStore({ demo: demo });
+			},
+			initTheme: () => {
+				const store = getStore();
+
+				const storedTheme = localStorage.getItem("theme") || "light";
+				setStore({...store, theme: storedTheme });
+				document.body.setAttribute("data-bs-theme", storedTheme);
+			},
+
+			setTheme: (newTheme) => {
+				const store = getStore();
+
+				setStore({...store, theme: newTheme });
+				localStorage.setItem("theme", newTheme);
+				document.body.setAttribute('data-bs-theme', newTheme);
 			},
 
 			login: async (email, password) => {
