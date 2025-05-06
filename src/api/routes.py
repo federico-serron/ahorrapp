@@ -769,7 +769,6 @@ def get_progress_from_goal():
         return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
 
 
-# Nueva ruta Juan
 # Ruta Editar Usuario
 @api.route('/user/edit', methods=['PUT'])
 @jwt_required()
@@ -810,15 +809,7 @@ def get_user():
     return jsonify(user.serialize()), 200
 
 
-
-
-
-# Nueva ruta Rafa
-
-
-# Nueva ruta Fede
 # RUTAS PARA PAYPAL
-
 # Crear orden -> se llama desde el boton PayPal -> flux.js
 @api.route("/paypal/create-order", methods=["POST"])
 def create_order():
@@ -899,7 +890,6 @@ def capture_order():
         return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
 
 
-# Nueva ruta Jose
 # Listas a todos los usuarios regitrados en la plataforma, funcion solo para admin
 @api.route("/admin/get-users", methods=["GET"])
 @jwt_required()
@@ -949,3 +939,12 @@ def delete_user(id):
 
     except Exception as e:
         return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
+
+
+#Ruta Juan
+
+#Ruta Rafa
+
+#Ruta Jose
+
+#Ruta Fede
