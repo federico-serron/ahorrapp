@@ -136,9 +136,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 				//reset the global store
 				setStore({ demo: demo });
 			},
+			
 			initTheme: () => {
+				const store = getStore();
+
 				const storedTheme = localStorage.getItem("theme") || "light";
-				setStore({ theme: storedTheme });
+				setStore({...store, theme: newTheme });
 				document.body.setAttribute("data-bs-theme", storedTheme);
 			},
 
