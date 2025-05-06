@@ -13,7 +13,7 @@ import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
-import { Dashboard } from "./component/Dashboard.jsx";
+import Dashboard from "./component/Dashboard.jsx";
 import Signup from "./pages/Signup.jsx";
 import AddRecord from "./component/AddRecord.jsx";
 import SavingsGoals from "./component/SavingsGoals.jsx";

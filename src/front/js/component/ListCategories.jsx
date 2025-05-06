@@ -39,18 +39,6 @@ const ListCategories = () => {
             return;
         }
 
-        // PARA SIMULAR AGREGAR CATEGORIA
-        // const new_category = {
-        //     id: store.categories_db.length + 1,
-        //     name: name,
-        //     description: description,
-        //     records_count: 10
-        // }
-        // const updatedCategories_db = [...categories, new_category]
-        // setCategories(updatedCategories_db)
-        // setName("")
-        // setDescription("")
-        // toast.success(`Categoria ${name} creda exitosamente!`)
 
     }
 
@@ -67,26 +55,10 @@ const ListCategories = () => {
         }
 
         toast.success("Categoría editada exitosamente");
-        setCategories(store.categories_db); // o volver a llamar a getCategories
+        setCategories(store.categories_db);
         setName("");
         setDescription("");
         setCategoryId(null);
-
-        // PARA SIMULAR EDITAR CATEGORIA
-        // const updatedCategories_db = categories.map(cat => {
-        //     if (cat.id === id) {
-        //         return {
-        //             ...cat,
-        //             name: name,
-        //             description: description
-        //         };
-        //     }
-        //     setCategories(cat)
-        //     return cat;
-        // });
-
-        // setCategories(updatedCategories_db);
-        // toast.success(`Categoría "${name}" editada exitosamente`);
 
     };
 
