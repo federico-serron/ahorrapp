@@ -138,6 +138,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			
 			initTheme: () => {
+				
 				const store = getStore();
 
 				const storedTheme = localStorage.getItem("theme") || "light";
