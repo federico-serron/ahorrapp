@@ -314,7 +314,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 
-			//Actions Juan
 			// Action Get Mostrar Usuario Por ID 
 			getUser: async () => {
 				try {
@@ -639,9 +638,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-			//Actions Rafa
 
-			//Actions Fede
 			//Captura el rol desencriptando el token
 			getUserRoleFromToken: () => {
 				const token = localStorage.getItem("token");
@@ -708,7 +705,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 
-			//Actions Jose
 			// action para añadir una nueva wallet
 			addUserWallet: async (name_wallet,initial_value,currency_id) => {
 
@@ -1042,7 +1038,15 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return false
 					
 				}
-			}
+			},
+
+			//Actions Juan
+
+			//Actions Rafa
+			
+			//Actions Jose
+			
+			//Actions Fede
 		}
 	};
 };
