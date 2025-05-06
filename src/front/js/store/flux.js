@@ -348,7 +348,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 				let userData = {};
 				if (name !== undefined) userData.name = name;
 				if (email !== undefined) userData.email = email;
-				if (password !== undefined) userData.password = password;
+				if (typeof password === "string" && password.trim() !== "") {
+					userData.password = password;
+				}
 				if (phone !== undefined) userData.phone = phone;
 				if (address !== undefined) userData.address = address;
 			
@@ -968,7 +970,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					const data = await result.json()
 
-					setStore({...getStore(), categories_db: [...getStore().categories_db, ...data.categories]})
+					setStore({...getStore(), categories_db: data.categories})
 					console.log(getStore().categories_db)
 					return true
 				} catch (error) {
