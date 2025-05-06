@@ -142,7 +142,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const store = getStore();
 
 				const storedTheme = localStorage.getItem("theme") || "light";
-				setStore({...store, theme: newTheme });
+				setStore({...store, theme: storedTheme });
 				document.body.setAttribute("data-bs-theme", storedTheme);
 			},
 

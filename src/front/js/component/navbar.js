@@ -51,6 +51,7 @@ export const Navbar = () => {
 					<ul className="navbar-nav ms-auto">
 						{localStorage.getItem("token") && (
 							<>
+								<li className="nav-item">{store.currentUser.is_premium ? <i className="fas fa-gem" style={{ color: "gold" }} title="Usuario Premium"></i> : ""}</li>
 								<li className="nav-item">
 									<Link className="nav-link" to="/dashboard">Dashboard</Link>
 								</li>
