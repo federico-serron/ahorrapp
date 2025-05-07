@@ -49,8 +49,17 @@ const Dashboard = () => {
     return (
         <div className="container my-3">
             <div id="header" className="">
-                <h1>Dashboard User</h1>
-                <h3>Convertirse en Premium!</h3>
+
+                <h1>Bienvenid@ {store.currentUser.name} {store.currentUser.is_premium ? <i className="fas fa-gem " style={{ color: "gold" }} title="Usuario Premium"></i> : ""}</h1>
+                {store.currentUser.is_premium != true ? (
+                <div className="row">
+                <h3 className="col-3 mt-3">Aun no eres Premium?</h3>
+                <div className="col-3 ">
+                    <PayPalBtn />
+                </div>
+            </div>
+                ) : ""}
+
 
                 {/* Botón para navegar a HandleUpdateUser */}
                 <button
@@ -61,22 +70,6 @@ const Dashboard = () => {
                     Editar Usuario
                 </button>
 
-                <div className="row">
-                    <div className="col-3">
-                        <PayPalBtn />
-                    </div>
-                    <div className="col-2 mt-4">
-                        <AddWallet />
-                    </div>
-
-
-
-
-
-                </div>
-
-
-
             </div>
 
             <div className="row">
@@ -86,7 +79,7 @@ const Dashboard = () => {
                             setSelectedWalletId(wallet.id);
                             localStorage.setItem("selected_wallet", wallet.id);
                             console.log(selectedWalletId)
-                        }} className="col-lg-3 col-sm-4 col-sm-6 mb-3" key={wallet.id}>
+                        }} className="col-lg-3 col-sm-4 col-sm-6 my-3" key={wallet.id}>
                             <WalletCard
                                 id={wallet.id}
                                 balance={wallet.balance}
@@ -97,12 +90,11 @@ const Dashboard = () => {
                             />
                         </div>
                     ))
-                ) : (
-                    <div className="col-3">
-                        <p>No tienes wallets</p>
+                ) : ""}
+                    <div className="col-2 mt-4">
                         <AddWallet />
                     </div>
-                )}
+
             </div>
 
             <div className="row">
