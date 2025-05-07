@@ -25,6 +25,7 @@ dotenv = "*"
 mysqlclient = "*"
 colorama = "*"
 requests = "*"
+twilio = "*"
 
 [requires]
 python_version = "3.10"

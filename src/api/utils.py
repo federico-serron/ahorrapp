@@ -3,6 +3,8 @@ from datetime import datetime, timezone
 from .models import User
 import requests
 import os
+import re
+import unicodedata
 
 # paypal configuration
 PAYPAL_CLIENT_ID = os.getenv("PAYPAL_CLIENT_ID")
@@ -98,3 +100,51 @@ def get_access_token():
     )
 
     return response.json()["access_token"]
+
+
+def remove_accents(input_str):
+    return ''.join(
+        c for c in unicodedata.normalize('NFD', input_str)
+        if unicodedata.category(c) != 'Mn'
+    )
+
+def singularize(word):
+    if word.endswith("es") and len(word) > 3:
+        return word[:-2]
+    elif word.endswith("s") and len(word) > 3:
+        return word[:-1]
+    return word
+
+def parse_record_input(input_text: str, categories: dict[str, list[str]]) -> dict:
+    """
+    Parse input de WhatsApp o texto del usuario para extraer:
+    - monto (positivo o negativo)
+    - tipo (Ingreso o Gasto)
+    - categoría (basado en keywords)
+    - descripción (resto del texto limpio)
+    """
+
+    amount_match = re.search(r'-?\d+(?:\.\d+)?', input_text)
+    amount = float(amount_match.group()) if amount_match else None
+
+    clean_text = re.sub(r'[+-]?\d+(?:\.\d+)?', '', input_text)
+    words = clean_text.lower().split()
+    words = [remove_accents(singularize(word)) for word in words]
+
+    matched_category = "General"
+    if amount is not None and amount < 0:
+        record_type = "Gasto"
+    else:
+        record_type = "Ingreso"
+
+    for category, keywords in categories.items():
+        if any(word in keywords for word in words):
+            matched_category = category
+            break
+
+    return {
+        "amount": amount,
+        "type": record_type,
+        "category": matched_category,
+        "description": " ".join(words)
+    }
