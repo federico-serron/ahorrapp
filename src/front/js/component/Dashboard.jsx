@@ -9,13 +9,6 @@ import ConfirmModal from "./ConfrimModal.jsx";
 
 const Dashboard = () => {
 
-    /*
-    ⚠️ Importante: el componente HandleUpdateUser necesita que se llame a actions.getUser() antes de renderizarse, para poder llenar correctamente el formulario con los datos del usuario.
-    
-    Actualmente, esa llamada está en el useEffect del componente Dashboard (justo debajo de este comentario).
-    
-    ✅ Si mueves el botón o renderizas HandleUpdateUser en otro lugar, asegúrate de incluir este useEffect completo para que el botón funcione correctamente y se cargue la información del usuario.
-    */
 
     const navigate = useNavigate()
     const { store, actions } = useContext(Context);
