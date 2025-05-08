@@ -53,16 +53,6 @@ const Dashboard = () => {
             </div>
                 ) : ""}
 
-
-                {/* Botón para navegar a HandleUpdateUser */}
-                <button
-                    className="btn btn-primary"
-                    style={{ width: "200px" }}
-                    onClick={() => navigate("/edit-user")}
-                >
-                    Editar Usuario
-                </button>
-
             </div>
 
             <div className="row">
