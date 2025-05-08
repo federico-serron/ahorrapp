@@ -471,13 +471,13 @@ def edit_record(id):
         if not record:
             return jsonify({"msg": "No se encuentra el registro solicitado"}), 404
 
-        if "description" in data:
+        if "description" in data and data['description'] is not None:
             record.description = data["description"]
-        if "amount" in data:
+        if "amount" in data and data['amount'] is not None:
             record.amount = data["amount"]
-        if "type" in data:
+        if "type" in data and data['type'] is not None:
             record.type = data["type"]
-        if "category_id" in data:
+        if "category_id" in data and data['category_id'] is not None:
             record.category_id = data["category_id"]
 
         db.session.commit()
