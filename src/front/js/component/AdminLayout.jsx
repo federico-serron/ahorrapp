@@ -14,6 +14,16 @@ const AdminLayout = () => {
     <div className="d-flex">
       {/* Sidebar fijo en desktop */}
       <div className="d-none d-md-flex flex-column bg-success text-white vh-100 p-3" style={{ width: "220px" }}>
+        
+        
+         {/* Logo en la parte superior */}
+         <div className="sidebar-logo">
+        <img src={logo} alt="Logo" className="logo" />
+        </div>
+
+        
+        
+        
         <h4 className="mb-4">Admin</h4>
         <ul className="nav flex-column">
           <li className="nav-item">
@@ -60,6 +70,10 @@ const AdminLayout = () => {
 
         <div className="offcanvas offcanvas-start bg-success text-white" tabIndex="-1" id="adminSidebar">
           <div className="offcanvas-header">
+
+
+
+           
             <h5 className="offcanvas-title">Admin</h5>
             <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
           </div>
@@ -98,7 +112,7 @@ const AdminLayout = () => {
       </div>
 
       {/* Contenido principal */}
-      <div className="flex-grow-1 p-4" style={{ minHeight: "100vh" }}>
+      <div className="flex-grow-1 p-4" style={{ minHeight: "100vh", marginTop: "20%" }}>
         <Outlet />
       </div>
     </div>

@@ -69,3 +69,19 @@ tr:hover .delete-fa {
 body[data-bs-theme='light'] .btn-danger:hover {
     color: white;
 }
+
+
+
+
+.sidebar-logo {
+    width: 50%;
+    height: auto;
+    margin-top: 30px;
+    text-align: center;
+  }
+  
+  .sidebar-logo img.logo {
+    background-color: aliceblue;
+    max-width: 100%;
+    border-radius: 10px;
+  }
