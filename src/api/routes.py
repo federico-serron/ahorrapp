@@ -984,10 +984,12 @@ def wpp_add_records():
         category_id = Category.query.filter_by(name=result.get('category', 'General')).first().id
         
         if not category_id:
-                new_cat = Category(name="General", description="Categoria por defecto")
-                db.session.add(new_cat)
-                db.session.commit()
-                category_id = new_cat.id
+            general_cat = Category.query.filter_by(name="General").first()
+            if not general_cat:       
+                general_cat = Category(name="General", description="Categoria por defecto")
+                db.session.add(general_cat)
+                db.session.flush()
+                category_id = general_cat.id
                 
         wallet.total_value += result['amount']
 
