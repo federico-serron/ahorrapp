@@ -973,7 +973,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					const data = await result.json()
 
-					setStore({...getStore(), users:[...getStore().users, ...data]})
+					setStore({...getStore(), users: data})
 					console.log(getStore().users)
 					return true
 	
