@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext";
 import { useParams } from "react-router-dom";
+import SpinnerLogo from "./SpinnerLogo.jsx";
+
 
 
 const ListRecord = () => {
@@ -49,12 +51,8 @@ const ListRecord = () => {
                     <tbody>
                         {loading && (
                             <tr>
-                                <td colSpan="4">
-                                    <div className="d-flex justify-content-center mx-auto my-3">
-                                        <div className="spinner-border text-primary" role="status">
-                                            <span className="visually-hidden">Cargando...</span>
-                                        </div>
-                                    </div>
+                                <td colSpan="5">
+                                    <SpinnerLogo />
                                 </td>
                             </tr>
                         )}
