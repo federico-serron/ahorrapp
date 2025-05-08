@@ -6,6 +6,7 @@ import AddWallet from "./AddWallet.jsx";
 import AddRecord from "./AddRecord.jsx"
 import { Context } from "../store/appContext";
 import ConfirmModal from "./ConfrimModal.jsx";
+import LinesChart from "./LinesChart.jsx";
 
 const Dashboard = () => {
 
@@ -102,7 +103,10 @@ const Dashboard = () => {
                     <AddRecord />
                 </div>
                 <div className="text-center align-items-center my-auto col-lg-6 col-md-12">
-                    Meter grafiquitas aca
+                    <div className="row">
+                    <LinesChart/>
+                    <LinesChart/>
+                    </div>
                 </div>
             </div>
             <ConfirmModal
