@@ -471,13 +471,13 @@ def edit_record(id):
         if not record:
             return jsonify({"msg": "No se encuentra el registro solicitado"}), 404
 
-        if "description" in data:
+        if "description" in data and data['description'] is not None:
             record.description = data["description"]
-        if "amount" in data:
+        if "amount" in data and data['amount'] is not None:
             record.amount = data["amount"]
-        if "type" in data:
+        if "type" in data and data['type'] is not None:
             record.type = data["type"]
-        if "category_id" in data:
+        if "category_id" in data and data['category_id'] is not None:
             record.category_id = data["category_id"]
 
         db.session.commit()
@@ -984,10 +984,12 @@ def wpp_add_records():
         category_id = Category.query.filter_by(name=result.get('category', 'General')).first().id
         
         if not category_id:
-                new_cat = Category(name="General", description="Categoria por defecto")
-                db.session.add(new_cat)
-                db.session.commit()
-                category_id = new_cat.id
+            general_cat = Category.query.filter_by(name="General").first()
+            if not general_cat:       
+                general_cat = Category(name="General", description="Categoria por defecto")
+                db.session.add(general_cat)
+                db.session.flush()
+                category_id = general_cat.id
                 
         wallet.total_value += result['amount']
 
