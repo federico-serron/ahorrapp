@@ -2,6 +2,8 @@ import React, { useEffect, useState, useContext } from 'react';
 import { Context } from "../store/appContext";
 import ConfirmModal from './ConfrimModal.jsx';
 import { toast } from "react-toastify";
+import SpinnerLogo from "./SpinnerLogo.jsx";
+
 
 const ListUsers = () => {
     const { store, actions } = useContext(Context);
@@ -14,7 +16,7 @@ const ListUsers = () => {
 
         const response = await actions.deleteUser(id);
 
-        if(response == "403"){
+        if (response == "403") {
             toast.error("No puedes eliminar tu propio usuario")
             return;
         }
@@ -34,10 +36,10 @@ const ListUsers = () => {
         const fetchUsers = async () => {
             const response = await actions.getUsers();
             if (!response) {
-                 console.log("No se pudieron traer los usuarios desde la BD.")
-                 setLoading(false)
-                 return users;
-             }
+                console.log("No se pudieron traer los usuarios desde la BD.")
+                setLoading(false)
+                return users;
+            }
 
             setUsers(store.users)
             setLoading(false)
@@ -66,11 +68,7 @@ const ListUsers = () => {
                         {loading ? (
                             <tr>
                                 <td colSpan="6">
-                                    <div className="d-flex justify-content-center my-3">
-                                        <div className="spinner-border text-primary" role="status">
-                                            <span className="visually-hidden">Cargando...</span>
-                                        </div>
-                                    </div>
+                                    <SpinnerLogo />
                                 </td>
                             </tr>
                         ) : (

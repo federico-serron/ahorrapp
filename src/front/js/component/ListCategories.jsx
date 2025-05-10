@@ -3,6 +3,7 @@ import { Context } from "../store/appContext";
 import ConfirmModal from "./ConfrimModal.jsx";
 import { toast } from "react-toastify";
 import FormCategoryModal from "./FormCategoryModal.jsx";
+import SpinnerLogo from "./SpinnerLogo.jsx";
 
 const ListCategories = () => {
 
@@ -129,11 +130,7 @@ const ListCategories = () => {
                                 {loading ? (
                                     <tr>
                                         <td colSpan="4">
-                                            <div className="d-flex justify-content-center my-3">
-                                                <div className="spinner-border text-primary" role="status">
-                                                    <span className="visually-hidden">Cargando...</span>
-                                                </div>
-                                            </div>
+                                            <SpinnerLogo />
                                         </td>
                                     </tr>
                                 ) : (

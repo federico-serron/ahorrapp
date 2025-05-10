@@ -2,6 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import SpinnerLogo from "./SpinnerLogo.jsx";
+
 
 
 const ListRecord = () => {
@@ -127,12 +129,8 @@ const ListRecord = () => {
                     <tbody>
                         {loading ? (
                             <tr>
-                                <td colSpan="6">
-                                    <div className="d-flex justify-content-center my-3">
-                                        <div className="spinner-border text-primary" role="status">
-                                            <span className="visually-hidden">Cargando...</span>
-                                        </div>
-                                    </div>
+                                <td colSpan="5">
+                                    <SpinnerLogo />
                                 </td>
                             </tr>
                         ) : store.records.length > 0 ? (
