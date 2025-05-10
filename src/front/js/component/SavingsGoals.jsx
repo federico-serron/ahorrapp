@@ -25,18 +25,12 @@ const SavingsGoals = () => {
     },[])
 
     return (
-        <div style={{
-            maxWidth: "600px",
-            margin: "20px auto",
-            padding: "20px",
-            fontFamily: "Arial, sans-serif",
-            backgroundColor: "#f9f9f9",
-            borderRadius: "10px"
-        }}>
+        <div className="card shadow rounded-2 mt-3">
             <h2 style={{
                 textAlign: "center",
                 color: "#333",
-                marginBottom: "30px"
+                marginBottom: "2vh",
+                marginTop: "1vh"
             }}>
                 Progreso de Ahorros
             </h2>
