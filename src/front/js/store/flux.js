@@ -1059,6 +1059,43 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			//Actions Juan
 
+			// Action Calcular Ahorro (Calculadora)
+
+			calcularAhorro: async (datos) => {
+    try {
+        const response = await fetch(`${apiUrl}/api/calculate-savings`, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(datos)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData?.message || "Error en el cálculo de ahorro");
+        }
+
+        const data = await response.json();
+        return data;
+
+    } catch (error) {
+        console.error("Error al calcular ahorro:", error);
+        throw error;
+    }
+},
+
+
+			
+
+
+
+
+
+
+
+
 			//Actions Rafa
 			
 			//Actions Jose

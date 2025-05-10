@@ -1,62 +1,79 @@
-import React, { useContext } from "react";
-import { Navigate, Outlet, Link } from "react-router-dom";
+import React, { useContext, useState, useEffect } from "react";
+import { Navigate, Outlet, Link, useLocation } from "react-router-dom";
 import { Context } from "../store/appContext";
 import logo from "../../img/logo.png";
-
+import HeaderCardAdmin from "./HeaderCardAdmin.jsx";
+import HeaderInfoCard from "./HeaderInfoCard.jsx";
+import CalculadoraAhorro from "./CalculadoraAhorro.jsx";
+import RadialProgressChart from "./RadialProgressChart.jsx";
+import "../../styles/index.css"; 
 
 const AdminLayout = () => {
   const { store, actions } = useContext(Context);
-  const role = actions.getUserRoleFromToken();
+  const location = useLocation();
+  const [role, setRole] = useState(null);
 
+  useEffect(() => {
+    // Simulación de carga de rol
+    const simulatedRole = "admin";
+    setTimeout(() => setRole(simulatedRole), 500);
+  }, []);
+
+  if (role === null)
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        Cargando...
+      </div>
+    );
   if (role !== "admin") return <Navigate to="/unauthorized" />;
 
-  return (
-    <div className="d-flex">
-      {/* Sidebar fijo en desktop */}
-      <div className="d-none d-md-flex flex-column bg-success text-white vh-100 p-3" style={{ width: "220px" }}>
-        
-        
-         {/* Logo en la parte superior */}
-         <div className="sidebar-logo">
-        <img src={logo} alt="Logo" className="logo" />
-        </div>
+  const isActive = (path) =>
+    location.pathname === path || location.pathname.startsWith(path);
 
-        
-        
-        
-        <h4 className="mb-4">Admin</h4>
+  return (
+    <div className="d-flex vh-100">
+      {/* Sidebar de Escritorio */}
+      <div className="d-none d-md-flex flex-column bg-success text-white p-3" style={{ width: "220px" }}>
+        <div className="sidebar-logo mb-4">
+          <img src={logo} alt="Logo" className="logo img-fluid" />
+        </div>
+        <h4 className="mb-4">Admin Panel</h4>
         <ul className="nav flex-column">
           <li className="nav-item">
             <Link
               to="/admin"
-              className={`nav-link text-white ${location.pathname === "/admin" ? "fw-bold" : ""}`}
+              className={`nav-link text-white d-flex align-items-center ${isActive("/admin") ? "fw-bold active-sidebar-link" : ""}`}
             >
+              <i className={`me-2 ${isActive("/admin") ? "fas" : "far"} fa-tachometer-alt`}></i>
               Dashboard
             </Link>
           </li>
           <li className="nav-item">
             <Link
               to="/admin/users"
-              className={`nav-link text-white ${location.pathname.includes("/admin/users") ? "fw-bold" : ""}`}
+              className={`nav-link text-white d-flex align-items-center ${isActive("/admin/users") ? "fw-bold active-sidebar-link" : ""}`}
             >
+              <i className={`me-2 ${isActive("/admin/users") ? "fas" : "far"} fa-users`}></i>
               Usuarios
             </Link>
           </li>
           <li className="nav-item">
             <Link
               to="/admin/categories"
-              className={`nav-link text-white ${location.pathname.includes("/admin/categories") ? "fw-bold" : ""}`}
+              className={`nav-link text-white d-flex align-items-center ${isActive("/admin/categories") ? "fw-bold active-sidebar-link" : ""}`}
             >
+              <i className={`me-2 ${isActive("/admin/categories") ? "fas" : "far"} fa-tags`}></i>
               Categorías
             </Link>
           </li>
         </ul>
+
         <div className="mt-auto text-center">
           <img src={logo} alt="Logo" className="img-fluid mt-5" style={{ maxHeight: "60px" }} />
         </div>
       </div>
 
-      {/* Sidebar móvil con botón toggle */}
+      {/* Sidebar Móvil (Offcanvas) */}
       <div className="d-md-none">
         <button
           className="btn btn-success m-2"
@@ -67,14 +84,9 @@ const AdminLayout = () => {
         >
           ☰
         </button>
-
         <div className="offcanvas offcanvas-start bg-success text-white" tabIndex="-1" id="adminSidebar">
           <div className="offcanvas-header">
-
-
-
-           
-            <h5 className="offcanvas-title">Admin</h5>
+            <h5 className="offcanvas-title">Admin Panel</h5>
             <button type="button" className="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
           </div>
           <div className="offcanvas-body d-flex flex-column">
@@ -82,24 +94,30 @@ const AdminLayout = () => {
               <li className="nav-item">
                 <Link
                   to="/admin"
-                  className={`nav-link text-white ${location.pathname === "/admin" ? "fw-bold" : ""}`}
+                  className={`nav-link text-white d-flex align-items-center ${isActive("/admin") ? "fw-bold active-sidebar-link" : ""}`}
+                  data-bs-dismiss="offcanvas" // Cierra el offcanvas al hacer clic
                 >
+                  <i className={`me-2 ${isActive("/admin") ? "fas" : "far"} fa-tachometer-alt`}></i>
                   Dashboard
                 </Link>
               </li>
               <li className="nav-item">
                 <Link
                   to="/admin/users"
-                  className={`nav-link text-white ${location.pathname.includes("/admin/users") ? "fw-bold" : ""}`}
+                  className={`nav-link text-white d-flex align-items-center ${isActive("/admin/users") ? "fw-bold active-sidebar-link" : ""}`}
+                  data-bs-dismiss="offcanvas" // Cierra el offcanvas al hacer clic
                 >
+                  <i className={`me-2 ${isActive("/admin/users") ? "fas" : "far"} fa-users`}></i>
                   Usuarios
                 </Link>
               </li>
               <li className="nav-item">
                 <Link
                   to="/admin/categories"
-                  className={`nav-link text-white ${location.pathname.includes("/admin/categories") ? "fw-bold" : ""}`}
+                  className={`nav-link text-white d-flex align-items-center ${isActive("/admin/categories") ? "fw-bold active-sidebar-link" : ""}`}
+                  data-bs-dismiss="offcanvas" // Cierra el offcanvas al hacer clic
                 >
+                  <i className={`me-2 ${isActive("/admin/categories") ? "fas" : "far"} fa-tags`}></i>
                   Categorías
                 </Link>
               </li>
@@ -111,9 +129,34 @@ const AdminLayout = () => {
         </div>
       </div>
 
-      {/* Contenido principal */}
-      <div className="flex-grow-1 p-4" style={{ minHeight: "100vh", marginTop: "20%" }}>
-        <Outlet />
+      {/* Contenido Principal */}
+      <div className="flex-grow-1 d-flex flex-column overflow-auto" style={{ maxHeight: "100vh" }}>
+        {/* Cabecera con tarjetas responsivas */}
+        <div className="container-fluid p-4 pb-0">
+          <div className="row g-3"> {/* g-3 añade un pequeño espacio entre las columnas */}
+            <div className="col-12 col-md-6 col-lg-4"> {/* Ocupa 12 columnas en extra-small, 6 en medium, 4 en large */}
+              <HeaderCardAdmin />
+            </div>
+            <div className="col-12 col-md-6 col-lg-4">
+              <RadialProgressChart />
+            </div>
+            <div className="col-12 col-lg-4"> {/* Ocupa 12 columnas en extra-small/medium, 4 en large */}
+              <HeaderInfoCard />
+            </div>
+          </div>
+        </div>
+
+        {/* Calculadora solo en /admin, con comportamiento responsivo */}
+        {location.pathname === "/admin" && (
+          <div className="container-fluid px-4">
+            <CalculadoraAhorro />
+          </div>
+        )}
+
+        {/* Contenido dinámico (Outlet) - Asegura que el contenido interno sea responsivo */}
+        <div className="container-fluid p-4 pt-0 flex-grow-1">
+          <Outlet />
+        </div>
       </div>
     </div>
   );

@@ -943,6 +943,39 @@ def delete_user(id):
 
 #Ruta Juan
 
+# Ruta Back-end Calculadora
+
+@api.route("/calculate-savings", methods=["POST"])
+@jwt_required()
+def calculate_savings():
+    data = request.get_json()
+
+    try:
+        ingresos = float(data.get('ingresos', 0))
+        gastos_fijos = float(data.get('gastos_fijos', 0))
+        gastos_variables = float(data.get('gastos_variables', 0))
+        objetivo = float(data.get('objetivo_ahorro', 0))  # opcional
+
+        ahorro = ingresos - (gastos_fijos + gastos_variables)
+        porcentaje_ahorro = (ahorro / ingresos * 100) if ingresos > 0 else 0
+
+        return jsonify({
+            "ahorro": round(ahorro, 2),
+            "porcentaje_ahorro": round(porcentaje_ahorro, 2)
+        }), 200
+
+    except Exception as e:
+        return jsonify({"message": "Error en el cálculo", "error": str(e)}), 400
+
+
+
+
+
+
+
+
+
+
 #Ruta Rafa
 
 #Ruta Jose
