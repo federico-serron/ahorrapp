@@ -91,3 +91,8 @@ body[data-bs-theme='light'] .btn-danger:hover {
         transform: rotate(360deg);
     }
 }
+
+/* Envio tablas detras del menu dropdown */
+.table-responsive{
+    position: static;
+}

@@ -2,12 +2,13 @@ import React, { useEffect, useContext, useState } from "react";
 import { Context } from "../store/appContext";
 import { parseISO, getMonth, format } from "date-fns";
 import { es } from "date-fns/locale";
-import {LineChart, Line, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, CartesianGrid} from "recharts";
+import {BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, CartesianGrid} from "recharts";
 
-const LinesChart = () => {
+const BarsChart = () => {
 
     const { store, actions } = useContext(Context);
     const [data, setData] = useState([])
+
 
 
     useEffect(() => {
@@ -23,7 +24,7 @@ const LinesChart = () => {
             }
     
             store.records.forEach(record => {
-                const month = format(parseISO(record.timestamp), "HH:mm", { locale: es });
+                const month = format(parseISO(record.timestamp), "MMMM", { locale: es });
         
                 if(!grouped[month]){
                     grouped[month] = { month, income: 0, outcome: 0 };
@@ -35,8 +36,10 @@ const LinesChart = () => {
                     grouped[month].outcome += Math.abs(record.amount);
                 }
         
+        
             });
-           
+        
+    
             setData(Object.values(grouped)) 
             
         }
@@ -46,21 +49,21 @@ const LinesChart = () => {
     }, [JSON.stringify(store.records)]);
 
 return (
-    <div className="card p-3 shadow rounded-2">
-      <h5 className="text-center mb-3 fw-bold">Resumen Diario</h5>
+    <div className="card p-3 shadow rounded-2 my-3">
+      <h5 className="text-center mb-3 fw-bold">Resumen Mensual</h5>
       <ResponsiveContainer width="100%" height={300}>
-        <LineChart data={data} margin={{ top: 10, right: 20, left: 0, bottom: 5 }}>
+        <BarChart data={data} margin={{ top: 10, right: 20, left: 0, bottom: 5 }}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="month" />
           <YAxis />
           <Tooltip />
           <Legend />
-          <Line dataKey="income" type="monotone" stroke="#4caf50" name="Ingresos" />
-          <Line dataKey="outcome" type="monotone" stroke="#f44336" name="Gastos" />
-        </LineChart>
+          <Bar dataKey="income" fill="#4caf50" name="Ingresos" />
+          <Bar dataKey="outcome" fill="#f44336" name="Gastos" />
+        </BarChart>
       </ResponsiveContainer>
     </div>
   );
 };
 
-export default LinesChart;
+export default BarsChart;

@@ -20,7 +20,7 @@ const ListUsers = () => {
             toast.error("No puedes eliminar tu propio usuario")
             return;
         }
-
+        
         if (!response) {
             toast.error("No se pudo eliminar el usuario")
             return;
@@ -28,7 +28,6 @@ const ListUsers = () => {
             toast.success("El usuario ha sido eliminado correcamente")
             setUsers(store.users)
         }
-
 
     }
 
@@ -52,7 +51,7 @@ const ListUsers = () => {
     return (
         <div className="container mt-4">
             <h2 className="mb-4">Lista de Usuarios</h2>
-            <div className="table-responsive">
+            <div className="table-responsive card p-3 shadow rounded-2">
                 <table className="table table-hover table-bordered align-middle">
                     <thead className="table-dark">
                         <tr>

@@ -7,6 +7,8 @@ import AddRecord from "./AddRecord.jsx"
 import { Context } from "../store/appContext";
 import ConfirmModal from "./ConfrimModal.jsx";
 import LinesChart from "./LinesChart.jsx";
+import BarsChart from "./BarsChart.jsx";
+import SavingsGoals from "./SavingsGoals.jsx"
 
 const Dashboard = () => {
 
@@ -55,7 +57,6 @@ const Dashboard = () => {
                 ) : ""}
 
             </div>
-
             <div className="row">
                 {store.wallets_from_user && store.wallets_from_user.length > 0 ? (
                     store.wallets_from_user.map((wallet) => (
@@ -84,11 +85,12 @@ const Dashboard = () => {
             <div className="row">
                 <div className="col-lg-6 col-md-12">
                     <AddRecord />
+                    <SavingsGoals/>
                 </div>
                 <div className="text-center align-items-center my-auto col-lg-6 col-md-12">
                     <div className="row">
-                    <LinesChart/>
-                    <LinesChart/>
+                    <LinesChart />
+                    <BarsChart />
                     </div>
                 </div>
             </div>

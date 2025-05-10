@@ -71,7 +71,7 @@ export const Navbar = () => {
 									aria-expanded="false"
 								>
 									<i className="fas fa-user-circle fa-lg me-2" />
-									<span>Perfil</span>
+									<span>{store.currentUser.name}</span>
 								</button>
 								<ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
 									{store.currentUser?.is_premium && (

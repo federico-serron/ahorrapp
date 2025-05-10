@@ -111,9 +111,9 @@ const ListRecord = () => {
     }, []);
 
     return (
-        <div>
+        <div className="">
             <h2>Registros</h2>
-            <div className="table-responsive">
+            <div className="table-responsive card p-3 shadow rounded-2">
                 <table className="table table-striped table-bordered table-hover">
                     <thead className="table-dark">
                         <tr>

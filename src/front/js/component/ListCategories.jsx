@@ -112,9 +112,9 @@ const ListCategories = () => {
                     data-bs-toggle="modal"
                     data-bs-target="#createCategoryModal"></i>
             </div>
-            <div className="row">
+            <div className="row ">
                 <div className="col-12">
-                    <div className="table-responsive">
+                    <div className="table-responsive card p-3 shadow rounded-2">
                         <table className="table table-hover table-bordered align-middle">
                             <thead className="table-dark">
                                 <tr>
