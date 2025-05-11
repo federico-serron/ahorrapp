@@ -6,7 +6,7 @@ import HeaderCardAdmin from "./HeaderCardAdmin.jsx";
 import HeaderInfoCard from "./HeaderInfoCard.jsx";
 import CalculadoraAhorro from "./CalculadoraAhorro.jsx";
 import RadialProgressChart from "./RadialProgressChart.jsx";
-import "../../styles/index.css"; 
+import "../../styles/index.css";
 
 const AdminLayout = () => {
   const { store, actions } = useContext(Context);
@@ -44,7 +44,7 @@ const AdminLayout = () => {
               to="/admin"
               className={`nav-link text-white d-flex align-items-center ${isActive("/admin") ? "fw-bold active-sidebar-link" : ""}`}
             >
-              <i className={`me-2 ${isActive("/admin") ? "fas" : "far"} fa-tachometer-alt`}></i>
+              {isActive("/admin") && <i className="me-2 fas fa-tachometer-alt"></i>}
               Dashboard
             </Link>
           </li>
@@ -53,7 +53,7 @@ const AdminLayout = () => {
               to="/admin/users"
               className={`nav-link text-white d-flex align-items-center ${isActive("/admin/users") ? "fw-bold active-sidebar-link" : ""}`}
             >
-              <i className={`me-2 ${isActive("/admin/users") ? "fas" : "far"} fa-users`}></i>
+              {isActive("/admin/users") && <i className="me-2 fas fa-users"></i>}
               Usuarios
             </Link>
           </li>
@@ -62,7 +62,7 @@ const AdminLayout = () => {
               to="/admin/categories"
               className={`nav-link text-white d-flex align-items-center ${isActive("/admin/categories") ? "fw-bold active-sidebar-link" : ""}`}
             >
-              <i className={`me-2 ${isActive("/admin/categories") ? "fas" : "far"} fa-tags`}></i>
+              {isActive("/admin/categories") && <i className="me-2 fas fa-tags"></i>}
               Categorías
             </Link>
           </li>
@@ -97,7 +97,7 @@ const AdminLayout = () => {
                   className={`nav-link text-white d-flex align-items-center ${isActive("/admin") ? "fw-bold active-sidebar-link" : ""}`}
                   data-bs-dismiss="offcanvas" // Cierra el offcanvas al hacer clic
                 >
-                  <i className={`me-2 ${isActive("/admin") ? "fas" : "far"} fa-tachometer-alt`}></i>
+                  {isActive("/admin") && <i className="me-2 fas fa-tachometer-alt"></i>}
                   Dashboard
                 </Link>
               </li>
@@ -107,7 +107,7 @@ const AdminLayout = () => {
                   className={`nav-link text-white d-flex align-items-center ${isActive("/admin/users") ? "fw-bold active-sidebar-link" : ""}`}
                   data-bs-dismiss="offcanvas" // Cierra el offcanvas al hacer clic
                 >
-                  <i className={`me-2 ${isActive("/admin/users") ? "fas" : "far"} fa-users`}></i>
+                  {isActive("/admin/users") && <i className="me-2 fas fa-users"></i>}
                   Usuarios
                 </Link>
               </li>
@@ -117,7 +117,7 @@ const AdminLayout = () => {
                   className={`nav-link text-white d-flex align-items-center ${isActive("/admin/categories") ? "fw-bold active-sidebar-link" : ""}`}
                   data-bs-dismiss="offcanvas" // Cierra el offcanvas al hacer clic
                 >
-                  <i className={`me-2 ${isActive("/admin/categories") ? "fas" : "far"} fa-tags`}></i>
+                  {isActive("/admin/categories") && <i className="me-2 fas fa-tags"></i>}
                   Categorías
                 </Link>
               </li>

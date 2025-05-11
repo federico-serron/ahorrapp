@@ -106,16 +106,16 @@ const ListCategories = () => {
 
             <div className="d-flex align-items-center mb-4 ">
                 <h2 className="mb-0">Lista de Categorias</h2>
-                <i className="ms-2 fa-solid fa-circle-plus fs-3 text-success"
+                <i className="ms-2 fa-solid fa-circle-plus fs-3 text-success "
                     role="button"
                     data-bs-toggle="modal"
                     data-bs-target="#createCategoryModal"></i>
             </div>
             <div className="row">
                 <div className="col-12">
-                    <div className="table-responsive">
+                    <div className="table-responsive p-3 shadow rounded-2">
                         <table className="table table-hover table-bordered align-middle">
-                            <thead className="table-dark">
+                            <thead className="table-light">
                                 <tr>
                                     <th>#</th>
                                     <th>Nombre</th>
