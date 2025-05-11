@@ -969,7 +969,22 @@ def calculate_savings():
 
 
 
+# ruta para obtener el conteo total de usuarios
+@api.route("/admin/users/count", methods=["GET"])
+@jwt_required()
+def get_users_count():
+    try:
+        is_not_admin = check_user_is_admin(get_jwt_identity())
 
+        if is_not_admin:
+            return is_not_admin
+
+        total_users_count = User.query.count() # Obtiene el conteo directamente
+
+        return jsonify({"total_users_count": total_users_count}), 200
+
+    except Exception as e:
+        return jsonify({"msg": f"Error al obtener el conteo de usuarios: {e}"}), 500
 
 
 

@@ -140,3 +140,19 @@ body[data-bs-theme='light'] .btn-danger:hover {
   
 
 
+/* CSS PARA RESPONSIVE LIST CATEGORIES y LIST USERS */
+
+/* En tu archivo index.css u otro archivo CSS que uses */
+
+/* Para que las columnas con 'fit-content' solo tomen el espacio necesario */
+.fit-content {
+    width: 1%; /* Esto es un truco CSS común para que la columna se ajuste al contenido */
+    white-space: nowrap; /* Evita que el contenido se rompa en varias líneas */
+}
+
+/* Opcional: para el truncate, si el texto es muy largo puedes añadir un tooltip */
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

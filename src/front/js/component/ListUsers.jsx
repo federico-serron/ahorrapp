@@ -9,44 +9,39 @@ const ListUsers = () => {
     const [loading, setLoading] = useState(true)
     const [userToDelete, setUserToDelete] = useState(null)
 
-
     const handleDelete = async (id) => {
-
         const response = await actions.deleteUser(id);
 
-        if(response == "403"){
-            toast.error("No puedes eliminar tu propio usuario")
+        if (response == "403") {
+            toast.error("No puedes eliminar tu propio usuario");
             return;
         }
 
         if (!response) {
-            toast.error("No se pudo eliminar el usuario")
+            toast.error("No se pudo eliminar el usuario");
             return;
         } else {
-            toast.success("El usuario ha sido eliminado correcamente")
-            setUsers(store.users)
+            toast.success("El usuario ha sido eliminado correctamente");
+            setUsers(store.users);
         }
-
-
-    }
+    };
 
     useEffect(() => {
         const fetchUsers = async () => {
             const response = await actions.getUsers();
             if (!response) {
-                 console.log("No se pudieron traer los usuarios desde la BD.")
-                 setLoading(false)
-                 return users;
-             }
+                console.log("No se pudieron traer los usuarios desde la BD.");
+                setLoading(false);
+                return users;
+            }
 
-            setUsers(store.users)
-            setLoading(false)
-        }
+            setUsers(store.users);
+            setLoading(false);
+        };
 
         fetchUsers();
-
-
     }, []);
+
     return (
         <div className="container mt-4">
             <h2 className="mb-4">Lista de Usuarios</h2>
@@ -88,10 +83,23 @@ const ListUsers = () => {
                                         {user.name}
                                     </td>
                                     <td>{user.email}</td>
-                                    <td>{user.wallets.length}</td>
+                                    <td>
+                                        <div
+                                            className="rounded-circle d-inline-flex justify-content-center align-items-center"
+                                            style={{
+                                                width: "30px",
+                                                height: "30px",
+                                                backgroundColor: "#157347",
+                                                color: "white",
+                                                fontWeight: "bold"
+                                            }}
+                                        >
+                                            {user.wallets.length}
+                                        </div>
+                                    </td>
                                     <td>{new Date(user.last_login).toLocaleString('es-UY')}</td>
                                     <td>
-                                        <span className={`badge ${user.is_premium ? 'bg-success' : 'bg-secondary'}`}>
+                                        <span className={`badge ${user.is_premium ? 'custom-green' : 'bg-secondary'}`}>
                                             {user.is_premium ? 'Sí' : 'No'}
                                         </span>
                                     </td>
@@ -110,7 +118,6 @@ const ListUsers = () => {
             />
         </div>
     );
-
-}
+};
 
 export default ListUsers;

@@ -6,15 +6,18 @@ import HeaderCardAdmin from "./HeaderCardAdmin.jsx";
 import HeaderInfoCard from "./HeaderInfoCard.jsx";
 import CalculadoraAhorro from "./CalculadoraAhorro.jsx";
 import RadialProgressChart from "./RadialProgressChart.jsx";
+import HandleUpdateUser from "./HandleUpdateUser.jsx";
 import "../../styles/index.css";
 
+// Importa Offcanvas de Bootstrap
+import * as bootstrap from 'bootstrap'; 
 const AdminLayout = () => {
   const { store, actions } = useContext(Context);
   const location = useLocation();
   const [role, setRole] = useState(null);
+  const [activeContentComponent, setActiveContentComponent] = useState("dashboard");
 
   useEffect(() => {
-    // Simulación de carga de rol
     const simulatedRole = "admin";
     setTimeout(() => setRole(simulatedRole), 500);
   }, []);
@@ -30,9 +33,33 @@ const AdminLayout = () => {
   const isActive = (path) =>
     location.pathname === path || location.pathname.startsWith(path);
 
+  const handleSetActiveComponent = (componentName) => {
+    setActiveContentComponent(componentName);
+  };
+
+  const handleCloseUpdateUserForm = () => {
+    setActiveContentComponent("dashboard");
+  };
+
+  // NUEVA FUNCIÓN: Para cerrar el Offcanvas
+  const closeOffcanvas = () => {
+    const offcanvasElement = document.getElementById('adminSidebar');
+    if (offcanvasElement) {
+      const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement) || new bootstrap.Offcanvas(offcanvasElement);
+      offcanvas.hide();
+    }
+  };
+
+  // Función que se llama al hacer click en un ítem del offcanvas
+  const handleMenuItemClick = (componentName, path) => {
+    setActiveContentComponent(componentName);
+    closeOffcanvas(); // Cierra el offcanvas
+    
+  };
+
   return (
     <div className="d-flex vh-100">
-      {/* Sidebar de Escritorio */}
+      {/* Sidebar para escritorio  */}
       <div className="d-none d-md-flex flex-column bg-success text-white p-3" style={{ width: "220px" }}>
         <div className="sidebar-logo mb-4">
           <img src={logo} alt="Logo" className="logo img-fluid" />
@@ -43,6 +70,7 @@ const AdminLayout = () => {
             <Link
               to="/admin"
               className={`nav-link text-white d-flex align-items-center ${isActive("/admin") ? "fw-bold active-sidebar-link" : ""}`}
+              onClick={() => setActiveContentComponent("dashboard")}
             >
               {isActive("/admin") && <i className="me-2 fas fa-tachometer-alt"></i>}
               Dashboard
@@ -52,6 +80,7 @@ const AdminLayout = () => {
             <Link
               to="/admin/users"
               className={`nav-link text-white d-flex align-items-center ${isActive("/admin/users") ? "fw-bold active-sidebar-link" : ""}`}
+              onClick={() => setActiveContentComponent("users")}
             >
               {isActive("/admin/users") && <i className="me-2 fas fa-users"></i>}
               Usuarios
@@ -61,6 +90,7 @@ const AdminLayout = () => {
             <Link
               to="/admin/categories"
               className={`nav-link text-white d-flex align-items-center ${isActive("/admin/categories") ? "fw-bold active-sidebar-link" : ""}`}
+              onClick={() => setActiveContentComponent("categories")}
             >
               {isActive("/admin/categories") && <i className="me-2 fas fa-tags"></i>}
               Categorías
@@ -73,7 +103,7 @@ const AdminLayout = () => {
         </div>
       </div>
 
-      {/* Sidebar Móvil (Offcanvas) */}
+      {/* Offcanvas para móviles */}
       <div className="d-md-none">
         <button
           className="btn btn-success m-2"
@@ -95,7 +125,8 @@ const AdminLayout = () => {
                 <Link
                   to="/admin"
                   className={`nav-link text-white d-flex align-items-center ${isActive("/admin") ? "fw-bold active-sidebar-link" : ""}`}
-                  data-bs-dismiss="offcanvas" // Cierra el offcanvas al hacer clic
+               
+                  onClick={() => handleMenuItemClick("dashboard", "/admin")}
                 >
                   {isActive("/admin") && <i className="me-2 fas fa-tachometer-alt"></i>}
                   Dashboard
@@ -105,7 +136,7 @@ const AdminLayout = () => {
                 <Link
                   to="/admin/users"
                   className={`nav-link text-white d-flex align-items-center ${isActive("/admin/users") ? "fw-bold active-sidebar-link" : ""}`}
-                  data-bs-dismiss="offcanvas" // Cierra el offcanvas al hacer clic
+                  onClick={() => handleMenuItemClick("users", "/admin/users")}
                 >
                   {isActive("/admin/users") && <i className="me-2 fas fa-users"></i>}
                   Usuarios
@@ -115,7 +146,7 @@ const AdminLayout = () => {
                 <Link
                   to="/admin/categories"
                   className={`nav-link text-white d-flex align-items-center ${isActive("/admin/categories") ? "fw-bold active-sidebar-link" : ""}`}
-                  data-bs-dismiss="offcanvas" // Cierra el offcanvas al hacer clic
+                  onClick={() => handleMenuItemClick("categories", "/admin/categories")}
                 >
                   {isActive("/admin/categories") && <i className="me-2 fas fa-tags"></i>}
                   Categorías
@@ -129,33 +160,39 @@ const AdminLayout = () => {
         </div>
       </div>
 
-      {/* Contenido Principal */}
+      {/* Contenido principal  */}
       <div className="flex-grow-1 d-flex flex-column overflow-auto" style={{ maxHeight: "100vh" }}>
-        {/* Cabecera con tarjetas responsivas */}
         <div className="container-fluid p-4 pb-0">
-          <div className="row g-3"> {/* g-3 añade un pequeño espacio entre las columnas */}
-            <div className="col-12 col-md-6 col-lg-4"> {/* Ocupa 12 columnas en extra-small, 6 en medium, 4 en large */}
-              <HeaderCardAdmin />
+          <div className="row g-3">
+            <div className="col-12 col-md-6 col-lg-4">
+              <HeaderCardAdmin setActiveComponent={handleSetActiveComponent} />
             </div>
             <div className="col-12 col-md-6 col-lg-4">
               <RadialProgressChart />
             </div>
-            <div className="col-12 col-lg-4"> {/* Ocupa 12 columnas en extra-small/medium, 4 en large */}
+            <div className="col-12 col-lg-4">
               <HeaderInfoCard />
             </div>
           </div>
         </div>
 
-        {/* Calculadora solo en /admin, con comportamiento responsivo */}
-        {location.pathname === "/admin" && (
-          <div className="container-fluid px-4">
-            <CalculadoraAhorro />
-          </div>
-        )}
-
-        {/* Contenido dinámico (Outlet) - Asegura que el contenido interno sea responsivo */}
         <div className="container-fluid p-4 pt-0 flex-grow-1">
-          <Outlet />
+          {activeContentComponent === "edit-user" && (
+            <HandleUpdateUser onClose={handleCloseUpdateUserForm} />
+          )}
+
+          {activeContentComponent === "dashboard" && location.pathname === "/admin" && (
+            <>
+              <div className="container-fluid px-0">
+                <CalculadoraAhorro />
+              </div>
+              <Outlet />
+            </>
+          )}
+
+          {activeContentComponent !== "edit-user" && location.pathname.startsWith("/admin") && (
+            <Outlet />
+          )}
         </div>
       </div>
     </div>

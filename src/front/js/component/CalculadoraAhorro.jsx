@@ -1,5 +1,5 @@
 
-// Componente Calculador Ahorro 
+// Componente Calculador de Ahorro 
 
 
 import React, { useEffect, useState } from "react";

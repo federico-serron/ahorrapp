@@ -102,6 +102,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 			wallets_from_user: [],
 
 			currentWallet: {},
+
+
+			// Para saber solo el conteo de Usuarios 
+
+
+			users: [], 
+            totalUsersCount: null, 
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -1088,6 +1095,38 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 			
+  // Action  para obtener solo el conteo de usuarios
+    getUsersCount: async () => {
+        try {
+            const result = await fetch(`${apiUrl}/api/admin/users/count`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    "Content-Type": "application/json",
+                }
+            });
+
+            if (!result.ok) {
+                const errorData = await result.json();
+                throw new Error(`Se presentó el siguiente error al obtener el conteo: ${errorData.msg || result.statusText}`);
+            }
+
+            const data = await result.json();
+
+            setStore({
+                ...getStore(),
+                totalUsersCount: data.total_users_count // Guarda el conteo en la nueva propiedad
+            });
+
+            console.log("Conteo total de usuarios obtenido:", getStore().totalUsersCount);
+            return true;
+
+        } catch (error) {
+            console.error("Se presentó el siguiente error al obtener el conteo de usuarios: ", error);
+            setStore({...getStore(), totalUsersCount: null}); // Opcional: Limpiar si hay un error
+            return false;
+        }
+    },
 
 
 

@@ -1,7 +1,21 @@
-import React from 'react';
-
+import React, { useEffect, useContext } from 'react';
+import { Context } from "../store/appContext"; 
 
 const HeaderInfoCard = () => {
+  const { store, actions } = useContext(Context); 
+
+  useEffect(() => {
+    // Llama a la nueva acción para obtener solo el conteo de usuarios
+  // y si el conteo ya se ha cargado para evitar llamadas redundantes.
+    const userRole = store.currentUser?.role; 
+    if (userRole === "admin" && store.totalUsersCount === null) {
+      actions.getUsersCount(); // Llama a la NUEVA acción
+    }
+  }, [actions, store.currentUser, store.totalUsersCount]); // Dependencias para el useEffect
+
+  // Obtener el número total de usuarios
+  const totalUsuarios = store.totalUsersCount !== null ? store.totalUsersCount : "Cargando...";
+
   return (
     <div className="card shadow-sm border-light" style={{ maxWidth: '300px' }}>
       <div className="card-body d-flex flex-column align-items-start p-3">
@@ -12,12 +26,14 @@ const HeaderInfoCard = () => {
           </svg>
           <h6 className="card-subtitle mb-0">Usuarios Registrados </h6>
         </div>
-        <h3 className="card-title fw-bold mb-0">3,782</h3>
+        <h3 className="card-title fw-bold mb-0">
+          {totalUsuarios}
+        </h3>
         <p className="card-text text-success mt-1">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-up me-1" viewBox="0 0 16 16">
             <path fillRule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 0 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/>
           </svg>
-          11.07%
+          11.07% {/* Este valor sigue siendo estático */}
         </p>
       </div>
     </div>
