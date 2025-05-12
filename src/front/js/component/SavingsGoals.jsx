@@ -1,14 +1,46 @@
 import React, { useEffect, useState, useContext } from "react";
 // Suponiendo que tienes un contexto donde está getGoalProgress
 import { Context } from "../store/appContext";
+import  AddGoal  from "./AddGoal.jsx"
 
 const SavingsGoals = () => {
     const { store, actions } = useContext(Context);
-    //const [metas, setMetas] = useState(store.goals);
+    const [goals, setGoals] = useState({
+        name:"",
+        value:0,
+    });
     const [goalIds, setGoalIds] = useState ([]);
 
 
+    const handleAddGoal = async()=>{
 
+        if(goals.name == "" || goals.value < 0){
+            toast.warn("Debe ingresar todos los campos o el monto debe ser mayor a 0.")
+            setGoals({
+                name:"",
+                value:0
+            })
+            return;
+        }
+
+        const result = await actions.setGoal(goals.name,goals.value)
+
+        if(!result){
+            toast.error(`Hubo un error al intentar crear la meta ${goals.name}`)
+            setGoals({
+                name:"",
+                value:0
+            })
+            return;
+        } else {
+            toast.success(`Meta de Ahorro ${goals.name} creada exitosamente!`)
+            setGoals({
+                name:"",
+                value:0
+            })
+            return;
+        }
+    }
     useEffect (() => {
         
         const fetchData=async () =>{
@@ -97,9 +129,32 @@ const SavingsGoals = () => {
                                 ¡Meta alcanzada!
                             </p>
                         )}
+
                     </div>
+       
                 );
             })}
+
+        <button type="button" className="btn btn-success" data-bs-toggle="modal" data-bs-target="#addGoal">
+            Añadir Meta de Ahorro
+        </button>
+        
+        <AddGoal 
+            id = "addGoal"
+            onCancel = {()=> {
+                setGoals({
+                    name:"",
+                    value:0,
+                })
+            }}
+            onConfirm = {handleAddGoal}
+            name = {goals.name}
+            value = {goals.value}
+            onChangeName={(e) => setGoals({...goals,name:e.target.value})}
+            onChangeValue={(e) => setGoals({...goals,value:parseInt(e.target.value)})}
+
+            />
+        
         </div>
     );
 };
