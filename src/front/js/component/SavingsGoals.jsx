@@ -2,42 +2,35 @@ import React, { useEffect, useState, useContext } from "react";
 // Suponiendo que tienes un contexto donde está getGoalProgress
 import { Context } from "../store/appContext";
 import  AddGoal  from "./AddGoal.jsx"
+import { toast } from "react-toastify";
 
 const SavingsGoals = () => {
     const { store, actions } = useContext(Context);
-    const [goals, setGoals] = useState({
-        name:"",
-        value:0,
-    });
+    const [goalName, setGoalName] = useState("");
+    const [goalValue, setGoalValue] = useState(0);
     const [goalIds, setGoalIds] = useState ([]);
 
 
     const handleAddGoal = async()=>{
 
-        if(goals.name == "" || goals.value < 0){
+        if(goalName == "" || goalValue < 0){
             toast.warn("Debe ingresar todos los campos o el monto debe ser mayor a 0.")
-            setGoals({
-                name:"",
-                value:0
-            })
+            setGoalName("")
+            setGoalValue(0)
             return;
         }
 
-        const result = await actions.setGoal(goals.name,goals.value)
+        const result = await actions.setGoal(goalName,goalValue)
 
         if(!result){
-            toast.error(`Hubo un error al intentar crear la meta ${goals.name}`)
-            setGoals({
-                name:"",
-                value:0
-            })
+            toast.error(`Hubo un error al intentar crear la meta ${goalName}`)
+            setGoalName("")
+            setGoalValue(0)
             return;
         } else {
-            toast.success(`Meta de Ahorro ${goals.name} creada exitosamente!`)
-            setGoals({
-                name:"",
-                value:0
-            })
+            toast.success(`Meta de Ahorro ${goalName} creada exitosamente!`)
+            setGoalName("")
+            setGoalValue(0)
             return;
         }
     }
@@ -142,16 +135,14 @@ const SavingsGoals = () => {
         <AddGoal 
             id = "addGoal"
             onCancel = {()=> {
-                setGoals({
-                    name:"",
-                    value:0,
-                })
+            setGoalName("")
+            setGoalValue(0)
             }}
             onConfirm = {handleAddGoal}
-            name = {goals.name}
-            value = {goals.value}
-            onChangeName={(e) => setGoals({...goals,name:e.target.value})}
-            onChangeValue={(e) => setGoals({...goals,value:parseInt(e.target.value)})}
+            name = {goalName}
+            value = {goalValue}
+            onChangeName={(e) => setGoalName(e.target.value)}
+            onChangeValue={(e) => setGoalValue(e.target.value)}
 
             />
         
