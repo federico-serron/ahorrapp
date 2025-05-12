@@ -16,7 +16,7 @@ PAYPAL_SECRET = os.getenv("PAYPAL_SECRET")
 PAYPAL_BASE_URL = os.getenv("PAYPAL_BASE_URL")
 
 # OpenAi
-OPEN_AI_KEY = os.getenv("OPEN_AI")
+OPEN_AI_KEY = os.getenv("OPEN_AI_KEY")
 
 
 class APIException(Exception):
