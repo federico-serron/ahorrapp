@@ -2,6 +2,8 @@ import React, { useEffect, useState, useContext } from 'react';
 import { Context } from "../store/appContext";
 import ConfirmModal from './ConfrimModal.jsx';
 import { toast } from "react-toastify";
+import SpinnerLogo from "./SpinnerLogo.jsx";
+
 
 const ListUsers = () => {
     const { store, actions } = useContext(Context);
@@ -9,45 +11,49 @@ const ListUsers = () => {
     const [loading, setLoading] = useState(true)
     const [userToDelete, setUserToDelete] = useState(null)
 
+
     const handleDelete = async (id) => {
+
         const response = await actions.deleteUser(id);
 
         if (response == "403") {
-            toast.error("No puedes eliminar tu propio usuario");
+            toast.error("No puedes eliminar tu propio usuario")
             return;
         }
-
+        
         if (!response) {
-            toast.error("No se pudo eliminar el usuario");
+            toast.error("No se pudo eliminar el usuario")
             return;
         } else {
-            toast.success("El usuario ha sido eliminado correctamente");
-            setUsers(store.users);
+            toast.success("El usuario ha sido eliminado correcamente")
+            setUsers(store.users)
         }
-    };
+
+    }
 
     useEffect(() => {
         const fetchUsers = async () => {
             const response = await actions.getUsers();
             if (!response) {
-                console.log("No se pudieron traer los usuarios desde la BD.");
-                setLoading(false);
+                console.log("No se pudieron traer los usuarios desde la BD.")
+                setLoading(false)
                 return users;
             }
 
-            setUsers(store.users);
-            setLoading(false);
-        };
+            setUsers(store.users)
+            setLoading(false)
+        }
 
         fetchUsers();
-    }, []);
 
+
+    }, []);
     return (
         <div className="container mt-4">
             <h2 className="mb-4">Lista de Usuarios</h2>
             <div className="table-responsive card p-3 shadow rounded-2">
                 <table className="table table-hover table-bordered align-middle">
-                    <thead className="table-light">
+                    <thead className="table-dark">
                         <tr>
                             <th>#</th>
                             <th>Nombre</th>
@@ -61,11 +67,7 @@ const ListUsers = () => {
                         {loading ? (
                             <tr>
                                 <td colSpan="6">
-                                    <div className="d-flex justify-content-center my-3">
-                                        <div className="spinner-border text-primary" role="status">
-                                            <span className="visually-hidden">Cargando...</span>
-                                        </div>
-                                    </div>
+                                    <SpinnerLogo />
                                 </td>
                             </tr>
                         ) : (
@@ -83,20 +85,7 @@ const ListUsers = () => {
                                         {user.name}
                                     </td>
                                     <td>{user.email}</td>
-                                    <td>
-                                        <div
-                                            className="rounded-circle d-inline-flex justify-content-center align-items-center"
-                                            style={{
-                                                width: "30px",
-                                                height: "30px",
-                                                backgroundColor: "#157347",
-                                                color: "white",
-                                                fontWeight: "bold"
-                                            }}
-                                        >
-                                            {user.wallets.length}
-                                        </div>
-                                    </td>
+                                    <td>{user.wallets.length}</td>
                                     <td>{new Date(user.last_login).toLocaleString('es-UY')}</td>
                                     <td>
                                         <span className={`badge ${user.is_premium ? 'bg-success' : 'bg-secondary'}`}>
@@ -118,6 +107,7 @@ const ListUsers = () => {
             />
         </div>
     );
-};
+
+}
 
 export default ListUsers;
