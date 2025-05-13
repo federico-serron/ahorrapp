@@ -3,7 +3,7 @@ import { Context } from "../store/appContext";
 import ConfirmModal from "./ConfrimModal.jsx";
 import { toast } from "react-toastify";
 import FormCategoryModal from "./FormCategoryModal.jsx";
-import * as bootstrap from 'bootstrap'; // Importa bootstrap para modales
+import * as bootstrap from 'bootstrap'; 
 
 const ListCategories = () => {
     const { store, actions } = useContext(Context);
@@ -117,22 +117,22 @@ const ListCategories = () => {
             </div>
             <div className="row">
                 <div className="col-12">
-                    {/* Añade .table-sm para un padding más compacto */}
+                    
                     <div className="table-responsive p-3 shadow rounded-2">
                         <table className="table table-hover table-bordered align-middle table-sm"> 
                             <thead className="table-light">
                                 <tr>
-                                    <th className="fit-content">#</th> {/* Clase para ancho fijo */}
+                                    <th className="fit-content">#</th> 
                                     <th>Nombre</th>
                                     <th>Descripcion</th>
-                                    <th className="text-center d-none d-md-table-cell fit-content">Registros Asoc.</th> {/* Ocultar en móvil */}
-                                    <th className="fit-content"></th> {/* Clase para ancho fijo */}
+                                    <th className="text-center d-none d-md-table-cell fit-content">Registros Asoc.</th> 
+                                    <th className="fit-content"></th> 
                                 </tr>
                             </thead>
                             <tbody>
                                 {loading ? (
                                     <tr>
-                                        <td colSpan="5"> {/* Ajusta el colspan si ocultas columnas */}
+                                        <td colSpan="5"> 
                                             <div className="d-flex justify-content-center my-3">
                                                 <div className="spinner-border text-primary" role="status">
                                                     <span className="visually-hidden">Cargando...</span>

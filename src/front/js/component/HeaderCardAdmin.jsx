@@ -33,7 +33,7 @@ const HeaderCardAdmin = ({ setActiveComponent }) => {
 
     return (
         <div className="card shadow-sm border-light position-relative" style={{ maxWidth: '300px' }}>
-            {/* Icono para cambiar a vista de editar */}
+            
             <div className="position-absolute top-0 end-0 p-2" style={{ cursor: 'pointer' }} onClick={() => setActiveComponent("edit-user")}>
                 <FontAwesomeIcon icon={faPencilAlt} size="lg" />
             </div>

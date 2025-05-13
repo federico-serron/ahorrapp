@@ -105,10 +105,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 			// Para saber solo el conteo de Usuarios 
-
-
-			users: [], 
-            totalUsersCount: null, 
+			totalUsersCount: null, 
+		
+		
+		
 		},
 		actions: {
 			// Use getActions to call a function within a fuction

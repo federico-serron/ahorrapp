@@ -14,20 +14,10 @@ import * as bootstrap from 'bootstrap';
 const AdminLayout = () => {
   const { store, actions } = useContext(Context);
   const location = useLocation();
-  const [role, setRole] = useState(null);
+   const role = actions.getUserRoleFromToken();
   const [activeContentComponent, setActiveContentComponent] = useState("dashboard");
 
-  useEffect(() => {
-    const simulatedRole = "admin";
-    setTimeout(() => setRole(simulatedRole), 500);
-  }, []);
-
-  if (role === null)
-    return (
-      <div className="d-flex justify-content-center align-items-center vh-100">
-        Cargando...
-      </div>
-    );
+ 
   if (role !== "admin") return <Navigate to="/unauthorized" />;
 
   const isActive = (path) =>

@@ -99,7 +99,7 @@ const ListUsers = () => {
                                     </td>
                                     <td>{new Date(user.last_login).toLocaleString('es-UY')}</td>
                                     <td>
-                                        <span className={`badge ${user.is_premium ? 'custom-green' : 'bg-secondary'}`}>
+                                        <span className={`badge ${user.is_premium ? 'bg-success' : 'bg-secondary'}`}>
                                             {user.is_premium ? 'Sí' : 'No'}
                                         </span>
                                     </td>
