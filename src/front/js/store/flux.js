@@ -503,10 +503,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 						})
 					});
 
-					if (response.status == "403") {
+					if(response.status == "403"){
 						return "403";
 					}
-
 
 					if (!response.ok) {
 						const errorData = await response.json();

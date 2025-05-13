@@ -634,12 +634,21 @@ def set_goal():
         goal_value = request.json.get("goal_value")
         is_complete = False
 
+        user = User.query.filter_by(id = user_id).first()
+
         if not user_id or not name_goal or not goal_value:
             return jsonify({"msg": "Completar todos los campos solicitados"}), 404
         goal = Goal.query.filter_by(user_id=user_id, name=name_goal).first()
 
         if goal:
             return (jsonify({"msg": "El nombre de Goal ya existe"})), 404
+        
+
+        # Condicion pars verificar que el usuario no es premium y si tiene mas de 3 goals creadas, llego a si lmite de prueba
+        all_goals = Goal.query.filter_by(user_id=user_id).all()
+        if not user.is_premium and len(all_goals) >= 3:
+            return jsonify({'msg': 'El usuario es Free y ya tiene mas de 3 metas creadas'}), 403
+        
 
         new_goal = Goal(
             name=name_goal,
