@@ -70,6 +70,33 @@ body[data-bs-theme='light'] .btn-danger:hover {
     color: white;
 }
 
+/* logo girando */
+.image-spinner {
+    width: 6vh;
+    height: 6vh;
+    border-radius: 50%;
+    border: 1px solid  green;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    animation: spin 2s linear infinite;
+    display: inline-block;
+    object-fit: cover; 
+}
+
+/* Animacion */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Envio tablas detras del menu dropdown */
+.table-responsive{
+    position: static;
+}
+
 /* Side Bar Logo  */
 
 
@@ -155,4 +182,4 @@ body[data-bs-theme='light'] .btn-danger:hover {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-}
+    }

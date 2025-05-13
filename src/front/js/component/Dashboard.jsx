@@ -6,16 +6,12 @@ import AddWallet from "./AddWallet.jsx";
 import AddRecord from "./AddRecord.jsx"
 import { Context } from "../store/appContext";
 import ConfirmModal from "./ConfrimModal.jsx";
+import LinesChart from "./LinesChart.jsx";
+import BarsChart from "./BarsChart.jsx";
+import SavingsGoals from "./SavingsGoals.jsx"
 
 const Dashboard = () => {
 
-    /*
-    ⚠️ Importante: el componente HandleUpdateUser necesita que se llame a actions.getUser() antes de renderizarse, para poder llenar correctamente el formulario con los datos del usuario.
-    
-    Actualmente, esa llamada está en el useEffect del componente Dashboard (justo debajo de este comentario).
-    
-    ✅ Si mueves el botón o renderizas HandleUpdateUser en otro lugar, asegúrate de incluir este useEffect completo para que el botón funcione correctamente y se cargue la información del usuario.
-    */
 
     const navigate = useNavigate()
     const { store, actions } = useContext(Context);
@@ -60,18 +56,7 @@ const Dashboard = () => {
             </div>
                 ) : ""}
 
-
-                {/* Botón para navegar a HandleUpdateUser */}
-                <button
-                    className="btn btn-primary"
-                    style={{ width: "200px" }}
-                    onClick={() => navigate("/edit-user")}
-                >
-                    Editar Usuario
-                </button>
-
             </div>
-
             <div className="row">
                 {store.wallets_from_user && store.wallets_from_user.length > 0 ? (
                     store.wallets_from_user.map((wallet) => (
@@ -100,9 +85,13 @@ const Dashboard = () => {
             <div className="row">
                 <div className="col-lg-6 col-md-12">
                     <AddRecord />
+                    <SavingsGoals/>
                 </div>
                 <div className="text-center align-items-center my-auto col-lg-6 col-md-12">
-                    Meter grafiquitas aca
+                    <div className="row">
+                    <LinesChart />
+                    <BarsChart />
+                    </div>
                 </div>
             </div>
             <ConfirmModal
