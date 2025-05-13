@@ -350,9 +350,9 @@ def add_record():
         }
         
 
-        error_fields = validate_required_fields(required_fields)
-        if error_fields:
-            return error_fields
+        # error_fields = validate_required_fields(required_fields)
+        # if error_fields:
+        #     return error_fields
         
         if fields["type"] not in ["Ingreso", "Gasto"]:
             return jsonify({"msg": "El campo 'type' debe ser 'Ingreso' o 'Gasto'."}), 400
