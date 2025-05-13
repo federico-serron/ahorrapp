@@ -283,7 +283,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const store = getStore();
 
 				try {
-					if (!description) {
+					if (!description || !amount || !type || !wallet_id) {
 						console.error("Faltan campos requeridos para agregar el registro.");
 						return false;
 					}
@@ -502,6 +502,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 							goal_value: goal_value
 						})
 					});
+
+					if (response.status == "403") {
+						return "403";
+					}
 
 
 					if (!response.ok) {
