@@ -29,6 +29,10 @@ export const Navbar = () => {
 		setIsLoggedIn(!!localStorage.getItem("token"))
 	}, [])
 
+	useEffect(() => {
+		actions.getUser();
+	}, []);
+
 
 	return (
 		<nav className={`navbar navbar-expand-lg ${currentTheme === 'dark' ? 'navbar-dark bg-dark' : 'navbar-light bg-light'} shadow-sm animated-navbar ${isVisible ? "fade-slide" : ""}`}>
