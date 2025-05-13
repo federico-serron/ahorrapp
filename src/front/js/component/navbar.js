@@ -30,7 +30,9 @@ export const Navbar = () => {
 	}, [])
 
 	useEffect(() => {
-		actions.getUser();
+		if (localStorage.getItem("token")) {
+			actions.getUser();
+		}
 	}, []);
 
 
