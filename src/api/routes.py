@@ -976,7 +976,7 @@ def calculate_savings():
         ingresos = float(data.get('ingresos', 0))
         gastos_fijos = float(data.get('gastos_fijos', 0))
         gastos_variables = float(data.get('gastos_variables', 0))
-        objetivo = float(data.get('objetivo_ahorro', 0))  # opcional
+        objetivo = float(data.get('objetivo_ahorro', 0)) 
 
         ahorro = ingresos - (gastos_fijos + gastos_variables)
         porcentaje_ahorro = (ahorro / ingresos * 100) if ingresos > 0 else 0
@@ -1001,7 +1001,7 @@ def get_users_count():
         if is_not_admin:
             return is_not_admin
 
-        total_users_count = User.query.count() # Obtiene el conteo directamente
+        total_users_count = User.query.count() 
 
         return jsonify({"total_users_count": total_users_count}), 200
 

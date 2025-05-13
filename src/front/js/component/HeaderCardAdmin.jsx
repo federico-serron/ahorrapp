@@ -4,19 +4,36 @@ import { faPencilAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Context } from "../store/appContext";
 
 const HeaderCardAdmin = ({ setActiveComponent }) => {
-    const { store } = useContext(Context);
+    const { store, actions } = useContext(Context);
     const [profileImage, setProfileImage] = useState(null);
     const [hovered, setHovered] = useState(false);
+    const [loading, setLoading] = useState(true); 
+    const [userData, setUserData] = useState(null); 
 
     useEffect(() => {
-        // Carga inicial desde localStorage si no hay en currentUser
+       
         const storedImage = localStorage.getItem("profileImage");
         if (storedImage) {
-            setProfileImage(storedImage);
-        } else if (store.currentUser?.profile_picture_url) {
-            setProfileImage(store.currentUser.profile_picture_url);
+            setProfileImage(storedImage); 
         }
-    }, [store.currentUser]);
+
+        
+        if (store.currentUser && Object.keys(store.currentUser).length > 0) {
+            setUserData(store.currentUser); 
+            setLoading(false);
+        } else {
+           
+            actions.getUser()
+                .then((user) => {
+                    if (user) {
+                        setUserData(user); 
+                    }
+                })
+                .finally(() => {
+                    setLoading(false); 
+                });
+        }
+    }, [store.currentUser, actions]); 
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -26,14 +43,23 @@ const HeaderCardAdmin = ({ setActiveComponent }) => {
         reader.onloadend = () => {
             const base64String = reader.result;
             setProfileImage(base64String);
-            localStorage.setItem("profileImage", base64String);
+            localStorage.setItem("profileImage", base64String); 
         };
         reader.readAsDataURL(file);
     };
 
+    if (loading) {
+        return (
+            <div className="card shadow-sm border-light position-relative" style={{ maxWidth: '300px' }}>
+                <div className="card-body d-flex flex-column align-items-center p-4">
+                    <p>cargando...</p> 
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="card shadow-sm border-light position-relative" style={{ maxWidth: '300px' }}>
-            
             <div className="position-absolute top-0 end-0 p-2" style={{ cursor: 'pointer' }} onClick={() => setActiveComponent("edit-user")}>
                 <FontAwesomeIcon icon={faPencilAlt} size="lg" />
             </div>
@@ -74,8 +100,8 @@ const HeaderCardAdmin = ({ setActiveComponent }) => {
                     style={{ display: 'none' }}
                 />
 
-                <h5 className="card-title fw-bold mb-1 text-center">{store.currentUser?.name || "Cargando..."}</h5>
-                <p className="card-subtitle text-muted mb-2 text-center">{store.currentUser?.email || "Cargando..."}</p>
+                <h5 className="card-title fw-bold mb-1 text-center">{userData?.name || "Cargando..."}</h5>
+                <p className="card-subtitle text-muted mb-2 text-center">{userData?.email || "Cargando..."}</p>
             </div>
         </div>
     );
