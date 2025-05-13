@@ -10,6 +10,23 @@ const SavingsGoals = () => {
     const [goalValue, setGoalValue] = useState(0);
     const [goalIds, setGoalIds] = useState ([]);
 
+    const handleDeleteGoal = async(id) => {
+        try {
+            const result = await actions.deleteGoal(id)
+            if (!result){
+                toast.error(`Hubo un error al intentar borrar la meta`)
+                return;
+
+            }
+            toast.success(`Meta borrada con exito`)
+
+
+        } catch (error) {
+            console.error("Ocurrio el siguiente error: ", error)
+            
+        }
+    }
+
 
     const handleAddGoal = async()=>{
 
@@ -22,6 +39,11 @@ const SavingsGoals = () => {
 
         const result = await actions.setGoal(goalName,goalValue)
 
+        if(result == "403"){
+            toast.error(`El usuario no es premium y no puede crear mas de 3 metas`)
+            return;
+        }
+
         if(!result){
             toast.error(`Hubo un error al intentar crear la meta ${goalName}`)
             setGoalName("")
@@ -31,6 +53,7 @@ const SavingsGoals = () => {
             toast.success(`Meta de Ahorro ${goalName} creada exitosamente!`)
             setGoalName("")
             setGoalValue(0)
+            setIsModalOpen(false)
             return;
         }
     }
@@ -47,7 +70,7 @@ const SavingsGoals = () => {
         }
         fetchData()
         
-    },[])
+    },[store.goals])
 
     return (
         <div className="card shadow rounded-2 mt-3">
@@ -76,13 +99,26 @@ const SavingsGoals = () => {
                             justifyContent: "space-between",
                             marginBottom: "10px"
                         }}>
-                            <h3 style={{ margin: "0", color: "#444" }}>{goal.name}</h3>
-                            <span style={{
-                                fontWeight: "bold",
-                                color: goal.progress === 100 ? "#28a745" : "#007bff"
-                            }}>
+
+                          
+                            <h3 style={{ margin: "0", color: "#444" }}>{goal.name}</h3>  
+                                <div className="d-flex flex-row justify-content-center align-items-center">
+                                <span style={{
+                                    fontWeight: "bold",
+                                    color: goal.progress === 100 ? "#28a745" : "#007bff"
+                                        }}>
                                 {goal.progress}%
-                            </span>
+                                </span>
+
+                                    <i
+                                    className="fas fa-trash me-3 text-danger ms-1"
+                                    role="button"
+                                    onClick={() => handleDeleteGoal(goal.id)}
+                                />
+                                
+                                </div>
+                                                   
+
                         </div>
 
                         {/* Barra de progreso */}
@@ -93,7 +129,7 @@ const SavingsGoals = () => {
                             marginBottom: "8px"
                         }}>
                             <div style={{
-                                width: `${goal.progress}%`,
+                                width: `${goal.progress >= 100? 100 : goal.progress}%`,
                                 height: "100%",
                                 backgroundColor: goal.progress === 100 ? "#28a745" : "#17a2b8",
                                 borderRadius: "5px"
@@ -107,12 +143,12 @@ const SavingsGoals = () => {
                             fontSize: "14px",
                             color: "#666"
                         }}>
-                            <span>Ahorrado: <strong>${goal.remaining.toLocaleString()}</strong></span>
+                            <span>Restante: <strong>${goal.remaining.toLocaleString() < 0 ? goal.goal_value.toLocaleString() - goal.remaining.toLocaleString() : goal.remaining.toLocaleString() }</strong></span>
                             <span>Meta: <strong>${goal.goal_value.toLocaleString()}</strong></span> 
                         </div>
 
                         {/* Mensaje si está completo */}
-                        {goal.progress === 100 && (
+                        {goal.progress >= 100 && (
                             <p style={{
                                 margin: "10px 0 0",
                                 color: "#28a745",
