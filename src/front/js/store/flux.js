@@ -102,6 +102,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 			wallets_from_user: [],
 
 			currentWallet: {},
+
+
+			// Para saber solo el conteo de Usuarios 
+			totalUsersCount: null, 
+		
+		
+		
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -283,7 +290,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const store = getStore();
 
 				try {
-					if (!description || !amount || !type || !category_name || !wallet_id) {
+					if (!description || !amount || !type || !wallet_id) {
 						console.error("Faltan campos requeridos para agregar el registro.");
 						return false;
 					}
@@ -505,7 +512,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					if (response.status == "403") {
 						return "403";
 					}
-
 
 					if (!response.ok) {
 						const errorData = await response.json();
@@ -1065,6 +1071,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const data = await result.json()
 
 					setStore({ ...getStore(), categories_db: data.categories })
+
 					return true
 				} catch (error) {
 					console.error("Se presento el siguiente error: ", error)
@@ -1138,6 +1145,69 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			//Actions Juan
+
+			// Action Calcular Ahorro (Calculadora)
+
+			calcularAhorro: async (datos) => {
+    try {
+        const response = await fetch(`${apiUrl}/api/calculate-savings`, {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(datos)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData?.message || "Error en el cálculo de ahorro");
+        }
+
+        const data = await response.json();
+        return data;
+
+    } catch (error) {
+        console.error("Error al calcular ahorro:", error);
+        throw error;
+    }
+},
+
+
+			
+  // Action  para obtener solo el conteo de usuarios
+    getUsersCount: async () => {
+        try {
+            const result = await fetch(`${apiUrl}/api/admin/users/count`, {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                    "Content-Type": "application/json",
+                }
+            });
+
+            if (!result.ok) {
+                const errorData = await result.json();
+                throw new Error(`Se presentó el siguiente error al obtener el conteo: ${errorData.msg || result.statusText}`);
+            }
+
+            const data = await result.json();
+
+            setStore({
+                ...getStore(),
+                totalUsersCount: data.total_users_count // Guarda el conteo en la nueva propiedad
+            });
+
+            console.log("Conteo total de usuarios obtenido:", getStore().totalUsersCount);
+            return true;
+
+        } catch (error) {
+            console.error("Se presentó el siguiente error al obtener el conteo de usuarios: ", error);
+            setStore({...getStore(), totalUsersCount: null}); // Opcional: Limpiar si hay un error
+            return false;
+        }
+    },
+
 
 			//Actions Rafa
 
