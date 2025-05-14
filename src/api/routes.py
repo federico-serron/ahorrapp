@@ -811,7 +811,7 @@ def actualizar_usuario():
             if campo == 'password':
                 hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
                 setattr(user, 'password', hashed_password)
-            elif campo == 'phone' and data[campo] != "":
+            elif campo == 'phone' and data[campo] != "" and str(data[campo]) != user.phone:
                 msg = f"Bienvenid@ a AhorrApp 😁, ahora puedes ingresar tus registros a traves de Whatsapp!"
                     
                 setattr(user, 'phone', data[campo])
