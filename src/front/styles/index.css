@@ -146,15 +146,17 @@ body[data-bs-theme='light'] .btn-danger:hover {
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
 
+/* Envio tablas detras del menu dropdown en el Admin-Panel */
+
 .nav-item .nav-link {
-  margin-bottom: 8px; /* espacio entre enlaces */
-  border-radius: 4px;  /* opcional: bordes redondeados */
+  margin-bottom: 8px; 
+  border-radius: 4px;  
 }
 
 
 .nav-link.text-white:active {
-  transform: scale(0.98); /* efecto de "presionado" */
-  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2); /* sombra interna */
+  transform: scale(0.98); 
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2); 
 }
 
 

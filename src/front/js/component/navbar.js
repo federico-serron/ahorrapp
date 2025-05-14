@@ -64,7 +64,7 @@ export const Navbar = () => {
 						{localStorage.getItem("token") ? (
 							// Dropdown perfil
 							<li className="nav-item dropdown">
-								<a
+								<button
 									className="btn nav-link dropdown-toggle d-flex align-items-center"
 									id="userDropdown"
 									data-bs-toggle="dropdown"
@@ -72,7 +72,7 @@ export const Navbar = () => {
 								>
 									<i className="fas fa-user-circle fa-lg me-2" />
 									<span>{store.currentUser.name}</span>
-								</a>
+								</button>
 								<ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
 									{store.currentUser?.is_premium && (
 										<li className="dropdown-item">

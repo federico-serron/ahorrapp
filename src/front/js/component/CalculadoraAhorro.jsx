@@ -1,10 +1,5 @@
-
-// Componente Calculador de Ahorro 
-
-
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { motion } from "framer-motion";
-import { useContext } from "react";
 import { Context } from "../store/appContext";
 import Chart from "react-apexcharts";
 
@@ -16,10 +11,9 @@ const CalculadoraAhorro = () => {
     gastos_variables: "",
     objetivo_ahorro: ""
   });
+
   const [result, setResult] = useState(null);
   const [showChart, setShowChart] = useState(false);
-
-  // Estado para controlar si ya animamos
   const [firstLoad, setFirstLoad] = useState(() => {
     return sessionStorage.getItem("calcAnimated") !== "true";
   });
@@ -31,10 +25,15 @@ const CalculadoraAhorro = () => {
     }
   }, [firstLoad]);
 
-  const handleChange = e =>
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await actions.calcularAhorro(formData);
@@ -48,9 +47,12 @@ const CalculadoraAhorro = () => {
   const chartOptions = {
     chart: {
       type: "bar",
-      animations: { enabled: true, easing: "easeinout", speed: 800 }
+      animations: { enabled: true, easing: "easeinout", speed: 800 },
+      foreColor: undefined 
     },
-    xaxis: { categories: ["Ingresos", "Gastos Fijos", "Gastos Variables", "Ahorro"] }
+    xaxis: {
+      categories: ["Ingresos", "Gastos Fijos", "Gastos Variables", "Ahorro"]
+    }
   };
 
   const chartSeries = [
@@ -70,13 +72,16 @@ const CalculadoraAhorro = () => {
       initial={firstLoad ? { opacity: 0, y: 30 } : {}}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: firstLoad ? 0.6 : 0, ease: "easeOut" }}
-      className="container mt-4 p-4 bg-light rounded shadow"
+      className="container mt-4 p-4 bg-body rounded shadow"
     >
       <h5 className="mb-3">Calculadora de Ahorro Mensual</h5>
+
       <form onSubmit={handleSubmit} className="row g-3">
-        {["ingresos", "gastos_fijos", "gastos_variables", "objetivo_ahorro"].map(field => (
+        {["ingresos", "gastos_fijos", "gastos_variables", "objetivo_ahorro"].map((field) => (
           <div className="col-md-6" key={field}>
-            <label className="form-label text-capitalize">{field.replace("_", " ")}</label>
+            <label className="form-label text-capitalize">
+              {field.replace("_", " ")}
+            </label>
             <input
               type="number"
               className="form-control"
@@ -98,8 +103,16 @@ const CalculadoraAhorro = () => {
 
       {result && (
         <div className="mt-4">
-          <p><strong>Ahorro Potencial:</strong> ${result.ahorro}</p>
-          <p><strong>Porcentaje Ahorro:</strong> {result.porcentaje_ahorro}%</p>
+          <p>
+            <strong>Ahorro Potencial:</strong>{" "}
+            ${parseFloat(result.ahorro).toLocaleString("es-ES", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+            })}
+          </p>
+          <p>
+            <strong>Porcentaje Ahorro:</strong> {result.porcentaje_ahorro}%
+          </p>
         </div>
       )}
 
@@ -113,3 +126,7 @@ const CalculadoraAhorro = () => {
 };
 
 export default CalculadoraAhorro;
+
+
+
+
