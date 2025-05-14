@@ -435,7 +435,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 
 					const data = await response.json();
-					console.log("Usuario obtenido correctamente:", data);
 					setStore({ ...getStore(), currentUser: data });
 					return true;
 				} catch (error) {
@@ -510,7 +509,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 						})
 					});
 
-					if(response.status == "403"){
+					if (response.status == "403") {
 						return "403";
 					}
 
@@ -1045,7 +1044,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 					const data = await result.json()
 
-					console.log(data)
 					setStore({ ...getStore(), categories_db: [...getStore().categories_db, data] })
 
 					return true
@@ -1073,7 +1071,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const data = await result.json()
 
 					setStore({ ...getStore(), categories_db: data.categories })
-					console.log(getStore().categories_db)
+
 					return true
 				} catch (error) {
 					console.error("Se presento el siguiente error: ", error)
@@ -1209,12 +1207,6 @@ const getState = ({ getStore, getActions, setStore }) => {
             return false;
         }
     },
-
-
-
-
-
-
 
 
 			//Actions Rafa
