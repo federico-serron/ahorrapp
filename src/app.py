@@ -12,6 +12,8 @@ from flask_jwt_extended import JWTManager
 from api.admin import setup_admin
 from api.commands import setup_commands
 from flask_bcrypt import Bcrypt
+from sqlalchemy import create_engine
+from api.config import engine
 
 # from models import Person
 
@@ -37,6 +39,8 @@ app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "clave_super_secreta"
 
 db.init_app(app)
 jwt = JWTManager(app)
+
+engine = create_engine(db_url)
 
 # add the admin
 setup_admin(app)
