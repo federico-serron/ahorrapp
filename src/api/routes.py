@@ -802,6 +802,16 @@ def actualizar_usuario():
             if campo == 'password':
                 hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
                 setattr(user, 'password', hashed_password)
+            elif campo == 'phone' and data[campo] != "":
+                msg = f"Bienvenid@ a AhorrApp 😁, ahora puedes ingresar tus registros a traves de Whatsapp!:"
+                    
+                setattr(user, 'phone', data[campo])
+                
+                twilio_client.messages.create(
+                from_=TWILIO_NUMBER,
+                to=f"whatsapp:{str(data[campo])}",
+                body=msg
+                )
             else:
                 setattr(user, campo, data[campo] if data[campo] is not None else None)
 
