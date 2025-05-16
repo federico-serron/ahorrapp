@@ -40,7 +40,7 @@ app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "clave_super_secreta"
 db.init_app(app)
 jwt = JWTManager(app)
 
-engine = create_engine(db_url)
+#engine = create_engine(db_url)
 
 # add the admin
 setup_admin(app)

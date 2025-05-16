@@ -95,8 +95,6 @@ const ListRecord = () => {
             }
 
             toast.success("Descargando archivo de registros")
-
-
             
         } catch (error) {
             console.error(error)

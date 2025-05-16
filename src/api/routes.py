@@ -1036,18 +1036,26 @@ def export_records_excel():
 
     try:
         user_id = get_jwt_identity()
-        query = "SELECT * FROM Record WHERE user_id = %s"
+
+        query = """SELECT r.id, r.description, r.amount, r.type, 
+            w.name AS wallet_name, c.name AS category_name, r.timestamp
+            FROM record r
+            JOIN wallet w ON r.wallet_id = w.id
+            JOIN category c ON r.category_id = c.id
+            WHERE r.user_id = %s"""
+
         df = pd.read_sql(query, engine,params=(user_id,))
 
 
         # Este loop es para eliminar la zona horaria de las fechas y convertirlas a datetime
         for column in df.select_dtypes(include=['datetime64[ns, UTC]', 'datetime64[ns]']):
             df[column] = df[column].dt.tz_localize(None)
-
+        
+        #Crea el archivo
         excel_file = "records.xlsx"
         df.to_excel(excel_file, index = False)
 
-
+        # Escribir sobre el archivo los registros desde la base de datos
         response = Response(
             open(excel_file, "rb").read(),
             mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
