@@ -97,7 +97,7 @@ export const Navbar = () => {
 									</li>
 									{role === "admin" && (
 										<li>
-											<Link className="dropdown-item" to="/admin">Admin</Link>
+											<Link className="dropdown-item" to="/administrator">Admin</Link>
 										</li>
 									)}
 									<li>

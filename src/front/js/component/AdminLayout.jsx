@@ -10,14 +10,14 @@ import HandleUpdateUser from "./HandleUpdateUser.jsx";
 import "../../styles/index.css";
 
 // Importa Offcanvas de Bootstrap
-import * as bootstrap from 'bootstrap'; 
+import * as bootstrap from 'bootstrap';
 const AdminLayout = () => {
   const { store, actions } = useContext(Context);
   const location = useLocation();
-   const role = actions.getUserRoleFromToken();
+  const role = actions.getUserRoleFromToken();
   const [activeContentComponent, setActiveContentComponent] = useState("dashboard");
 
- 
+
   if (role !== "admin") return <Navigate to="/unauthorized" />;
 
   const isActive = (path) =>
@@ -44,7 +44,7 @@ const AdminLayout = () => {
   const handleMenuItemClick = (componentName, path) => {
     setActiveContentComponent(componentName);
     closeOffcanvas(); // Cierra el offcanvas
-    
+
   };
 
   return (
@@ -58,31 +58,31 @@ const AdminLayout = () => {
         <ul className="nav flex-column">
           <li className="nav-item">
             <Link
-              to="/admin"
-              className={`nav-link text-white d-flex align-items-center ${isActive("/admin") ? "fw-bold active-sidebar-link" : ""}`}
+              to="/administrator"
+              className={`nav-link text-white d-flex align-items-center ${isActive("/administrator") ? "fw-bold active-sidebar-link" : ""}`}
               onClick={() => setActiveContentComponent("dashboard")}
             >
-              {isActive("/admin") && <i className="me-2 fas fa-tachometer-alt"></i>}
+              {isActive("/administrator") && <i className="me-2 fas fa-tachometer-alt"></i>}
               Dashboard
             </Link>
           </li>
           <li className="nav-item">
             <Link
-              to="/admin/users"
-              className={`nav-link text-white d-flex align-items-center ${isActive("/admin/users") ? "fw-bold active-sidebar-link" : ""}`}
+              to="/administrator/users"
+              className={`nav-link text-white d-flex align-items-center ${isActive("/administrator/users") ? "fw-bold active-sidebar-link" : ""}`}
               onClick={() => setActiveContentComponent("users")}
             >
-              {isActive("/admin/users") && <i className="me-2 fas fa-users"></i>}
+              {isActive("/administrator/users") && <i className="me-2 fas fa-users"></i>}
               Usuarios
             </Link>
           </li>
           <li className="nav-item">
             <Link
-              to="/admin/categories"
-              className={`nav-link text-white d-flex align-items-center ${isActive("/admin/categories") ? "fw-bold active-sidebar-link" : ""}`}
+              to="/administrator/categories"
+              className={`nav-link text-white d-flex align-items-center ${isActive("/administrator/categories") ? "fw-bold active-sidebar-link" : ""}`}
               onClick={() => setActiveContentComponent("categories")}
             >
-              {isActive("/admin/categories") && <i className="me-2 fas fa-tags"></i>}
+              {isActive("/administrator/categories") && <i className="me-2 fas fa-tags"></i>}
               Categorías
             </Link>
           </li>
@@ -113,32 +113,32 @@ const AdminLayout = () => {
             <ul className="nav flex-column">
               <li className="nav-item">
                 <Link
-                  to="/admin"
-                  className={`nav-link text-white d-flex align-items-center ${isActive("/admin") ? "fw-bold active-sidebar-link" : ""}`}
-               
-                  onClick={() => handleMenuItemClick("dashboard", "/admin")}
+                  to="/administrator"
+                  className={`nav-link text-white d-flex align-items-center ${isActive("/administrator") ? "fw-bold active-sidebar-link" : ""}`}
+
+                  onClick={() => handleMenuItemClick("dashboard", "/administrator")}
                 >
-                  {isActive("/admin") && <i className="me-2 fas fa-tachometer-alt"></i>}
+                  {isActive("/administrator") && <i className="me-2 fas fa-tachometer-alt"></i>}
                   Dashboard
                 </Link>
               </li>
               <li className="nav-item">
                 <Link
-                  to="/admin/users"
-                  className={`nav-link text-white d-flex align-items-center ${isActive("/admin/users") ? "fw-bold active-sidebar-link" : ""}`}
-                  onClick={() => handleMenuItemClick("users", "/admin/users")}
+                  to="/administrator/users"
+                  className={`nav-link text-white d-flex align-items-center ${isActive("/administrator/users") ? "fw-bold active-sidebar-link" : ""}`}
+                  onClick={() => handleMenuItemClick("users", "/administrator/users")}
                 >
-                  {isActive("/admin/users") && <i className="me-2 fas fa-users"></i>}
+                  {isActive("/administrator/users") && <i className="me-2 fas fa-users"></i>}
                   Usuarios
                 </Link>
               </li>
               <li className="nav-item">
                 <Link
-                  to="/admin/categories"
-                  className={`nav-link text-white d-flex align-items-center ${isActive("/admin/categories") ? "fw-bold active-sidebar-link" : ""}`}
-                  onClick={() => handleMenuItemClick("categories", "/admin/categories")}
+                  to="/administrator/categories"
+                  className={`nav-link text-white d-flex align-items-center ${isActive("/administrator/categories") ? "fw-bold active-sidebar-link" : ""}`}
+                  onClick={() => handleMenuItemClick("categories", "/administrator/categories")}
                 >
-                  {isActive("/admin/categories") && <i className="me-2 fas fa-tags"></i>}
+                  {isActive("/administrator/categories") && <i className="me-2 fas fa-tags"></i>}
                   Categorías
                 </Link>
               </li>
@@ -171,7 +171,7 @@ const AdminLayout = () => {
             <HandleUpdateUser onClose={handleCloseUpdateUserForm} />
           )}
 
-          {activeContentComponent === "dashboard" && location.pathname === "/admin" && (
+          {activeContentComponent === "dashboard" && location.pathname === "/administrator" && (
             <>
               <div className="container-fluid px-0">
                 <CalculadoraAhorro />
@@ -180,7 +180,7 @@ const AdminLayout = () => {
             </>
           )}
 
-          {activeContentComponent !== "edit-user" && location.pathname.startsWith("/admin") && (
+          {activeContentComponent !== "edit-user" && location.pathname.startsWith("/administrator") && (
             <Outlet />
           )}
         </div>

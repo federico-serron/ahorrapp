@@ -52,7 +52,7 @@ const Layout = () => {
                         <Route element={<Dashboard />} path="/dashboard" />
                         <Route element={<Single />} path="/single/:theid" />
                         {/* Admin routes */}
-                        <Route path="/admin" element={<AdminLayout />}>
+                        <Route path="/administrator" element={<AdminLayout />}>
                             <Route path="users" index element={<ListUsers />} />
                             <Route path="categories" index element={<ListCategories />} />
                         </Route>
