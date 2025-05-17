@@ -29,6 +29,12 @@ export const Navbar = () => {
 		setIsLoggedIn(!!localStorage.getItem("token"))
 	}, [])
 
+	useEffect(() => {
+		if (localStorage.getItem("token")) {
+			actions.getUser();
+		}
+	}, []);
+
 
 	return (
 		<nav className={`navbar navbar-expand-lg ${currentTheme === 'dark' ? 'navbar-dark bg-dark' : 'navbar-light bg-light'} shadow-sm animated-navbar ${isVisible ? "fade-slide" : ""}`}>
@@ -91,7 +97,7 @@ export const Navbar = () => {
 									</li>
 									{role === "admin" && (
 										<li>
-											<Link className="dropdown-item" to="/admin">Admin</Link>
+											<Link className="dropdown-item" to="/administrator">Admin</Link>
 										</li>
 									)}
 									<li>
