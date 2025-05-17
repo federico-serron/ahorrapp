@@ -1212,6 +1212,39 @@ const getState = ({ getStore, getActions, setStore }) => {
 			//Actions Rafa
 
 			//Actions Jose
+			exportRecordsExcel: async() => {
+				try {
+
+					const result = await fetch(`${apiUrl}/api/export/records`, {
+						method: "GET",
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem('token')}`,
+							"Content-Type": "application/json",
+							}
+					})
+
+					if (!result.ok){
+						throw new Error("Se presento el siguiente error: ", result.status)
+						return false;
+					}
+
+					    const blob = await result.blob();
+						const url = window.URL.createObjectURL(blob);
+
+						const a = document.createElement("a");
+						a.href = url;
+						a.download = "records.xlsx";
+						document.body.appendChild(a);
+						a.click();
+						document.body.removeChild(a);
+						return true;
+					
+				} catch (error) {
+					console.error("Se tiene el siguiente error: ",error)
+					
+				}
+			},
+			
 
 			//Actions Fede
 		}

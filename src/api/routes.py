@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 
-from flask import Flask, request, jsonify, url_for, Blueprint
+from flask import Flask, request, jsonify, url_for, Blueprint, Response
 import os
 from api.models import db, User, Record, Category, Wallet, Goal, Currency
 from api.utils import generate_sitemap, APIException, validate_relationships, validate_required_fields, parse_date, check_user_is_admin, get_access_token, parse_record_input, categorize_with_ai
@@ -15,6 +15,8 @@ from twilio.rest import Client
 from .categories_dict import categories
 from datetime import timedelta, timezone, datetime
 import requests
+import pandas as pd
+from .config import engine
 
 api = Blueprint("api", __name__)
 
@@ -1092,5 +1094,42 @@ def wpp_add_records():
             from_=TWILIO_NUMBER,
             to=f"whatsapp:{from_number}",
             body=msg)
-        
         return jsonify({"msg": "No se pudo agregar el registro a traves de whatsapp"}), 500
+    
+
+@api.route('/export/records', methods=['GET'])
+@jwt_required()
+def export_records_excel():
+
+    try:
+        user_id = get_jwt_identity()
+
+        query = """SELECT r.id, r.description, r.amount, r.type, 
+            w.name AS wallet_name, c.name AS category_name, r.timestamp
+            FROM record r
+            JOIN wallet w ON r.wallet_id = w.id
+            JOIN category c ON r.category_id = c.id
+            WHERE r.user_id = %s"""
+
+        df = pd.read_sql(query, engine,params=(user_id,))
+
+
+        # Este loop es para eliminar la zona horaria de las fechas y convertirlas a datetime
+        for column in df.select_dtypes(include=['datetime64[ns, UTC]', 'datetime64[ns]']):
+            df[column] = df[column].dt.tz_localize(None)
+        
+        #Crea el archivo
+        excel_file = "records.xlsx"
+        df.to_excel(excel_file, index = False)
+
+        # Escribir sobre el archivo los registros desde la base de datos
+        response = Response(
+            open(excel_file, "rb").read(),
+            mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            headers={"Content-Disposition": "attachment; filename=records.xlsx"}
+            )
+        os.remove(excel_file)
+        return response
+
+    except Exception as e:
+        return jsonify({"msg":f"No se pudo obtener el excel: ${e}"}), 500

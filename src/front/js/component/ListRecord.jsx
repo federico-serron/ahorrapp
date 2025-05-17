@@ -86,6 +86,22 @@ const ListRecord = () => {
         }
     }, []);
 
+    const handleExport = async() => {
+        try {
+            const result = await actions.exportRecordsExcel()
+            if (!result) {
+                toast.error("Ha ocurrido un error al exportar el excel")
+                return;
+            }
+
+            toast.success("Descargando archivo de registros")
+            
+        } catch (error) {
+            console.error(error)
+            
+        }
+    }
+
     useEffect(() => {
         const fetchCategories = async () => {
             try {
@@ -216,6 +232,7 @@ const ListRecord = () => {
                     </tbody>
                 </table>
             </div>
+            <button type="button" className="btn btn-success mt-2" onClick={handleExport}>Exportar Registros</button>
 
         </div>
     );
