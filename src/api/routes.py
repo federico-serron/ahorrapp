@@ -73,6 +73,13 @@ def signup_user():
         if role:
             if role != "user" and role != "admin":
                 return jsonify({"msg": "No se pudo asignar el role"}), 400
+            
+        
+        if Currency.query.count() == 0:
+            new_currency_usd = Currency(name="Dolares", symbol="USD")            
+            new_currency_uyu = Currency(name="Pesos Uruguayos", symbol="UYU")
+            db.session.add_all([new_currency_usd, new_currency_uyu])
+            db.session.commit()
 
         user = User.query.filter_by(email=email).first()
 

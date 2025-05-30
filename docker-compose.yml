@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   db:
     image: postgres:15
@@ -18,6 +20,11 @@ services:
       - .env
     depends_on:
       - db
+    #volumes:
+     # - ./src:/app/src  # Only for DEV ENVIROMENT
+    command: >
+      sh -c "pipenv run flask db upgrade &&
+             pipenv run gunicorn wsgi:application --chdir src --bind 0.0.0.0:3001"
 
 volumes:
   postgres-data:

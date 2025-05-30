@@ -18,8 +18,10 @@ from api.config import engine
 # from models import Person
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
-# static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../public/')
-static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'front/build/') #To make it work on production
+# static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../../public/')
+# static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../dist')
+static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'front/build')
+
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 
@@ -62,8 +64,8 @@ def handle_invalid_usage(error):
 
 
 @app.route('/')
-def sitemap():
-    if ENV == "development":
+def index():
+    if os.getenv("FLASK_ENV") == "development":
         return generate_sitemap(app)
     return send_from_directory(static_file_dir, 'index.html')
 

@@ -33,7 +33,7 @@ const Layout = () => {
     const basename = process.env.BASENAME || "";
     const { actions } = useContext(Context);
 
-    if (!process.env.BACKEND_URL || process.env.BACKEND_URL == "") return <BackendURL />;
+    if (!process.env.REACT_APP_BACKEND_URL || process.env.REACT_APP_BACKEND_URL == "") return <BackendURL />;
 
     useEffect(() => {
         actions.initTheme();

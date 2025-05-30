@@ -32,10 +32,14 @@ RUN pipenv install
 
 # Copiar solo el código backend (src/) y el frontend ya compilado
 COPY src/ ./src/
-COPY --from=frontend-builder /app/dist ./src/front/build
+COPY migrations/ ./migrations/
+COPY --from=frontend-builder /app/src/front/build ./src/front/build
+
 
 # Variables de entorno
 ENV PORT=3001
 ENV FLASK_APP=src/wsgi.py
 
 CMD ["pipenv", "run", "gunicorn", "wsgi:application", "--chdir", "src", "--bind", "0.0.0.0:3001"]
+
+RUN ls -la /app/migrations
