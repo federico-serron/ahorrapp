@@ -15,7 +15,7 @@ RUN npm run build
 
 
 # Etapa 2: Backend con pipenv
-FROM python:3.10-slim AS backend
+FROM python:3.13-slim AS backend
 
 WORKDIR /app
 
