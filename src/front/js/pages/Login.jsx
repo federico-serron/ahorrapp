@@ -32,11 +32,11 @@ const Login = () => {
     }
   };
 
-  useEffect(()=>{
-      if (localStorage.getItem("token")) {
-          navigate('/dashboard')
-      }
-  },[])
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      navigate('/dashboard')
+    }
+  }, [])
 
   return (
     <div className="container d-flex justify-content-center align-items-center mt-5">
@@ -94,6 +94,12 @@ const Login = () => {
                 ¿No tenés una cuenta?{" "}
                 <Link to={"/signup"} className="link-danger">
                   Registrarse
+                </Link>
+              </p>
+              <p className="small fw-bold mt-2 pt-1 mb-0 text-center">
+                ¿Olvidaste tu contraseña?{" "}
+                <Link to={"/forgot-password"} className="link-danger">
+                  Recuperar contraseña
                 </Link>
               </p>
             </div>

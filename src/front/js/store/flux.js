@@ -2,7 +2,7 @@ import { jwtDecode } from "jwt-decode";
 
 const getState = ({ getStore, getActions, setStore }) => {
 
-	const apiUrl = process.env.REACT_APP_BACKEND_URL;
+	const apiUrl = process.env.BACKEND_URL;
 
 	return {
 		store: {
@@ -119,7 +119,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			getMessage: async () => {
 				try {
 					// fetching data from the backend
-					const resp = await fetch(process.env.REACT_APP_BACKEND_URL + "/api/hello")
+					const resp = await fetch(process.env.BACKEND_URL + "/api/hello")
 					const data = await resp.json()
 					setStore({ message: data.message })
 					// don't forget to return something, that is how the async resolves
@@ -197,6 +197,70 @@ const getState = ({ getStore, getActions, setStore }) => {
 				} catch (error) {
 					console.error(error);
 					return false
+				}
+			},
+
+			// Send link to email for recovering password function
+			forgotPassword: async (email) => {
+				const URLforgotPassword = `${apiUrl}/api/forgot-password`;
+				const store = getStore();
+
+				if (!email) {
+					console.error("Email is required")
+					return false;
+				}
+
+				try {
+					const response = await fetch(URLforgotPassword, {
+						method: 'POST',
+						body: JSON.stringify({ 'email': email }),
+						headers: { "Content-type": "application/json; charset=UTF-8" }
+					})
+
+					if (!response.ok) {
+						throw new Error("Hubo un error desde el lado del server.");
+					}
+
+					return true;
+
+				} catch (error) {
+					console.error(error.statusText)
+					return false;
+
+
+				}
+			},
+
+			// Reset Password
+			recoverPassword: async (token, password) => {
+				const URLresetPassword = `${apiUrl}/api/reset-password`;
+				const store = getStore();
+
+				if (!token || !password) {
+					console.error("Data missing")
+					return false;
+				}
+
+				try {
+					const response = await fetch(URLresetPassword, {
+						method: 'POST',
+						body: JSON.stringify({ 'password': password }),
+						headers: {
+							'Authorization': `Bearer ${token}`,
+							'Content-Type': 'application/json'
+						}
+					})
+
+					if (!response.ok) {
+						throw new Error("Hubo un error desde el lado del server.");
+					}
+
+					return true;
+
+				} catch (error) {
+					console.error(error.statusText)
+					return false;
+
 				}
 			},
 

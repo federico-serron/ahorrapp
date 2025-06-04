@@ -30,6 +30,7 @@ exceptiongroup = "*"
 pandas = "*"
 openpyxl = "*"
 numpy = "*"
+flask-mail = "*"
 
 [requires]
 python_version = "3.13"

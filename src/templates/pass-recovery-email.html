@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Password Reset</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f9f9;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      background-color: #ffffff;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 2rem;
+    }
+    .header {
+      text-align: center;
+      color: #2e7d32; /* Verde AhorrApp */
+    }
+    .button {
+      display: inline-block;
+      margin-top: 1.5rem;
+      padding: 12px 20px;
+      background-color: #2e7d32;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+    .footer {
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: #777;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 class="header">AhorrApp</h2>
+
+    <!-- ENGLISH -->
+    <p>Hello, {{ user }}</p>
+    <p>We received a request to reset your AhorrApp account password. Click the button below to set a new password:</p>
+    <p style="text-align: center;">
+      <a class="button" href="{{reset_link}}">Reset Password</a>
+    </p>
+    <p>If you didn't request this, you can safely ignore this email.</p>
+
+    <hr style="margin: 2rem 0;">
+
+    <!-- ESPAÑOL -->
+    <p>Hola, {{ user }}</p>
+    <p>Recibimos una solicitud para restablecer la contraseña de tu cuenta de AhorrApp. Hacé clic en el botón de abajo para crear una nueva contraseña:</p>
+    <p style="text-align: center;">
+      <a class="button" href="{{reset_link}}">Restablecer Contraseña</a>
+    </p>
+    <p>Si no fuiste vos, podés ignorar este mensaje sin problemas.</p>
+
+    <div class="footer">
+      &copy; 2025 AhorrApp · All rights reserved.
+    </div>
+  </div>
+</body>
+</html>

@@ -208,3 +208,7 @@ def categorize_with_ai(description):
     except Exception as e:
         print(f"Error al categorizar con IA:\n\n{e}")
         return "General"
+    
+    
+def str_to_bool(value):
+    return str(value).lower() in ('true', '1', 'yes')
