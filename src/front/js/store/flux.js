@@ -2,7 +2,7 @@ import { jwtDecode } from "jwt-decode";
 
 const getState = ({ getStore, getActions, setStore }) => {
 
-	const apiUrl = process.env.BACKEND_URL;
+	const apiUrl = process.env.REACT_APP_BACKEND_URL;
 
 	return {
 		store: {
@@ -119,7 +119,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			getMessage: async () => {
 				try {
 					// fetching data from the backend
-					const resp = await fetch(process.env.BACKEND_URL + "/api/hello")
+					const resp = await fetch(process.env.REACT_APP_BACKEND_URL + "/api/hello")
 					const data = await resp.json()
 					setStore({ message: data.message })
 					// don't forget to return something, that is how the async resolves
