@@ -8,6 +8,9 @@ COPY package.json package-lock.json* ./
 
 RUN npm install
 
+# Copiamos .env.prod como .env para que Webpack lo use
+COPY .env.prod .env
+
 # Copiamos el resto del código (React)
 COPY . .
 

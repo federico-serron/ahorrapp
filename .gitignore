@@ -1,6 +1,9 @@
 # ignore all files starting with .
 .*
 
+# ignore enviroment variables
+.env.prod
+
 # track this file .gitignore (i.e. do NOT ignore it)
 !.gitignore
 !.github

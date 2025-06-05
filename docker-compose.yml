@@ -17,7 +17,7 @@ services:
     ports:
       - "3001:3001"
     env_file:
-      - .env
+      - .env.prod
     depends_on:
       - db
     #volumes:
