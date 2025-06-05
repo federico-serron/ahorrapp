@@ -5,18 +5,21 @@ This module takes care of starting the API Server, Loading the DB and Adding the
 from flask import Flask, request, jsonify, url_for, Blueprint, Response
 import os
 from api.models import db, User, Record, Category, Wallet, Goal, Currency
+from api.services import send_email_forgot_password, reset_pass
 from api.utils import generate_sitemap, APIException, validate_relationships, validate_required_fields, parse_date, check_user_is_admin, get_access_token, parse_record_input, categorize_with_ai
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
+from flask_jwt_extended import get_jwt
 from twilio.rest import Client
 from .categories_dict import categories
 from datetime import timedelta, timezone, datetime
 import requests
 import pandas as pd
 from .config import engine
+
 
 api = Blueprint("api", __name__)
 
@@ -73,6 +76,13 @@ def signup_user():
         if role:
             if role != "user" and role != "admin":
                 return jsonify({"msg": "No se pudo asignar el role"}), 400
+            
+        
+        if Currency.query.count() == 0:
+            new_currency_usd = Currency(name="Dolares", symbol="USD")            
+            new_currency_uyu = Currency(name="Pesos Uruguayos", symbol="UYU")
+            db.session.add_all([new_currency_usd, new_currency_uyu])
+            db.session.commit()
 
         user = User.query.filter_by(email=email).first()
 
@@ -145,6 +155,53 @@ def login():
         )
     else:
         return jsonify({"messagge": "contraseña incorrecta"}), 400
+    
+# Ruta para enviar email a usuario que olvido su contrasena
+@api.route('/forgot-password', methods=["POST"])
+def forgot_password():
+    data = request.get_json()
+    email = data.get('email')
+     
+    if not email:
+        return jsonify({"msg": "Email is required"}), 400
+     
+    try:
+        resp = send_email_forgot_password(email)
+        if resp:
+            return resp
+        else:
+            raise Exception("There was an error trying to send the email")
+        
+    except Exception as e:
+        
+        return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
+    
+
+# Ruta para cambiar la password
+@api.route('/reset-password', methods=["POST"])
+@jwt_required()
+def reset_password():
+    data = request.get_json()
+    new_password = data.get("password")
+    
+    claims = get_jwt()
+    identity = get_jwt_identity()
+    
+    if not claims.get("reset"):
+        return jsonify({"msg": "Invalid token"}), 403
+    
+    if not new_password:
+        return jsonify({"msg": "Email is required"}), 400
+    
+    try:
+        resp = reset_pass(new_password, identity)
+        if resp:
+            return resp
+        else:
+            raise Exception("Nose que pasa")
+    except Exception as e:
+        return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
+    
 
 
 # Ruta creada para añadir una nueva wallet a la cuenta del usuario

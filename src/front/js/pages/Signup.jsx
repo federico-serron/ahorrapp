@@ -13,7 +13,7 @@ const Signup = () => {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [role, setRole] = useState("")
+  const [role, setRole] = useState("user")
   const [confirmPassword, setConfirmPassword] = useState("")
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate()
@@ -31,6 +31,9 @@ const Signup = () => {
       return;
     } else if (password.length < 8) {
       toast.warn("La contrasena debe ser de al menos 8 caracteres 😒")
+      return;
+    } else if (role !== "user") {
+      toast.error("No puedes tener privilegios de Administrador")
       return;
     }
 
@@ -130,10 +133,9 @@ const Signup = () => {
             </div>
             <div className="mb-3">
               <label htmlFor="role" className="form-label">Rol de usuario</label>
-              <select className="form-select" id="role" name="role" onChange={(e)=>{setRole(e.target.value)}}>
+              <select className="form-select" id="role" name="role" onChange={(e) => { setRole(e.target.value) }}>
                 <option value="" disabled>Selecciona un rol</option>
                 <option value="user">Usuario</option>
-                <option value="admin">Administrador</option>
               </select>
             </div>
 

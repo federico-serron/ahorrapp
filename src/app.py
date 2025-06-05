@@ -5,7 +5,7 @@ import os
 from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
-from api.utils import APIException, generate_sitemap
+from api.utils import APIException, generate_sitemap, str_to_bool
 from api.models import db
 from api.routes import api
 from flask_jwt_extended import JWTManager
@@ -14,16 +14,18 @@ from api.commands import setup_commands
 from flask_bcrypt import Bcrypt
 from sqlalchemy import create_engine
 from api.config import engine
+from flask_mail import Mail, Message
 
 # from models import Person
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
-static_file_dir = os.path.join(os.path.dirname(
-    os.path.realpath(__file__)), '../public/')
+# static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../../public/')
+# static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../dist')
+static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'front/build')
+
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 
-bcrypt = Bcrypt(app)
 
 # database condiguration
 db_url = os.getenv("DATABASE_URL")
@@ -37,8 +39,24 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 MIGRATE = Migrate(app, db, compare_type=True)
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY", "clave_super_secreta")
 
+#MAIL CONFIG
+app.config.update(
+    MAIL_SERVER=os.getenv('MAIL_SERVER'),
+    MAIL_PORT=int(os.getenv('MAIL_PORT', 587)),
+    MAIL_USE_TLS=str_to_bool(os.getenv('MAIL_USE_TLS', 'True')),
+    MAIL_USE_SSL=str_to_bool(os.getenv('MAIL_USE_SSL', 'False')),
+    MAIL_USERNAME=os.getenv('MAIL_USERNAME'),
+    MAIL_PASSWORD=os.getenv('MAIL_PASSWORD'),
+    MAIL_DEFAULT_SENDER=os.getenv('MAIL_DEFAULT_SENDER'),
+    MAIL_SUPPRESS_SEND=str_to_bool(os.getenv('MAIL_SUPPRESS_SEND', 'False')),
+    MAIL_ASCII_ATTACHMENTS=str_to_bool(os.getenv('MAIL_ASCII_ATTACHMENTS', 'False')),
+)
+
+mail = Mail(app)
 db.init_app(app)
 jwt = JWTManager(app)
+bcrypt = Bcrypt(app)
+
 
 #engine = create_engine(db_url)
 
@@ -62,8 +80,8 @@ def handle_invalid_usage(error):
 
 
 @app.route('/')
-def sitemap():
-    if ENV == "development":
+def index():
+    if os.getenv("FLASK_ENV") == "development":
         return generate_sitemap(app)
     return send_from_directory(static_file_dir, 'index.html')
 

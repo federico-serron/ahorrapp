@@ -26,6 +26,8 @@ import PayPalSuccess from "./pages/PayPalSuccess.jsx";
 import PayPalCancel from "./pages/PayPalCancel.jsx";
 import WalletDetail from "./pages/WalletDetail.jsx";
 import { Context } from "./store/appContext";
+import ForgotPass from "./component/ForgotPass.jsx";
+import PasswordResetForm from "./component/PasswordResetForm.jsx";
 //create your first component
 const Layout = () => {
     //the basename is used when your project is published in a subdirectory and not in the root of the domain
@@ -77,6 +79,11 @@ const Layout = () => {
 
                         <Route path="/unauthorized" element={<Unauthorized />} />
                         <Route element={<h1>Not found!</h1>} />
+
+                        <Route path="/forgot-password" element={<ForgotPass />} />
+                        <Route path="/reset-form" element={<PasswordResetForm />} />
+
+
 
 
 

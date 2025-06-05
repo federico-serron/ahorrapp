@@ -2,7 +2,7 @@ import { jwtDecode } from "jwt-decode";
 
 const getState = ({ getStore, getActions, setStore }) => {
 
-	const apiUrl = process.env.BACKEND_URL;
+	const apiUrl = process.env.REACT_APP_BACKEND_URL;
 
 	return {
 		store: {
@@ -105,10 +105,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 
 			// Para saber solo el conteo de Usuarios 
-			totalUsersCount: null, 
-		
-		
-		
+			totalUsersCount: null,
+
+
+
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -119,7 +119,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			getMessage: async () => {
 				try {
 					// fetching data from the backend
-					const resp = await fetch(process.env.BACKEND_URL + "/api/hello")
+					const resp = await fetch(process.env.REACT_APP_BACKEND_URL + "/api/hello")
 					const data = await resp.json()
 					setStore({ message: data.message })
 					// don't forget to return something, that is how the async resolves
@@ -197,6 +197,70 @@ const getState = ({ getStore, getActions, setStore }) => {
 				} catch (error) {
 					console.error(error);
 					return false
+				}
+			},
+
+			// Send link to email for recovering password function
+			forgotPassword: async (email) => {
+				const URLforgotPassword = `${apiUrl}/api/forgot-password`;
+				const store = getStore();
+
+				if (!email) {
+					console.error("Email is required")
+					return false;
+				}
+
+				try {
+					const response = await fetch(URLforgotPassword, {
+						method: 'POST',
+						body: JSON.stringify({ 'email': email }),
+						headers: { "Content-type": "application/json; charset=UTF-8" }
+					})
+
+					if (!response.ok) {
+						throw new Error("Hubo un error desde el lado del server.");
+					}
+
+					return true;
+
+				} catch (error) {
+					console.error(error.statusText)
+					return false;
+
+
+				}
+			},
+
+			// Reset Password
+			recoverPassword: async (token, password) => {
+				const URLresetPassword = `${apiUrl}/api/reset-password`;
+				const store = getStore();
+
+				if (!token || !password) {
+					console.error("Data missing")
+					return false;
+				}
+
+				try {
+					const response = await fetch(URLresetPassword, {
+						method: 'POST',
+						body: JSON.stringify({ 'password': password }),
+						headers: {
+							'Authorization': `Bearer ${token}`,
+							'Content-Type': 'application/json'
+						}
+					})
+
+					if (!response.ok) {
+						throw new Error("Hubo un error desde el lado del server.");
+					}
+
+					return true;
+
+				} catch (error) {
+					console.error(error.statusText)
+					return false;
+
 				}
 			},
 
@@ -1149,70 +1213,70 @@ const getState = ({ getStore, getActions, setStore }) => {
 			// Action Calcular Ahorro (Calculadora)
 
 			calcularAhorro: async (datos) => {
-    try {
-        const response = await fetch(`${apiUrl}/api/calculate-savings`, {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${localStorage.getItem("token")}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(datos)
-        });
+				try {
+					const response = await fetch(`${apiUrl}/api/calculate-savings`, {
+						method: "POST",
+						headers: {
+							"Authorization": `Bearer ${localStorage.getItem("token")}`,
+							"Content-Type": "application/json"
+						},
+						body: JSON.stringify(datos)
+					});
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData?.message || "Error en el cálculo de ahorro");
-        }
+					if (!response.ok) {
+						const errorData = await response.json();
+						throw new Error(errorData?.message || "Error en el cálculo de ahorro");
+					}
 
-        const data = await response.json();
-        return data;
+					const data = await response.json();
+					return data;
 
-    } catch (error) {
-        console.error("Error al calcular ahorro:", error);
-        throw error;
-    }
-},
+				} catch (error) {
+					console.error("Error al calcular ahorro:", error);
+					throw error;
+				}
+			},
 
 
-			
-  // Action  para obtener solo el conteo de usuarios
-    getUsersCount: async () => {
-        try {
-            const result = await fetch(`${apiUrl}/api/admin/users/count`, {
-                method: "GET",
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('token')}`,
-                    "Content-Type": "application/json",
-                }
-            });
 
-            if (!result.ok) {
-                const errorData = await result.json();
-                throw new Error(`Se presentó el siguiente error al obtener el conteo: ${errorData.msg || result.statusText}`);
-            }
+			// Action  para obtener solo el conteo de usuarios
+			getUsersCount: async () => {
+				try {
+					const result = await fetch(`${apiUrl}/api/admin/users/count`, {
+						method: "GET",
+						headers: {
+							Authorization: `Bearer ${localStorage.getItem('token')}`,
+							"Content-Type": "application/json",
+						}
+					});
 
-            const data = await result.json();
+					if (!result.ok) {
+						const errorData = await result.json();
+						throw new Error(`Se presentó el siguiente error al obtener el conteo: ${errorData.msg || result.statusText}`);
+					}
 
-            setStore({
-                ...getStore(),
-                totalUsersCount: data.total_users_count // Guarda el conteo en la nueva propiedad
-            });
+					const data = await result.json();
 
-            console.log("Conteo total de usuarios obtenido:", getStore().totalUsersCount);
-            return true;
+					setStore({
+						...getStore(),
+						totalUsersCount: data.total_users_count // Guarda el conteo en la nueva propiedad
+					});
 
-        } catch (error) {
-            console.error("Se presentó el siguiente error al obtener el conteo de usuarios: ", error);
-            setStore({...getStore(), totalUsersCount: null}); // Opcional: Limpiar si hay un error
-            return false;
-        }
-    },
+					console.log("Conteo total de usuarios obtenido:", getStore().totalUsersCount);
+					return true;
+
+				} catch (error) {
+					console.error("Se presentó el siguiente error al obtener el conteo de usuarios: ", error);
+					setStore({ ...getStore(), totalUsersCount: null }); // Opcional: Limpiar si hay un error
+					return false;
+				}
+			},
 
 
 			//Actions Rafa
 
 			//Actions Jose
-			exportRecordsExcel: async() => {
+			exportRecordsExcel: async () => {
 				try {
 
 					const result = await fetch(`${apiUrl}/api/export/records`, {
@@ -1220,31 +1284,31 @@ const getState = ({ getStore, getActions, setStore }) => {
 						headers: {
 							Authorization: `Bearer ${localStorage.getItem('token')}`,
 							"Content-Type": "application/json",
-							}
+						}
 					})
 
-					if (!result.ok){
+					if (!result.ok) {
 						throw new Error("Se presento el siguiente error: ", result.status)
 						return false;
 					}
 
-					    const blob = await result.blob();
-						const url = window.URL.createObjectURL(blob);
+					const blob = await result.blob();
+					const url = window.URL.createObjectURL(blob);
 
-						const a = document.createElement("a");
-						a.href = url;
-						a.download = "records.xlsx";
-						document.body.appendChild(a);
-						a.click();
-						document.body.removeChild(a);
-						return true;
-					
+					const a = document.createElement("a");
+					a.href = url;
+					a.download = "records.xlsx";
+					document.body.appendChild(a);
+					a.click();
+					document.body.removeChild(a);
+					return true;
+
 				} catch (error) {
-					console.error("Se tiene el siguiente error: ",error)
-					
+					console.error("Se tiene el siguiente error: ", error)
+
 				}
 			},
-			
+
 
 			//Actions Fede
 		}
