@@ -8,3 +8,9 @@ currencies = Blueprint("currencies", __name__)
 
 # Allow CORS requests to this API
 CORS(currencies)
+
+
+@currencies.route('/test', methods=["GET"])
+def test():
+    return jsonify({"msg": "Esta funcionando  la ruta currencies"}), 200
+
