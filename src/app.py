@@ -8,6 +8,7 @@ from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap, str_to_bool
 from api.models import db
 from api.routes import api
+from api.currencies.currencies_bp import currencies
 from flask_jwt_extended import JWTManager
 from api.admin import setup_admin
 from api.commands import setup_commands
@@ -68,6 +69,7 @@ setup_commands(app)
 
 # Add all endpoints form the API with a "api" prefix
 app.register_blueprint(api, url_prefix='/api')
+app.register_blueprint(currencies, url_prefix='/currencies')
 
 # Handle/serialize errors like a JSON object
 
