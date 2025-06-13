@@ -58,13 +58,14 @@ export const Navbar = () => {
 					<ul className="navbar-nav ms-auto align-items-center">
 
 						{/* Cambiar tema oscuro/claro */}
-						<li className="nav-item">
+						<li className="nav-item tooltip-container">
 							<button
 								className="btn btn-outline-secondary mx-2"
 								onClick={() => actions.setTheme(currentTheme === "light" ? "dark" : "light")}
 							>
 								{currentTheme === "dark" ? <i className="fas fa-sun" /> : <i className="fas fa-moon" />}
 							</button>
+							<span class="tooltip-text">Cambiar a tema {currentTheme === "light" ? "oscuro" : "claro"}</span>
 						</li>
 
 						{localStorage.getItem("token") ? (
