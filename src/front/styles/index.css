@@ -185,3 +185,57 @@ body[data-bs-theme='light'] .btn-danger:hover {
 }
 
 
+.tooltip-container {
+    /* Establece el contexto de posicionamiento para el tooltip */
+    position: relative;
+    display: inline-block; /* Asegura que el contenedor se ajuste al tamaño del botón */
+}
+
+.tooltip-text {
+    /* Oculta el texto por defecto */
+    visibility: hidden;
+    /* Color de fondo del tooltip */
+    background-color: #333;
+    /* Color del texto */
+    color: #fff;
+    /* Alineación del texto */
+    text-align: center;
+    /* Borde redondeado */
+    border-radius: 6px;
+    /* Relleno */
+    padding: 5px 8px;
+    /* Posición del tooltip */
+    position: absolute;
+    /* Z-index para asegurar que esté sobre otros elementos */
+    z-index: 1;
+    /* Centrar horizontalmente debajo del botón */
+    top: 125%; /* Ajusta la distancia vertical del tooltip al botón (ahora hacia abajo) */
+    left: 50%;
+    margin-left: -60px; /* La mitad del ancho del tooltip para centrar */
+    /* Transición suave para la aparición */
+    opacity: 0;
+    transition: opacity 0.3s;
+    /* Tamaño de fuente pequeño */
+    font-size: 0.85em;
+    /* Ancho máximo del tooltip */
+    min-width: 120px;
+    white-space: nowrap; /* Evita que el texto se rompa en varias líneas */
+}
+
+.tooltip-container:hover .tooltip-text {
+    /* Muestra el tooltip al pasar el ratón por encima del contenedor */
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Opcional: una flecha pequeña en el tooltip (ahora hacia arriba) */
+.tooltip-text::after {
+    content: "";
+    position: absolute;
+    bottom: 100%; /* En la parte superior del tooltip */
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #333 transparent; /* Cambia el color de la flecha para que apunte hacia arriba */
+}
