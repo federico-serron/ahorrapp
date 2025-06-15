@@ -1,112 +1,157 @@
 
-# AhorrApp
+# 💸 AhorrApp - Personal Finance Manager
 
-AhorrApp es una aplicación web que te ayuda a gestionar tus gastos, estableciendo metas de ahorro y realizando un seguimiento de tus finanzas personales. Está construida con **React.js** para el frontend y **Flask** con **SQLAlchemy** para el backend API.
+**AhorrApp** is a full stack web application that helps users manage their personal finances, track expenses, and set savings goals.  
+It was selected as a **featured project** in the **SembrandoTIC program** organized by CUTI (Uruguay), and developed as the capstone project of the Full Stack Developer Bootcamp at 4Geeks Academy.
 
-## Características
+Built with **React.js** on the frontend and **Flask** (Python) with **SQLAlchemy** on the backend.
 
-- **Frontend con React.js**: Una interfaz dinámica y fácil de usar para gestionar tus finanzas.
-- **Backend con Flask**: API RESTful para manejar los datos de los usuarios, sus gastos, y sus metas de ahorro.
-- **Base de datos con SQLAlchemy**: Abstracción de base de datos que te permite almacenar y gestionar datos de manera eficiente.
-- **Gestión de usuarios**: Permite la creación de usuarios y autenticación para el seguimiento personalizado.
-- **Integración con Pipenv**: Gestión de dependencias Python.
-- **Despliegue rápido a Heroku**: Implementación simple de la aplicación en Heroku.
+---
 
-## Documentación
+## 🚀 Features
 
-[Documentación de inicio](https://start.4geeksacademy.com/starters/react-flask)  
-[Video tutorial de uso](https://www.loom.com/share/f37c6838b3f1496c95111e515e83dd9b)
+- 📊 Track **incomes and expenses** across categories.
+- 🎯 Set **personal savings goals** and monitor progress.
+- 🌍 Manage **multiple wallets and currencies**.
+- 📈 Visualize data with interactive **graphs and dashboards**.
+- 🔐 Secure **user registration and login**.
+- 🌐 Real-time exchange rate API integration.
+- 📨 WhatsApp integration to improve the UX
+- 🤖 AI-enhanced UX: Natural language input in Spanish or English for adding expenses and interacting with the app more intuitively.
 
-## Instalación
+---
 
-### Backend (Flask)
+## 🛠️ Tech Stack
 
-1. **Instalar Python 3.10 y Pipenv**:
-   Si no tienes Python 3.10 y Pipenv instalados, instálalos en tu máquina local. Puedes instalar Pipenv con el siguiente comando:
+### Frontend
+- React.js + Bootstrap
+- Custom global state manager (Flux-inspired)
+- Form validation with Bootstrap + user-friendly feedback
 
+### Backend
+- Python + Flask
+- SQLAlchemy ORM
+- JWT-based authentication
+
+### DevOps / Tools
+- Docker (multi-container setup)
+- PostgreSQL
+- Render.com & EC2 deployment support
+- Environment variable management via `.env`
+
+---
+
+## 📦 Project Structure
+
+```
+ahorrapp/
+├── src/
+│   ├── api/              # Backend (Flask)
+│   │   ├── routes.py
+│   │   └── models/
+│   ├── front/            # Frontend (React)
+│   │   ├── views/
+│   │   ├── flux.js
+│   │   └── index.js
+│   ├── wsgi.py           # App entry point
+├── Dockerfile
+├── docker-compose.yml
+├── render.yaml
+└── .env
+```
+
+---
+
+## 🧰 How to Run Locally
+
+### ⚙️ Backend (Flask)
+
+1. **Install Python 3.10 and Pipenv**  
    ```bash
    pip install pipenv
    ```
 
-2. **Instalar las dependencias de Python**:
-   Una vez que tengas el entorno preparado, instala las dependencias del backend:
-
+2. **Install dependencies**  
    ```bash
    pipenv install
    ```
 
-3. **Configurar variables de entorno**:
-   Crea un archivo `.env` a partir del ejemplo `.env.example`:
-
+3. **Create and edit your `.env` file**  
    ```bash
    cp .env.example .env
    ```
 
-   Luego, configura la variable `DATABASE_URL` para tu base de datos, dependiendo de cuál estés usando:
+   Then update `DATABASE_URL` depending on your database:
+   - SQLite: `sqlite:///test.db`
+   - PostgreSQL: `postgres://user:password@localhost:5432/dbname`
 
-   - **SQLite**: `sqlite:///test.db`
-   - **MySQL**: `mysql://usuario:contraseña@localhost:puerto/ejemplo`
-   - **PostgreSQL**: `postgres://usuario:contraseña@localhost:5432/ejemplo`
-
-4. **Migrar la base de datos**:
-   Si has hecho cambios en los modelos (en `./src/api/models.py`), ejecuta las migraciones:
-
+4. **Run database migrations**  
    ```bash
    pipenv run migrate
    pipenv run upgrade
    ```
 
-5. **Ejecutar la aplicación**:
-   Para iniciar el servidor backend, corre el siguiente comando:
-
+5. **Start the backend server**  
    ```bash
    pipenv run start
    ```
 
-### Frontend (React)
+---
 
-1. **Instalar Node.js**:
-   Asegúrate de tener **Node.js versión 14+** instalada en tu máquina.
+### 💻 Frontend (React)
 
-2. **Instalar las dependencias de frontend**:
-   Entra al directorio del frontend y ejecuta:
+1. **Install Node.js (v14 or higher)**
 
+2. **Install dependencies**
    ```bash
    npm install
    ```
 
-3. **Iniciar el servidor de desarrollo**:
-   Una vez instaladas las dependencias, ejecuta el servidor de desarrollo con:
-
+3. **Start the development server**
    ```bash
    npm run start
    ```
 
-## Despliegue
+---
 
-### Despliegue en Heroku
+## ☁️ Deployment
 
-Este proyecto está listo para ser desplegado en **Heroku** con tan solo unos pocos pasos. Sigue la documentación oficial para desplegar tu app en la plataforma.
+### Deploy to Heroku
 
-1. Crea una cuenta en [Heroku](https://www.heroku.com/).
-2. Instala el [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli).
-3. Sigue los pasos en la documentación oficial para crear una aplicación y conectarla con tu repositorio.
+This project is Heroku-ready. Steps:
 
-## Contribuciones
+1. Sign up at [heroku.com](https://heroku.com)
+2. Install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)
+3. Create a Heroku app and connect your GitHub repo or deploy using CLI.
 
-**Contribuyentes:**
-
-- **Jose Luis Nuñez**
-- **Juan Salazar**
-- **Rafael Vargas**
-- **Federico Serron**
-
-Este proyecto fue desarrollado como parte del aprendizaje en el desarrollo de aplicaciones Full Stack. ¡Contribuciones son bienvenidas! Si encuentras algún error o tienes una idea para mejorar la aplicación, no dudes en hacer un **Pull Request**.
-
-## Licencia
-
-Este proyecto está bajo la licencia MIT.
+> This project also includes a `render.yaml` for Render.com deployments and can be deployed to AWS EC2 or any custom server.
 
 ---
 
-**AhorrApp** es una solución sencilla pero potente para ayudarte a tener el control de tus finanzas personales y ahorrar de manera efectiva. ¡Empecemos a ahorrar juntos!
+## 📚 Resources
+
+- [Starter Template Documentation](https://start.4geeksacademy.com/starters/react-flask)
+- [Video Demo (Loom)](https://www.loom.com/share/f37c6838b3f1496c95111e515e83dd9b)
+
+---
+
+## 👥 Contributors
+
+- **Federico Serron**
+- **Jose Luis Nuñez**
+- **Juan Salazar**
+- **Rafael Vargas**
+
+We welcome contributions!  
+Found a bug or have a feature idea? Open an issue or pull request anytime.
+
+---
+
+## 📜 License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+**AhorrApp** is a powerful yet simple solution to help you take control of your finances and save more effectively.  
+Let’s start saving together! 🚀
