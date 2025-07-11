@@ -1078,15 +1078,6 @@ def get_users_count():
         return jsonify({"msg": f"Error al obtener el conteo de usuarios: {e}"}), 500
 
 
-
-
-
-
-#Ruta Rafa
-
-#Ruta Jose
-
-#Ruta Fede
 @api.route("/whatsapp/records/add", methods=["POST"])
 def wpp_add_records():
     try:
@@ -1153,6 +1144,7 @@ def wpp_add_records():
             body=msg)
         return jsonify({"msg": "No se pudo agregar el registro a traves de whatsapp"}), 500
     
+
 
 @api.route('/export/records', methods=['GET'])
 @jwt_required()
