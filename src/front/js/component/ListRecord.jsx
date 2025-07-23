@@ -1,130 +1,106 @@
+// 👇 Parte superior, dejá esto igual
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import SpinnerLogo from "./SpinnerLogo.jsx";
 
-
-
 const ListRecord = () => {
-
     const { store, actions } = useContext(Context);
     const { wallet_id } = useParams();
-    let records = store.records
-    const [loading, setLoading] = useState(true)
+    let records = store.records;
+
+    const [loading, setLoading] = useState(true);
     const [categories, setCategories] = useState([]);
 
     const [editId, setEditId] = useState(null);
-    const [description, setDescription] = useState(null)
+    const [description, setDescription] = useState(null);
     const [amount, setAmount] = useState(null);
-    const [cat_id, setCat_id] = useState(null)
+    const [cat_id, setCat_id] = useState(null);
 
-    const handleEditRecord = async (editId, description, amount, cat_id) => {
-        try {
-            console.log(editId, description, amount, cat_id)
-            const response = await actions.editRecord(editId, description, amount, cat_id)
-
-            if (response) {
-                toast.success("Registro editado correctamente")
-                cleanUpState();
-                return
-
-            } else {
-                toast.error("No se pudo editar el registro")
-                cleanUpState();
-                return;
-
-            }
-        } catch (error) {
-            toast.error("Error, algo salio mal en el componente")
-            cleanUpState();
-
-
-        }
-    }
+    const [currentPage, setCurrentPage] = useState(1);
+    const perPage = store.pagination.per_page || 10;
 
     const cleanUpState = () => {
         setEditId(null);
         setDescription(null);
         setAmount(null);
         setCat_id(null);
+    };
 
-    }
-
+    const handleEditRecord = async (editId, description, amount, cat_id) => {
+        try {
+            const response = await actions.editRecord(editId, description, amount, cat_id);
+            if (response) {
+                toast.success("Registro editado correctamente");
+                cleanUpState();
+            } else {
+                toast.error("No se pudo editar el registro");
+                cleanUpState();
+            }
+        } catch (error) {
+            toast.error("Error, algo salió mal en el componente");
+            cleanUpState();
+        }
+    };
 
     const handleDeleteRecord = async (recordId) => {
-        const result = await actions.deleteRecord(recordId)
-
+        const result = await actions.deleteRecord(recordId);
         if (result) {
             toast.success("Registro eliminado correctamente");
-            return;
         } else {
-            toast.error("No se pudo eliminar el registro")
-            return;
+            toast.error("No se pudo eliminar el registro");
         }
-    }
+    };
+
+    const fetchRecords = async (page = 1) => {
+        setLoading(true);
+
+        const success = await actions.get_records_paginated(null, null, wallet_id, page, perPage);
+        if (success) setLoading(false);
+    };
 
     useEffect(() => {
-
-        let isMounted = true;
-
-        const fetchRecords = async () => {
-            setLoading(true);
-
-            const success = await actions.get_records(null, null, wallet_id);
-            if (success && isMounted) {
-                records = store.records
-                setLoading(false)
-            }
-        }
-
-        fetchRecords();
-
-
-        return () => {
-            isMounted = false;
-        }
-    }, []);
+        fetchRecords(currentPage);
+    }, [currentPage]);
 
     const handleExport = async () => {
         try {
-            const result = await actions.exportRecordsExcel()
+            const result = await actions.exportRecordsExcel();
             if (!result) {
-                toast.error("Ha ocurrido un error al exportar el excel")
+                toast.error("Ha ocurrido un error al exportar el excel");
                 return;
             }
-
-            toast.success("Descargando archivo de registros")
-
+            toast.success("Descargando archivo de registros");
         } catch (error) {
-            console.error(error)
-
+            console.error(error);
         }
-    }
+    };
 
     useEffect(() => {
         const fetchCategories = async () => {
             try {
                 const data = await actions.getCategories();
-
                 if (!data) {
-                    console.log("No hay categorias")
-                    setLoading(false)
+                    console.log("No hay categorías");
+                    setLoading(false);
                     return;
                 }
-
-                setCategories(store.categories_db)
-                setLoading(false)
-                return;
-
+                setCategories(store.categories_db);
+                setLoading(false);
             } catch (error) {
-                console.error(`Hubo un error al intentar traer las categorias: ${error}`)
-                setLoading(false)
+                console.error(`Error al intentar traer las categorías: ${error}`);
+                setLoading(false);
             }
-        }
-
-        fetchCategories()
+        };
+        fetchCategories();
     }, []);
+
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }, []);
+
+    const pagination = store.pagination || { page: 1, pages: 1, has_next: false, has_prev: false };;
 
     return (
         <div className="">
@@ -134,18 +110,17 @@ const ListRecord = () => {
                     <thead className="table-dark">
                         <tr>
                             <th>ID</th>
-                            <th>Descripcion</th>
+                            <th>Descripción</th>
                             <th>Monto</th>
-                            <th>Categoria</th>
+                            <th>Categoría</th>
                             <th>Fecha</th>
                             <th></th>
-
                         </tr>
                     </thead>
                     <tbody>
                         {loading ? (
                             <tr>
-                                <td colSpan="5">
+                                <td colSpan="6">
                                     <SpinnerLogo />
                                 </td>
                             </tr>
@@ -160,7 +135,7 @@ const ListRecord = () => {
                                                     type="text"
                                                     className="form-control"
                                                     defaultValue={record.description}
-                                                    onChange={(e) => { setDescription(e.target.value) }}
+                                                    onChange={(e) => setDescription(e.target.value)}
                                                 />
                                             </td>
                                             <td>
@@ -168,11 +143,15 @@ const ListRecord = () => {
                                                     type="number"
                                                     className="form-control"
                                                     defaultValue={record.amount}
-                                                    onChange={(e) => { setAmount(e.target.value) }}
+                                                    onChange={(e) => setAmount(e.target.value)}
                                                 />
                                             </td>
                                             <td>
-                                                <select className="form-select" defaultValue={record.category.id} onChange={(e) => { setCat_id(e.target.value) }}>
+                                                <select
+                                                    className="form-select"
+                                                    defaultValue={record.category.id}
+                                                    onChange={(e) => setCat_id(e.target.value)}
+                                                >
                                                     {store.categories_db.map((cat, i) => (
                                                         <option key={i} value={cat.id}>
                                                             {cat.name}
@@ -184,16 +163,11 @@ const ListRecord = () => {
                                             <td>
                                                 <button
                                                     className="btn"
-                                                    role="button"
-                                                    onClick={() => {
-                                                        handleEditRecord(editId, description, amount, cat_id)
-                                                    }}
+                                                    onClick={() => handleEditRecord(editId, description, amount, cat_id)}
                                                 >
                                                     ✅
                                                 </button>
-                                                <button className="btn" role="button"
-                                                    onClick={() => cleanUpState()}
-                                                >
+                                                <button className="btn" onClick={cleanUpState}>
                                                     ❌
                                                 </button>
                                             </td>
@@ -232,8 +206,31 @@ const ListRecord = () => {
                     </tbody>
                 </table>
             </div>
-            <button type="button" className="btn btn-success mt-2" onClick={handleExport}>Exportar Registros</button>
 
+            {/* PAGINACIÓN */}
+            <div className="d-flex justify-content-between align-items-center mt-3">
+                <button
+                    className="btn btn-outline-primary"
+                    disabled={!pagination.has_prev}
+                    onClick={() => { setCurrentPage(prev => prev - 1) }}
+                >
+                    ◀ Anterior
+                </button>
+                <span>
+                    Página {pagination.page} de {pagination.pages}
+                </span>
+                <button
+                    className="btn btn-outline-primary"
+                    disabled={!pagination.has_next}
+                    onClick={() => { setCurrentPage(prev => prev + 1) }}
+                >
+                    Siguiente ▶
+                </button>
+            </div>
+
+            <button type="button" className="btn btn-success mt-3" onClick={handleExport}>
+                Exportar Registros
+            </button>
         </div>
     );
 };

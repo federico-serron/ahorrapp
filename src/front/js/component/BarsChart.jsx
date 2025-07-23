@@ -16,7 +16,7 @@ const BarsChart = () => {
         const fetchData = async () => {
             const grouped = {}
 
-            const result = await actions.get_records()
+            const result = await actions.get_records_all()
 
             if (!result) {
                 console.log("No se pudieron traer los datos de las graficas")

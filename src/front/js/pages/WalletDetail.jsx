@@ -14,7 +14,7 @@ const WalletDetail = () => {
   useEffect(() => {
     const fetchRecordsWallet = async (wallet_id) => {
       setLoading(true)
-      const response = await actions.get_records(null, null, wallet_id);
+      const response = await actions.get_records_paginated(null, null, wallet_id);
 
       if (!response) {
         console.error("Error al intentar traer los registros de esta wallet.")

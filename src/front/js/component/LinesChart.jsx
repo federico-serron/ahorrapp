@@ -15,14 +15,14 @@ const LinesChart = () => {
         const fetchData = async () => {
             const grouped = {}
 
-            const result = await actions.get_records()
+            const result = await actions.get_records_all()
 
             if (!result) {
                 console.log("No se pudieron traer los datos de las graficas")
                 return;
             }
 
-            store.records.forEach(record => {
+            store.recordsAll.forEach(record => {
                 const month = format(parseISO(record.timestamp), "HH:mm", { locale: es });
 
                 if (!grouped[month]) {
@@ -43,7 +43,7 @@ const LinesChart = () => {
 
         fetchData()
 
-    }, [JSON.stringify(store.records)]);
+    }, [JSON.stringify(store.recordsAll)]);
 
     return (
         <div className="card p-3 shadow rounded-2">

@@ -33,7 +33,7 @@ const Dashboard = () => {
             const response = await actions.getAllUserWallets()
 
             if (!response) {
-                console.log("Parece que hubo un error o no hay wallets")
+                console.error("Parece que hubo un error o no hay wallets")
                 return;
             }
         }
@@ -48,12 +48,12 @@ const Dashboard = () => {
 
                 <h1>Bienvenid@ {store.currentUser.name} {store.currentUser.is_premium ? <i className="fas fa-gem " style={{ color: "gold" }} title="Usuario Premium"></i> : ""}</h1>
                 {store.currentUser.is_premium != true ? (
-                <div className="row">
-                <h3 className="col-3 mt-3">Aun no eres Premium?</h3>
-                <div className="col-3 ">
-                    <PayPalBtn />
-                </div>
-            </div>
+                    <div className="row">
+                        <h3 className="col-3 mt-3">Aun no eres Premium?</h3>
+                        <div className="col-3 ">
+                            <PayPalBtn />
+                        </div>
+                    </div>
                 ) : ""}
 
             </div>
@@ -63,7 +63,6 @@ const Dashboard = () => {
                         <div onClick={() => {
                             setSelectedWalletId(wallet.id);
                             localStorage.setItem("selected_wallet", wallet.id);
-                            console.log(selectedWalletId)
                         }} className="col-lg-3 col-sm-4 col-sm-6 my-3" key={wallet.id}>
                             <WalletCard
                                 id={wallet.id}
@@ -76,21 +75,21 @@ const Dashboard = () => {
                         </div>
                     ))
                 ) : ""}
-                    <div className="col-2 mt-4">
-                        <AddWallet />
-                    </div>
+                <div className="col-2 mt-4">
+                    <AddWallet />
+                </div>
 
             </div>
 
             <div className="row">
                 <div className="col-lg-6 col-md-12">
                     <AddRecord />
-                    <SavingsGoals/>
+                    <SavingsGoals />
                 </div>
                 <div className="text-center align-items-center my-auto col-lg-6 col-md-12">
                     <div className="row">
-                    <LinesChart />
-                    <BarsChart />
+                        <LinesChart />
+                        <BarsChart />
                     </div>
                 </div>
             </div>

@@ -455,6 +455,50 @@ def add_record():
 
 
 # Lista todos los registros del usuario logueado, lo puede filtrar por Categoria y/o Fecha de inicio
+@api.route("/records/all", methods=["GET"])
+@jwt_required()
+def get_records_all():
+
+    try:
+
+        user_id = get_jwt_identity()
+
+        category_id = request.args.get("category_id", type=int, default=None)
+        wallet_id = request.args.get('wallet_id', type=int, default=None)
+        start_date = parse_date(
+            request.args.get("start_date"), datetime(2025, 1, 1, tzinfo=timezone.utc)
+        )
+        end_date = parse_date(request.args.get("end_date"), datetime.now(timezone.utc))
+
+        query = Record.query.filter(Record.user_id == user_id)
+
+        if category_id:
+            query = query.filter(Record.category_id == category_id)
+        if start_date:
+            query = query.filter(Record.timestamp >= start_date)
+        if end_date:
+            query = query.filter(Record.timestamp <= end_date)
+        if wallet_id:
+            query = query.filter(Record.wallet_id == wallet_id)
+            
+
+        records = query.all()
+        
+
+        if category_id and not records:
+            return (
+                jsonify({"msg": "No hay registros para la categoria solicitada"}),
+                404,
+            )
+
+        return jsonify({"records": [record.serialize() for record in records]}), 200
+
+    except Exception as e:
+        return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
+    
+    
+
+# Lista todos los registros del usuario logueado, lo puede filtrar por Categoria y/o Fecha de inicio
 @api.route("/records/list", methods=["GET"])
 @jwt_required()
 def get_records():
@@ -473,7 +517,7 @@ def get_records():
         )
         end_date = parse_date(request.args.get("end_date"), datetime.now(timezone.utc))
 
-        query = Record.query.filter(Record.user_id == user_id)
+        query = Record.query.order_by(Record.timestamp.desc()).filter(Record.user_id == user_id)
 
         if category_id:
             query = query.filter(Record.category_id == category_id)
