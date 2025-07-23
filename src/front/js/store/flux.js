@@ -90,8 +90,23 @@ const getState = ({ getStore, getActions, setStore }) => {
 			//Categorias desde la DB
 			categories_db: [],
 
+			//Todos los registros para las graficas
+			recordsAll: [],
+
 			//Registros de gastos/ingresos
 			records: [],
+
+			//Paginacion de records
+			pagination: {
+				total: null,
+				page: 1,
+				per_page: 10,
+				pages: null,
+				has_next: null,
+				has_prev: null,
+				next_num: null,
+				prev_num: null
+			},
 
 			// Registros de Metas (Goals)
 			goals: [],
@@ -125,7 +140,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					// don't forget to return something, that is how the async resolves
 					return data;
 				} catch (error) {
-					console.log("Error loading message from backend", error)
+					console.error("Error loading message from backend")
 				}
 			},
 
@@ -166,7 +181,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				try {
 					if (!email || !password) {
-						console.log("Missing email or password")
 						return false
 					}
 					let response = await fetch(URLlogin, {
@@ -189,7 +203,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 
 					localStorage.setItem("token", data.access_token)
-					console.log("Successfully logged in!")
 					setStore({ ...store, logged_user: data.logged_user_wallets })
 					localStorage.setItem("selected_wallet", data.logged_user_wallets[0])
 					return true
@@ -272,7 +285,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				try {
 					if (!email || !password || !name) {
-						console.log("Falta correo electrónico, contraseña o contraseña de confirmación");
 						return false;
 					}
 
@@ -297,7 +309,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 
 					const data = await response.json();
-					console.log("¡Registrado exitosamente!", data);
 					return true;
 
 				} catch (error) {
@@ -307,11 +318,13 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			// Acción para obtener registros filtrados por usuario y categoría en un período de tiempo (get-records)
-			get_records: async (category_id, start_date, wallet_id) => {
+			get_records_paginated: async (category_id, start_date, wallet_id, page, per_page) => {
 				const baseURL = `${apiUrl}/api/records/list`;
 				const queryParams = [];
 				const store = getStore();
 
+				queryParams.push(`page=${page ?? 1}`);
+				queryParams.push(`per_page=${per_page ?? 10}`);
 
 				if (category_id) queryParams.push(`category_id=${category_id}`);
 				if (start_date) queryParams.push(`start_date=${new Date(start_date).toISOString()}`);
@@ -336,7 +349,60 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 
 					const data = await response.json();
-					setStore({ ...store, records: data.records });
+					setStore({
+						...store,
+						records: data.records,
+						pagination: {
+							...store.pagination,
+							total: data.total,
+							page: data.page,
+							per_page: data.per_page,
+							pages: data.pages,
+							has_next: data.has_next,
+							has_prev: data.has_prev,
+							next_num: data.next_num,
+							prev_num: data.prev_num
+						}
+					});
+					return true;
+
+				} catch (error) {
+					console.error("Error al obtener los registros:", error);
+					setStore({ recordsError: error.message || "Ocurrió un error al cargar los registros." });
+					return false
+				}
+			},
+
+			// Acción para obtener TODOS los registros filtrados por usuario y categoría en un período de tiempo (get-records)
+			get_records_all: async (category_id, start_date, wallet_id) => {
+				const baseURL = `${apiUrl}/api/records/all`;
+				const queryParams = [];
+				const store = getStore();
+
+
+				if (category_id) queryParams.push(`category_id=${category_id}`);
+				if (start_date) queryParams.push(`start_date=${new Date(start_date).toISOString()}`);
+				if (wallet_id) queryParams.push(`wallet_id=${wallet_id}`);
+
+				const URLlistRecords = queryParams.length > 0 ? `${baseURL}?${queryParams.join('&')}` : baseURL;
+
+
+				try {
+					const response = await fetch(URLlistRecords, {
+						method: 'GET',
+						headers: {
+							'Authorization': `Bearer ${localStorage.getItem('token')}`,
+							'Content-Type': 'application/json'
+						}
+					});
+
+					if (!response.ok) {
+						const errorData = await response.json();
+						throw new Error(`Error en la petición: ${response.status} - ${errorData?.message || response.statusText}`);
+					}
+
+					const data = await response.json();
+					setStore({ ...store, recordsAll: data.records })
 					return true;
 
 				} catch (error) {
@@ -384,7 +450,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 
 					const data = await response.json();
-					console.log("Registro agregado exitosamente:", data);
 
 					// Refresca wallets
 					const wallets = await getActions().getAllUserWallets();
@@ -408,7 +473,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 				try {
 					if (!description && !amount && !cat_id) {
-						console.log("No hay nada para editar");
 						return false;
 					}
 
@@ -427,7 +491,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					});
 
 					if (!response.ok) {
-						console.log("La respuesta no fue 200, ", response.status)
+
 						return false;
 					}
 					const data = await response.json()
@@ -440,7 +504,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					return true
 
 				} catch (error) {
-					console.log("Error en flux function")
+
 					return false
 				}
 
@@ -537,7 +601,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 
 				const updatedUser = await response.json();
-				console.log("Usuario actualizado:", updatedUser);
+
 
 				// Actualiza el estado del store con el usuario actualizado
 				setStore({ ...store, currentUser: updatedUser });
@@ -631,7 +695,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 
 					const data = await response.json();
-					console.log("modificado exitosamente:", data);
 
 
 					setStore({
@@ -715,7 +778,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 						...store,
 						goals: [...data]
 					});
-					console.log(store.goals)
 					return true;
 
 				} catch (error) {
@@ -790,7 +852,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 
 					const data = await response.json();
-					console.log(data)
 
 
 					setStore({
@@ -993,7 +1054,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 
 					setStore({ ...getStore(), wallets_from_user: getStore().wallets_from_user.filter(wallet => wallet.id !== wallet_id) })
-					console.log(`El wallet ${wallet_id} fue eliminado con exito`)
 
 					return true
 
@@ -1049,7 +1109,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					const data = await result.json()
 
 					setStore({ ...getStore(), users: data })
-					console.log(getStore().users)
 					return true
 
 
@@ -1262,7 +1321,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 						totalUsersCount: data.total_users_count // Guarda el conteo en la nueva propiedad
 					});
 
-					console.log("Conteo total de usuarios obtenido:", getStore().totalUsersCount);
 					return true;
 
 				} catch (error) {

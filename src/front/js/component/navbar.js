@@ -65,7 +65,7 @@ export const Navbar = () => {
 							>
 								{currentTheme === "dark" ? <i className="fas fa-sun" /> : <i className="fas fa-moon" />}
 							</button>
-							<span class="tooltip-text">Cambiar a tema {currentTheme === "light" ? "oscuro" : "claro"}</span>
+							<span className="tooltip-text">Cambiar a tema {currentTheme === "light" ? "oscuro" : "claro"}</span>
 						</li>
 
 						{localStorage.getItem("token") ? (
