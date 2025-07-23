@@ -4,6 +4,9 @@
 # ignore enviroment variables
 .env.prod
 
+# Ignore Docker-compsoe file
+docker-compose.yml
+
 # track this file .gitignore (i.e. do NOT ignore it)
 !.gitignore
 !.github
