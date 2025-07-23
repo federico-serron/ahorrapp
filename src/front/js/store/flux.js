@@ -307,7 +307,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 			// Acción para obtener registros filtrados por usuario y categoría en un período de tiempo (get-records)
-			get_records: async (category_id, start_date, wallet_id) => {
+			get_records: async (category_id, start_date, wallet_id, page, per_page) => {
 				const baseURL = `${apiUrl}/api/records/list`;
 				const queryParams = [];
 				const store = getStore();
@@ -316,6 +316,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 				if (category_id) queryParams.push(`category_id=${category_id}`);
 				if (start_date) queryParams.push(`start_date=${new Date(start_date).toISOString()}`);
 				if (wallet_id) queryParams.push(`wallet_id=${wallet_id}`);
+				queryParams.push(`page=${page}`);
+				queryParams.push(`per_page=${per_page}`);
 
 
 				const URLlistRecords = queryParams.length > 0 ? `${baseURL}?${queryParams.join('&')}` : baseURL;
@@ -336,7 +338,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 
 					const data = await response.json();
-					setStore({ ...store, records: data.records });
+					setStore({ ...store, records: data });
 					return true;
 
 				} catch (error) {

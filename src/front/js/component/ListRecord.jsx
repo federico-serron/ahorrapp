@@ -55,10 +55,10 @@ const ListRecord = () => {
     const handleDeleteRecord = async (recordId) => {
         const result = await actions.deleteRecord(recordId)
 
-        if(result){
+        if (result) {
             toast.success("Registro eliminado correctamente");
             return;
-        }else{
+        } else {
             toast.error("No se pudo eliminar el registro")
             return;
         }
@@ -86,7 +86,7 @@ const ListRecord = () => {
         }
     }, []);
 
-    const handleExport = async() => {
+    const handleExport = async () => {
         try {
             const result = await actions.exportRecordsExcel()
             if (!result) {
@@ -95,10 +95,10 @@ const ListRecord = () => {
             }
 
             toast.success("Descargando archivo de registros")
-            
+
         } catch (error) {
             console.error(error)
-            
+
         }
     }
 

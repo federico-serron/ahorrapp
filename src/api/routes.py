@@ -462,6 +462,9 @@ def get_records():
     try:
 
         user_id = get_jwt_identity()
+        
+        page = request.args.get("page", default=1, type=int)
+        per_page = request.args.get("per_page", default=10, type=int)
 
         category_id = request.args.get("category_id", type=int, default=None)
         wallet_id = request.args.get('wallet_id', type=int, default=None)
@@ -482,7 +485,8 @@ def get_records():
             query = query.filter(Record.wallet_id == wallet_id)
             
 
-        records = query.all()
+        pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+        records = [record.serialize() for record in pagination.items]
 
         if category_id and not records:
             return (
@@ -490,13 +494,21 @@ def get_records():
                 404,
             )
 
-        return jsonify({"records": [record.serialize() for record in records]}), 200
+        return jsonify({"records": records,
+                        "total": pagination.total,
+                        "page": pagination.page,
+                        "per_page": pagination.per_page,
+                        "pages": pagination.pages,
+                        "has_next": pagination.has_next,
+                        "has_prev": pagination.has_prev,
+                        "next_num": pagination.next_num,
+                        "prev_num": pagination.prev_num}), 200
 
     except Exception as e:
         return jsonify({"msg": f"El siguiente error acaba de ocurrir: {e}"}), 500
 
 
-# Muestra la info de un registro especifico segun el id que viene ne la URL
+# Muestra la info de un registro especifico segun el id que viene en la URL
 @api.route("/records/<int:id>", methods=["GET"])
 @jwt_required()
 def get_record(id):
