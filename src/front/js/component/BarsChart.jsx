@@ -23,7 +23,7 @@ const BarsChart = () => {
                 return;
             }
 
-            store.records.forEach(record => {
+            store.recordsAll.forEach(record => {
                 const month = format(parseISO(record.timestamp), "MMMM", { locale: es });
 
                 if (!grouped[month]) {
